@@ -1,5 +1,7 @@
 package Clases.ClasesObjetos;
 
+import Exceptions.TarjetaInvalidaException;
+
 import java.util.Objects;
 
 public class Tarjeta {
@@ -7,10 +9,10 @@ public class Tarjeta {
     private long numeroDeTarjeta;
     private double saldoDisponible;
 
-    public Tarjeta(String titular, long numeroDeTarjeta, double saldoDisponible) {
+    public Tarjeta(String titular, long numeroDeTarjeta) {
         this.titular = titular;
         this.numeroDeTarjeta = numeroDeTarjeta;
-        this.saldoDisponible = saldoDisponible;
+        this.saldoDisponible = 0;
     }
 
     public String getTitular() {
@@ -20,6 +22,25 @@ public class Tarjeta {
     public double getSaldoDisponible() {
         return saldoDisponible;
     }
+
+
+    /// Carga de saldo limitada a 150.000
+    public boolean cargarSaldo(double saldo) {
+        if(saldo < 0 || saldo > 150000){
+            this.saldoDisponible =+ saldo;
+        }
+        return true;
+    }
+
+    /// Funcion para restar Saldo a la Tarjeta
+    public boolean restarSaldo(double saldo) throws TarjetaInvalidaException {
+        if(saldo < 0 && this.saldoDisponible < saldo){
+            throw new TarjetaInvalidaException("|Saldo insuficiente|");
+        }
+
+        return true;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

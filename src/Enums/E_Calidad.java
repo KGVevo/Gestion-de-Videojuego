@@ -11,7 +11,7 @@ public enum E_Calidad {
         this.opcionCalidad = opcionCalidad;
     }
 
-    public double obtenerCalidad()
+    public double getCalidad()
     {
         return this.opcionCalidad;
     }

@@ -11,7 +11,7 @@ public enum E_ClaseAsociada {
         this.opcionClase = opcionClase;
     }
 
-    public String obtenerClaseAsociada()
+    public String getClaseAsociada()
     {
         return this.opcionClase;
     }

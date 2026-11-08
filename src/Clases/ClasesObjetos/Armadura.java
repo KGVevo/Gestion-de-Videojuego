@@ -3,21 +3,21 @@ package Clases.ClasesObjetos;
 import Enums.E_ClaseAsociada;
 import Exceptions.ClaseAsociadaException;
 import Exceptions.RangoException;
-import Interfaces.I_comprobarClase;
+import Interfaces.IComprobarClase;
 
-public class Armadura extends Objeto implements I_comprobarClase {
+
+public class Armadura extends Objeto implements IComprobarClase {
 
     private double proteccion;
     private final E_ClaseAsociada claseAsociada;
     private double efecto;
 
-    public Armadura(String nombre, int nivel, int espacios, double proteccion,
-                    E_ClaseAsociada claseAsociada, double efecto) throws RangoException
+    public Armadura(String nombre, int nivel, int espacios, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws RangoException
     {
 
         if(proteccion > 100.00 || proteccion < 0.00)
         {
-            throw new RangoException("ERROR: La proteccion solo se puede medir en porcentaje");
+            throw new RangoException("ERROR: La proteccion no puede ser Mayor a 100 o Menor a 0");
         }
 
         super(nombre, nivel, espacios);
@@ -26,17 +26,17 @@ public class Armadura extends Objeto implements I_comprobarClase {
         this.efecto = efecto;
     }
 
-    public double obtenerProteccion()
+    public double getProteccion()
     {
         return this.proteccion;
     }
 
-    public E_ClaseAsociada obtenerClaseAsociada()
+    public E_ClaseAsociada getClaseAsociada()
     {
         return this.claseAsociada;
     }
 
-    public double obtenerEfecto()
+    public double getEfecto()
     {
         return this.efecto;
     }
@@ -44,6 +44,7 @@ public class Armadura extends Objeto implements I_comprobarClase {
     //Cabe aclarar, que entre los parametros debe ir la Clase Player para saber que tipo de Clase es.
     public String equipar(E_ClaseAsociada claseActual) throws ClaseAsociadaException
     {
+
         //Un jugador solamente puede equiparse armaduras compatibles con su clase.
         String mensaje = "Armadura equipada.";
 
@@ -51,7 +52,7 @@ public class Armadura extends Objeto implements I_comprobarClase {
         //mas rapido el tipo de clase que tiene el Personaje.
         if(claseActual != this.claseAsociada)
         {
-            throw new ClaseAsociadaException("No se puede equipar la armadura "+super.obtenerNombre()+" porque tu clase no es "+this.claseAsociada.obtenerClaseAsociada()+".");
+            throw new ClaseAsociadaException("No se puede equipar la armadura |" + super.getNombre()+ "| porque tu clase no es |" + this.claseAsociada.getClaseAsociada() + "|.");
         }
 
         return mensaje;

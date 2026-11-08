@@ -4,9 +4,11 @@ import Enums.E_Calidad;
 import Enums.E_ClaseAsociada;
 import Exceptions.ClaseAsociadaException;
 import Exceptions.RangoException;
-import Interfaces.I_comprobarClase;
+import Interfaces.IComprobarClase;
 
-public abstract class Arma extends Objeto implements I_comprobarClase {
+
+
+public abstract class Arma extends Objeto implements IComprobarClase {
 
     private final int dañoBase;
     private final E_ClaseAsociada claseAsociada;
@@ -20,35 +22,43 @@ public abstract class Arma extends Objeto implements I_comprobarClase {
         this.calidad = calidad;
     }
 
-    public int obtenerDañoBase()
+    public int getDañoBase()
     {
         return this.dañoBase;
     }
 
-    public E_ClaseAsociada obtenerClaseAsociada()
+    public E_ClaseAsociada getClaseAsociada()
     {
         return this.claseAsociada;
     }
 
-    public E_Calidad obtenerCalidad()
+    public E_Calidad getCalidad()
     {
         return this.calidad;
     }
 
+
     //Cabe aclarar, que entre los parametros debe ir la Clase Player para saber que tipo de Clase es.
     public String equipar(E_ClaseAsociada claseActual) throws ClaseAsociadaException
     {
+        /* IMPORTANTE: NO OLVIDAR COMPROBACION PLAYER */
+        /* IMPORTANTE: NO OLVIDAR COMPROBACION PLAYER*/
+        /* IMPORTANTE: NO OLVIDAR COMPROBACION PLAYER*/
+
         //Un jugador solamente puede equiparse armaduras compatibles con su clase.
         String mensaje = "Arma equipada.";
 
         //Los jugadores crean automaticamente su clase, entonces agregamos un atributo claseAsociada para identificar
         //mas rapido el tipo de clase que tiene el Personaje.
+
         if(claseActual != this.claseAsociada)
         {
-            throw new ClaseAsociadaException("No se puede equipar esta arma "+super.obtenerNombre()+" porque tu clase no es "+this.claseAsociada.obtenerClaseAsociada()+".");
+            throw new ClaseAsociadaException("No se puede equipar esta arma |"+ super.getNombre() +
+                    "| porque tu clase no es |" + this.claseAsociada.getClaseAsociada()+"|.");
         }
 
         return mensaje;
     }
+
 
 }

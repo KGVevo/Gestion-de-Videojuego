@@ -1,20 +1,21 @@
 package Clases.ClasesObjetos;
 
 import Enums.E_Calidad;
+import Enums.E_ClaseAsociada;
 import Exceptions.RangoException;
 
 public class ArmaCuerpoACuerpo extends Arma{
 
     private int consumoEnergia;
 
-    public ArmaCuerpoACuerpo(String nombre, int nivel, int espacios, int dañoBase,
-                             E_Calidad calidad, int consumoEnergia) throws RangoException
+    public ArmaCuerpoACuerpo(String nombre, int nivel, int espacios, int dañoBase, E_ClaseAsociada claseAsociada, E_Calidad calidad, int consumoEnergia) throws RangoException
     {
-        super(nombre, nivel, espacios, dañoBase, calidad);
+        super(nombre, nivel, espacios, dañoBase, claseAsociada , calidad);
         this.consumoEnergia = consumoEnergia;
     }
 
-    public int obtenerConsumoEnergia()
+
+    public int getConsumoEnergia()
     {
         return this.consumoEnergia;
     }

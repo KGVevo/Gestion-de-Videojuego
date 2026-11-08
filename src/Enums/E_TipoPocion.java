@@ -12,7 +12,7 @@ public enum E_TipoPocion {
         this.opcionPocion = opcionPocion;
     }
 
-    public String obtenerTipoPocion()
+    public String getTipoPocion()
     {
         return this.opcionPocion;
     }

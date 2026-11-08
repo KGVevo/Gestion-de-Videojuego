@@ -13,14 +13,17 @@ public abstract class Objeto {
     private int espacios;
     private String descripcion;
 
+
+    //Constructor
     public Objeto(String nombre, int nivel, int espacios) throws RangoException
     {
+
         if(nivel < 0)
         {
             throw new RangoException("ERROR: El nivel debe ser mayor o igual a 0");
         }
 
-        if(nivel > 21)
+        if(nivel > 20)
         {
             throw new RangoException("ERROR: El nivel debe ser como maximo 20");
         }
@@ -32,44 +35,48 @@ public abstract class Objeto {
         this.descripcion = "No tiene ninguna descripcion";
     }
 
-    public int obtenerIdentificador()
+
+    public int getIdentificador()
     {
         return this.id;
     }
 
-    public String obtenerNombre()
+    public String getNombre()
     {
         return this.nombre;
     }
 
-    public int obtenerNivel()
+    public int getNivel()
     {
         return this.nivel;
     }
 
-    public int obtenerEspacios()
+    public int getEspacios()
     {
         return this.espacios;
     }
 
-    public String obtenerDescripcion()
+    public String getDescripcion()
     {
         return this.descripcion;
     }
 
+
+
     @Override
     public boolean equals(Object obj)
     {
-        boolean verificacion = false;
-        if(obj != null && obj instanceof Objeto)
-        {
-            Objeto aux = (Objeto) obj;
-            if(aux.obtenerIdentificador() == this.id)
-            {
-                verificacion = true;
-            }
+        if(this == obj){
+            return true;
         }
-        return verificacion;
+
+        if(obj == null || this.getClass() != obj.getClass()){
+            return false;
+        }
+
+        Objeto aux = (Objeto) obj;
+        return aux.getIdentificador() == this.id;
+
     }
 
     @Override

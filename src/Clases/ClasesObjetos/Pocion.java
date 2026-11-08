@@ -15,12 +15,12 @@ public class Pocion extends Objeto{
         this.tipoPocion = tipoPocion;
     }
 
-    public double obtenerEfecto()
+    public double getEfecto()
     {
         return this.efecto;
     }
 
-    public E_TipoPocion obtenerTipoPocion()
+    public E_TipoPocion getTipoPocion()
     {
         return this.tipoPocion;
     }

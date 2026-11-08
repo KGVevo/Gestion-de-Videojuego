@@ -1,20 +1,23 @@
 package Clases.ClasesObjetos;
 
 import Enums.E_Calidad;
+import Enums.E_ClaseAsociada;
 import Exceptions.RangoException;
 
 public class ArmaDistancia extends Arma{
 
     private int consumoMunicion;
 
-    public ArmaDistancia(String nombre, int nivel, int espacios, int dañoBase,
-                         E_Calidad calidad, int consumoMunicion) throws RangoException
+    //Constructor
+    public ArmaDistancia(String nombre, int nivel, int espacios, int dañoBase, E_ClaseAsociada claseAsociada, E_Calidad calidad, int consumoMunicion) throws RangoException
     {
-        super(nombre, nivel, espacios, dañoBase, calidad);
+        super(nombre, nivel, espacios, dañoBase, claseAsociada , calidad);
         this.consumoMunicion = consumoMunicion;
     }
 
-    private int obtenerConsumoMunicion()
+
+    //Metodos
+    private int getConsumoMunicion()
     {
         return this.consumoMunicion;
     }

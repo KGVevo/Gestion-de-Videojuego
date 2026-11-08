@@ -85,4 +85,9 @@ public abstract class Objeto {
         return Objects.hashCode(this.id);
     }
 
+
+    @Override
+    public String toString() {
+        return "|ID: " + this.id + "|Nombre: " + this.nombre+"|Nivel: " + this.nivel + "|Espacios: " + this.espacios + "|Descripcion: " + this.descripcion + "|.";
+    }
 }

@@ -5,10 +5,10 @@ public class JugadorCuerpoACuerpo extends Jugador {
     private int energia;
     private ArmaCuerpoACuerpo arma;
 
-    public JugadorCuerpoACuerpo(String nombreEntidad, int vida, int dañoBase, int nivel, String nombreJugador, int idUsuario, int expAcumuladaNivel) {
-        super(nombreEntidad, vida, dañoBase, nivel, nombreJugador, idUsuario, expAcumuladaNivel);
+    public JugadorCuerpoACuerpo(String nombreJugador, int vida, int danioBase, int nivel, int idUsuario) {
+        super(nombreJugador, vida, danioBase, nivel, idUsuario);
         this.energia = 100;
-        this.arma = arma;
+        this.arma = null;
     }
 
 

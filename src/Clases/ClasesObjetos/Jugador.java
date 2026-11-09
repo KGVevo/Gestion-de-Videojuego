@@ -4,37 +4,24 @@ import java.util.Objects;
 
 public abstract class Jugador extends Entidad {
 
-    private String nombreJugador;
     private int idUsuario;
     private int expAcumuladaNivel;
     private Inventario inventario;
     private int monedas;
 
 
-    public Jugador(String nombreEntidad, int vida, int dañoBase, int nivel, String nombreJugador, int idUsuario, int expAcumuladaNivel) {
-        super(nombreEntidad, vida, dañoBase, nivel);
-        this.nombreJugador = nombreJugador;
+    public Jugador(String nombreJugador, int vida, int danioBase, int nivel, int idUsuario) {
+        super(nombreJugador, vida, danioBase, nivel);
         this.idUsuario = idUsuario;
-        this.expAcumuladaNivel = expAcumuladaNivel;
+        this.expAcumuladaNivel = 0;
         this.inventario = new Inventario();
         this.monedas = 0;
     }
 
     //////////////// GETTERS Y SETTERS ////////////////////
-    public String getNombreJugador() {
-        return nombreJugador;
-    }
-
-    public void setNombreJugador(String nombreJugador) {
-        this.nombreJugador = nombreJugador;
-    }
 
     public int getIdUsuario() {
         return idUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public int getExpAcumuladaNivel() {

@@ -3,21 +3,21 @@ package Clases.ClasesObjetos;
 import java.util.Objects;
 
 public abstract class Entidad {
-    private String nombre;
+    private String nombreEntidad;
     private int vida;
     private int dañoBase;
     private int nivel;
 
     public Entidad(String nombre, int vida, int dañoBase, int nivel) {
-        this.nombre = nombre;
+        this.nombreEntidad = nombre;
         this.vida = vida;
         this.dañoBase = dañoBase;
         this.nivel = nivel;
     }
 
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreEntidad() {
+        return nombreEntidad;
     }
 
     public int getVida() {
@@ -43,12 +43,12 @@ public abstract class Entidad {
             return false;
         }
         Entidad aux = (Entidad) obj;
-        return this.nombre.equals(aux.getNombre());
+        return this.nombreEntidad.equals(aux.getNombreEntidad());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.nombre);
+        return Objects.hash(this.nombreEntidad);
     }
 
 

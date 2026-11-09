@@ -10,21 +10,21 @@ import Interfaces.IComprobarClase;
 
 public abstract class Arma extends Objeto implements IComprobarClase {
 
-    private final int dañoBase;
+    private final int danioBase;
     private final E_ClaseAsociada claseAsociada;
-    private E_Calidad calidad;
+    private final E_Calidad calidad;
 
-    public Arma(String nombre, int nivel, int espacios, int dañoBase, E_ClaseAsociada claseAsociada, E_Calidad calidad) throws RangoException
+    public Arma(String nombre, int nivel, int espacios, int danioBase, E_ClaseAsociada claseAsociada, E_Calidad calidad) throws RangoException
     {
         super(nombre, nivel, espacios);
-        this.dañoBase = dañoBase;
+        this.danioBase = danioBase;
         this.claseAsociada = claseAsociada;
         this.calidad = calidad;
     }
 
-    public int getDañoBase()
+    public int getDanioBase()
     {
-        return this.dañoBase;
+        return this.danioBase;
     }
 
     public E_ClaseAsociada getClaseAsociada()

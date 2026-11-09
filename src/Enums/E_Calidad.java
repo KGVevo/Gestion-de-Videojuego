@@ -2,18 +2,23 @@ package Enums;
 
 public enum E_Calidad {
 
-    COMUN(1.0), RARO(1.2), EPICO(1.5), LEGENDARIO(2), MITICO(3);
+    COMUN(1.0, "COMUN"), RARO(1.2, "RARO"), EPICO(1.5, "EPICO"), LEGENDARIO(2, "LEGENDARIO"), MITICO(3, "MITICO");
 
-    private double opcionCalidad;
+    private double multiplicadorDeDaño;
+    private String calidad;
 
-    E_Calidad(double opcionCalidad)
+    E_Calidad(double multiplicadorDeDaño,  String calidad)
     {
-        this.opcionCalidad = opcionCalidad;
+        this.multiplicadorDeDaño = multiplicadorDeDaño;
+        this.calidad = calidad;
     }
 
-    public double getCalidad()
-    {
-        return this.opcionCalidad;
+    public double getMultiplicadorDeDaño() {
+        return multiplicadorDeDaño;
+    }
+
+    public String getCalidad() {
+        return calidad;
     }
 
 }

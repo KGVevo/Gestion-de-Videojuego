@@ -12,7 +12,7 @@ public class Armadura extends Objeto implements IComprobarClase {
     private final E_ClaseAsociada claseAsociada;
     private double efecto;
 
-    public Armadura(String nombre, int nivel, int espacios, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws RangoException
+    public Armadura(String nombre, int nivel, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws RangoException
     {
 
         if(proteccion > 100.00 || proteccion < 0.00)
@@ -20,7 +20,7 @@ public class Armadura extends Objeto implements IComprobarClase {
             throw new RangoException("ERROR: La proteccion no puede ser Mayor a 100 o Menor a 0");
         }
 
-        super(nombre, nivel, espacios);
+        super(nombre, nivel);
         this.proteccion = proteccion;
         this.claseAsociada = claseAsociada;
         this.efecto = efecto;

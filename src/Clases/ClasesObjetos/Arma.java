@@ -14,9 +14,9 @@ public abstract class Arma extends Objeto implements IComprobarClase {
     private final E_ClaseAsociada claseAsociada;
     private final E_Calidad calidad;
 
-    public Arma(String nombre, int nivel, int espacios, int danioBase, E_ClaseAsociada claseAsociada, E_Calidad calidad) throws RangoException
+    public Arma(String nombre, int nivel, int danioBase, E_ClaseAsociada claseAsociada, E_Calidad calidad) throws RangoException
     {
-        super(nombre, nivel, espacios);
+        super(nombre, nivel);
         this.danioBase = danioBase;
         this.claseAsociada = claseAsociada;
         this.calidad = calidad;

@@ -10,12 +10,12 @@ public abstract class Objeto {
     private int id;
     private String nombre;
     private int nivel;
-    private int espacios;
+
     private String descripcion;
 
 
     //Constructor
-    public Objeto(String nombre, int nivel, int espacios) throws RangoException
+    public Objeto(String nombre, int nivel) throws RangoException
     {
 
         if(nivel < 0)
@@ -31,7 +31,6 @@ public abstract class Objeto {
         this.id = contador++;
         this.nombre = nombre;
         this.nivel = nivel;
-        this.espacios = espacios;
         this.descripcion = "No tiene ninguna descripcion";
     }
 
@@ -49,11 +48,6 @@ public abstract class Objeto {
     public int getNivel()
     {
         return this.nivel;
-    }
-
-    public int getEspacios()
-    {
-        return this.espacios;
     }
 
     public String getDescripcion()
@@ -88,6 +82,6 @@ public abstract class Objeto {
 
     @Override
     public String toString() {
-        return "|ID: " + this.id + "|Nombre: " + this.nombre+"|Nivel: " + this.nivel + "|Espacios: " + this.espacios + "|Descripcion: " + this.descripcion + "|.";
+        return "|ID: " + this.id + "|Nombre: " + this.nombre+"|Nivel: " + this.nivel +  "|Descripcion: " + this.descripcion + "|.";
     }
 }

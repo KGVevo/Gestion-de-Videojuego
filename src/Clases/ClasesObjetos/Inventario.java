@@ -64,15 +64,14 @@ public class Inventario {
 
 
     /// Funcion para agregar un item al Inventario
-    public boolean agregarObjetoInventario(int id)throws ObjetoInvalidoException, InventarioException {
-        Objeto aux = buscarItem(id);
+    public boolean agregarObjetoInventario(Objeto objeto)throws ObjetoInvalidoException, InventarioException {
 
-        if(aux == null){
+        if(objeto == null){
             throw new ObjetoInvalidoException("|El item no existe|");
         }else{
 
             if(objetos.size() < capacidadMaxima){
-                objetos.add(aux);
+                objetos.add(objeto);
             }else{
                 throw new InventarioException("|No hay más espacio en el inventario|");
             }

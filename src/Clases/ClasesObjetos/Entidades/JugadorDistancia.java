@@ -1,4 +1,6 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.Entidades;
+
+import Clases.ClasesObjetos.ObjetosClass.ArmaDistancia;
 
 public class JugadorDistancia extends Jugador {
 

@@ -1,4 +1,4 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.ObjetosClass;
 
 import Enums.E_ClaseAsociada;
 import Exceptions.ClaseAsociadaException;

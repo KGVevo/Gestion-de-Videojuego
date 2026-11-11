@@ -1,9 +1,8 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.ObjetosClass;
 
 import Exceptions.RangoException;
 import Interfaces.IObtenerID;
 
-import javax.imageio.stream.IIOByteBuffer;
 import java.util.Objects;
 
 public abstract class Objeto implements IObtenerID {
@@ -74,7 +73,7 @@ public abstract class Objeto implements IObtenerID {
         }
 
         Objeto aux = (Objeto) obj;
-        return aux.getIdentificador() == this.id;
+        return this.id.equals(aux.getIdentificador());
 
     }
 

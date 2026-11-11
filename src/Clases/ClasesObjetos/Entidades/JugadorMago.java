@@ -1,4 +1,6 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.Entidades;
+
+import Clases.ClasesObjetos.ObjetosClass.ArmaMago;
 
 public class JugadorMago extends Jugador {
 

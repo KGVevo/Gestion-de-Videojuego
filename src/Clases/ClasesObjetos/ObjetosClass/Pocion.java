@@ -1,9 +1,9 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.ObjetosClass;
 
 import Enums.E_TipoPocion;
 import Exceptions.RangoException;
 
-public class Pocion extends Objeto{
+public class Pocion extends Objeto {
 
     private double efecto;
     private E_TipoPocion tipoPocion;

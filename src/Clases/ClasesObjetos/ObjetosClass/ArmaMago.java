@@ -1,10 +1,10 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.ObjetosClass;
 
 import Enums.E_Calidad;
 import Enums.E_ClaseAsociada;
 import Exceptions.RangoException;
 
-public class ArmaMago extends Arma{
+public class ArmaMago extends Arma {
 
     private int consumoMana;
 

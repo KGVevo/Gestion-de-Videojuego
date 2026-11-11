@@ -1,4 +1,4 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.Entidades;
 
 import Interfaces.IInterfazDeCombate;
 

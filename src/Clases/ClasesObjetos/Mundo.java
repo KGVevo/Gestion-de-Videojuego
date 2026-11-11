@@ -1,5 +1,7 @@
 package Clases.ClasesObjetos;
 
+import Clases.ClasesObjetos.Entidades.Enemigo;
+import Clases.ClasesObjetos.Entidades.Jugador;
 import Enums.E_Dificultad;
 import Enums.E_Fases;
 import Exceptions.RangoException;

@@ -1,6 +1,6 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.Entidades;
 
-import Interfaces.IInterfazDeCombate;
+import Clases.ClasesObjetos.Inventario;
 
 import java.util.Objects;
 

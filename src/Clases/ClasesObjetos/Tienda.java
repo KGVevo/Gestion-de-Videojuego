@@ -1,5 +1,6 @@
 package Clases.ClasesObjetos;
 
+import Clases.ClasesObjetos.ObjetosClass.Objeto;
 import Exceptions.ObjetoInvalidoException;
 import java.util.ArrayList;
 

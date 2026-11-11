@@ -2,11 +2,7 @@ package Clases.ClasesObjetos;
 import java.util.Random;
 
 public class SistemaDeProbabilidad {
-    private static Random random;
-
-    public SistemaDeProbabilidad() {
-        this.random = new Random();
-    }
+    private static final Random random = new Random();
 
 
     /// Una funcion sencilla para usar de Probabilidad de x cosa.

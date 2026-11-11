@@ -1,8 +1,10 @@
 package Clases.ClasesObjetos;
 
+import Interfaces.IInterfazDeCombate;
+
 import java.util.Objects;
 
-public abstract class Entidad {
+public abstract class Entidad implements IInterfazDeCombate {
     private String nombreEntidad;
     private int vida;
     private int dañoBase;

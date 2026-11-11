@@ -7,7 +7,7 @@ import java.util.Objects;
 
 
 public class Usuario implements ISuscripcion, IObtenerID {
-    private int id = 0;
+    private int id;
     private String userNombre;
     private String gmail;
     private Tarjeta tarjeta;
@@ -16,7 +16,8 @@ public class Usuario implements ISuscripcion, IObtenerID {
 
 
     /// Constructor 1: En caso de que el Usuario no quiera meter su Tarjeta
-    public Usuario(String userNombre, String gmail) {
+    public Usuario( int id,String userNombre, String gmail) {
+        this.id = id;
         this.userNombre = userNombre;
         this.gmail = gmail;
         this.tarjeta = null;
@@ -25,7 +26,8 @@ public class Usuario implements ISuscripcion, IObtenerID {
 
 
     /// Constructor 2: En caso de que el Usuario quiera meter la tarjeta de una
-    public Usuario(String userNombre, String gmail, Tarjeta tarjeta) {
+    public Usuario( int id, String userNombre, String gmail, Tarjeta tarjeta) {
+        this.id = id;
         this.userNombre = userNombre;
         this.gmail = gmail;
         this.tarjeta = tarjeta;
@@ -65,7 +67,7 @@ public class Usuario implements ISuscripcion, IObtenerID {
 
 
     /// Funcion para Registrar la Tarjeta en caso de que no lo haya hecho antes
-    public boolean registrarTarjeta(String titular, long numeroDeTarjeta)throws TarjetaInvalidaException {
+    public boolean registrarTarjeta(String titular, int numeroDeTarjeta)throws TarjetaInvalidaException {
         if(this.tarjeta != null) {
             throw new TarjetaInvalidaException("|Ya tienes una tarjeta registrada|");
         }

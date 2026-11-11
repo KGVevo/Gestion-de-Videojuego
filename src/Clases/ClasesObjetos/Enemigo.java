@@ -1,10 +1,8 @@
 package Clases.ClasesObjetos;
 
 import Enums.E_TipoDeEnemigo;
-import Interfaces.IInterfazDeCombate;
-import Interfaces.IObtenerID;
 
-public class Enemigo extends Entidad implements IInterfazDeCombate {
+public class Enemigo extends Entidad {
 
     private E_TipoDeEnemigo ETipoDeEnemigo;
 

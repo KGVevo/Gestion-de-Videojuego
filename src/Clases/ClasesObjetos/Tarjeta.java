@@ -1,15 +1,16 @@
 package Clases.ClasesObjetos;
 
 import Exceptions.TarjetaInvalidaException;
+import Interfaces.IObtenerID;
 
 import java.util.Objects;
 
-public class Tarjeta {
+public class Tarjeta implements IObtenerID {
     private String titular;
-    private long numeroDeTarjeta;
+    private int numeroDeTarjeta;
     private double saldoDisponible;
 
-    public Tarjeta(String titular, long numeroDeTarjeta) {
+    public Tarjeta(String titular, int numeroDeTarjeta) {
         this.titular = titular;
         this.numeroDeTarjeta = numeroDeTarjeta;
         this.saldoDisponible = 0;
@@ -45,6 +46,11 @@ public class Tarjeta {
 
 
     @Override
+    public int getID() {
+        return this.numeroDeTarjeta;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if(this == obj){
             return true;
@@ -54,13 +60,13 @@ public class Tarjeta {
         }
         Tarjeta aux = (Tarjeta) obj;
 
-        return this.titular.equals(aux.titular) || this.numeroDeTarjeta == aux.numeroDeTarjeta;
+        return this.numeroDeTarjeta == aux.numeroDeTarjeta;
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.titular, this.numeroDeTarjeta);
+        return Objects.hash(this.numeroDeTarjeta);
     }
 
 }

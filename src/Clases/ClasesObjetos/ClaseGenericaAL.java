@@ -1,13 +1,15 @@
 package Clases.ClasesObjetos;
+
 import Interfaces.IObtenerID;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
-public class ClaseGenerica <T extends IObtenerID> {
-    private HashSet<T> lista;
 
-    public ClaseGenerica() {
-        this.lista = new HashSet<>();
+public class ClaseGenericaAL<T extends IObtenerID> {
+    private ArrayList<T> lista;
+
+    public ClaseGenericaAL() {
+        this.lista = new ArrayList<>();
     }
 
 
@@ -59,6 +61,4 @@ public class ClaseGenerica <T extends IObtenerID> {
 
         return null;
     }
-
-
 }

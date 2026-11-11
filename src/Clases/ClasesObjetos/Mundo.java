@@ -1,5 +1,6 @@
 package Clases.ClasesObjetos;
 
+import Enums.E_Dificultad;
 import Enums.E_Fases;
 import Exceptions.RangoException;
 
@@ -10,55 +11,70 @@ public class Mundo {
     private String nombreMundo;
     private E_Fases fase;
     private Jugador jugadorActual;
+    private E_Dificultad dificultad;
     private ArrayList<Enemigo> enemigos;
     private Tienda tienda;
 
-    public Mundo(String nombreMundo, E_Fases fase, Jugador jugadorActual,
-                 ArrayList<Enemigo> enemigos, int cantidadEnemigos,
-                 Tienda tienda) throws RangoException
+    public Mundo(String nombreMundo, Jugador jugadorActual, Tienda tienda)
     {
-
-        if(fase == E_Fases.FACE_I && jugadorActual.getNivel() > 7)
-        {
-            throw new RangoException("Solo se permite hasta nivel 10 en la fase I");
-        }
-        else if(fase == E_Fases.FACE_II && jugadorActual.getNivel() > 15)
-        {
-            throw new RangoException("Solo se permite hasta nivel 10 en la fase II");
-        }
-        else if(fase == E_Fases.FACE_III && jugadorActual.getNivel() > 20)
-        {
-            throw new RangoException("Solo se permite hasta nivel 10 en la fase III");
-        }
-        else if(fase == E_Fases.FACE_FINAL && jugadorActual.getNivel() > 30)
-        {
-            throw new RangoException("Solo se permite hasta nivel 10 en la fase final");
-        }
-
         this.nombreMundo = nombreMundo;
-        this.fase = fase;
+        this.fase = E_Fases.FACE_I;
         this.jugadorActual = jugadorActual;
-
-        generarEnemigos(enemigos, cantidadEnemigos, fase.obtenerNumeroNivel());
-
         this.tienda = tienda;
     }
 
-    private void generarEnemigos(ArrayList<Enemigo> enemigosAuxiliares, int cantidadEnemigos, int fase)
+    public void generarMundo(ArrayList<Enemigo> enemigosAuxiliares, int limiteNivel)
     {
-        for (int i = 0; i < cantidadEnemigos; i++) {
+        int cantidadEnemigos = (int) (10 * this.dificultad.obtenerDificultad());
 
-                if(enemigosAuxiliares.get(i).getNivel() <= this.fase.obtenerNumeroNivel() &&
-                        this.fase.obtenerNumeroFace() == fase)
-                {
-                    this.enemigos.add(enemigosAuxiliares.get(i));
-                }
+        if(this.fase == E_Fases.FACE_II)
+        {
+            cantidadEnemigos = (int) (cantidadEnemigos * this.fase.obtenerNumeroEnemigos());
+        }
+        else if(this.fase == E_Fases.FACE_III)
+        {
+            cantidadEnemigos = (int) (cantidadEnemigos * this.fase.obtenerNumeroEnemigos());
+        }
+        else if(this.fase == E_Fases.FACE_FINAL)
+        {
+            cantidadEnemigos = (int) (cantidadEnemigos * this.fase.obtenerNumeroEnemigos());
+        }
+
+        for (int i = 0; i < cantidadEnemigos; i++)
+        {
+            int numeroRandom = SistemaDeProbabilidad.generadorInt(enemigosAuxiliares.size());
+            Enemigo enemigoAux = enemigosAuxiliares.get(numeroRandom);
+            if(enemigoAux.getNivel() <= limiteNivel)
+            {
+                this.enemigos.add(enemigoAux);
+            }
         }
     }
 
-    public String obtenerFaceYNivel()
-    {
-        return "La fase de tu mundo es "+this.fase.obtenerNumeroFace()+". Solo se permite nivel "+this.fase.obtenerNumeroNivel()+".";
+    public String cambiarFace() {
+
+        String verificacion = "La Fase Maxima solo es hasta la Fase Final";
+
+        if(this.fase == E_Fases.FACE_I)
+        {
+            this.fase = E_Fases.FACE_II;
+            verificacion = "Se cambio a Fase II";
+        }
+        else if(this.fase == E_Fases.FACE_II)
+        {
+            this.fase = E_Fases.FACE_III;
+            verificacion = "Se cambio a Fase III";
+        }
+        else if(this.fase == E_Fases.FACE_III)
+        {
+            this.fase = E_Fases.FACE_FINAL;
+            verificacion = "Se cambio a Fase Final";
+        }
+
+        return verificacion;
     }
 
+    public Tienda obtenerTienda() {
+        return this.tienda;
+    }
 }

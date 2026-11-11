@@ -2,15 +2,15 @@ package Enums;
 
 public enum E_Fases {
 
-    FACE_I(1, 7), FACE_II(2, 15), FACE_III(3, 20), FACE_FINAL(4, 30);
+    FACE_I(1, 1), FACE_II(2, 1.5), FACE_III(3, 2.2), FACE_FINAL(4, 2.7);
 
     private int numFace;
-    private int numNivel;
+    private double numEnemigos;
 
-    E_Fases(int numFace, int numNivel)
+    E_Fases(int numFace, double numEnemigos)
     {
         this.numFace = numFace;
-        this.numNivel = numNivel;
+        this.numEnemigos = numEnemigos;
     }
 
     public int obtenerNumeroFace()
@@ -18,9 +18,9 @@ public enum E_Fases {
         return this.numFace;
     }
 
-    public int obtenerNumeroNivel()
+    public double obtenerNumeroEnemigos()
     {
-        return this.numFace;
+        return this.numEnemigos;
     }
 
 }

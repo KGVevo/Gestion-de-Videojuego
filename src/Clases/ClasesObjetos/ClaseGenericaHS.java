@@ -39,9 +39,9 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         return false;
     }
 
-    /// Obtener elemento por Indice
+    /// Obtener elemento por Id
     public T obtenerElemento(Integer id){
-        if(id < 1){
+        if(id < 1 || id > this.elementos.size()){
             return null;
         }
 
@@ -52,6 +52,16 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         }
 
         return null;
+    }
+
+
+    public boolean existeElemento(Integer id){
+        for(T elemento : this.elementos){
+            if(elemento.getID().equals(id)){
+                return true;
+            }
+        }
+        return false;
     }
 
 

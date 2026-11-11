@@ -47,7 +47,7 @@ public class Inventario {
             listado.append(o.toString());
         }
 
-        return listado.toString();
+        return listado.toString() + "\n|-> Espacio disponible: " + (capacidadMaxima - objetos.size()) + " <-|";
     }
 
 
@@ -56,7 +56,7 @@ public class Inventario {
         Objeto obj = buscarItem(id);
 
         if(obj == null){
-            throw new ObjetoInvalidoException("|El item no existe|");
+            throw new ObjetoInvalidoException("|-> El item no existe <-|");
         }
 
         return obj.toString();
@@ -67,13 +67,17 @@ public class Inventario {
     public boolean agregarObjetoInventario(Objeto objeto)throws ObjetoInvalidoException, InventarioException {
 
         if(objeto == null){
-            throw new ObjetoInvalidoException("|El item no existe|");
+            throw new ObjetoInvalidoException("|-> El item no existe <-|");
         }else{
 
             if(objetos.size() < capacidadMaxima){
-                objetos.add(objeto);
+                if(objetos.contains(objeto)){
+                    throw new ObjetoInvalidoException("|-> El item ya existe en el inventario <-|");
+                }else {
+                    objetos.add(objeto);
+                }
             }else{
-                throw new InventarioException("|No hay más espacio en el inventario|");
+                throw new InventarioException("|-> No hay más espacio en el inventario <-|");
             }
 
         }
@@ -86,7 +90,7 @@ public class Inventario {
         Objeto aux = buscarItem(id);
 
         if(aux == null){
-            throw new ObjetoInvalidoException("|El item no existe|");
+            throw new ObjetoInvalidoException("|-> El item no existe <-|");
         }{
             return objetos.remove(aux);
         }

@@ -10,15 +10,15 @@ public abstract class Jugador extends Entidad {
     private int monedas;
 
 
-    public Jugador(String nombreJugador, int vida, int danioBase, int nivel, int idUsuario) {
-        super(nombreJugador, vida, danioBase, nivel); //Se supone que nivel inicialize en 0.
+    public Jugador(String nombreJugador, int vida, int danioBase, int idUsuario) {
+        super(nombreJugador, vida, danioBase, 1); //Por defecto el nivel esta en 1
         this.idUsuario = idUsuario; //Deberiamos usar la Base de Datos para saber si existe el jugador, caso contrario lanzar un "UserException"
         this.expAcumuladaNivel = 0;
         this.inventario = new Inventario();
         this.monedas = 0;
     }
 
-    //////////////// GETTERS Y SETTERS ////////////////////
+    //////////////// GETTERS ////////////////////
 
     public int getIdUsuario() {
         return idUsuario;
@@ -40,11 +40,7 @@ public abstract class Jugador extends Entidad {
         return monedas;
     }
 
-    public void setMonedas(int monedas) {
-        this.monedas = monedas;
-    }
-
-    //////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////
 
 
 

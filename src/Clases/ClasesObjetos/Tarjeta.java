@@ -25,19 +25,21 @@ public class Tarjeta {
 
 
     /// Carga de saldo limitada a 150.000
-    public boolean cargarSaldo(double saldo) {
+    public boolean cargarSaldo(double saldo) throws TarjetaInvalidaException {
         if(saldo < 0 || saldo > 150000){
-            this.saldoDisponible =+ saldo;
+            throw new TarjetaInvalidaException("|Numeros de carga Invalidos|");
         }
+        this.saldoDisponible += saldo;
         return true;
     }
 
     /// Funcion para restar Saldo a la Tarjeta
     public boolean restarSaldo(double saldo) throws TarjetaInvalidaException {
-        if(saldo < 0 && this.saldoDisponible < saldo){
+        if(saldo < 0 || this.saldoDisponible < saldo){
             throw new TarjetaInvalidaException("|Saldo insuficiente|");
         }
 
+        this.saldoDisponible -= saldo;
         return true;
     }
 

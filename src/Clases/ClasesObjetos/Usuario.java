@@ -29,6 +29,10 @@ public class Usuario implements ISuscripcion {
     }
 
 
+    public Tarjeta getTarjeta() {
+        return tarjeta;
+    }
+
     public String getUserNombre() {
         return userNombre;
     }
@@ -46,13 +50,14 @@ public class Usuario implements ISuscripcion {
 
         if(this.tarjeta != null) {
             this.tarjeta.restarSaldo(precioPremium);
+            this.premium = true;
         }else{
             throw new TarjetaInvalidaException("|No tiene tarjeta registrada|");
         }
 
         return true;
     }
-    
+
     /// Funcion para Registrar la Tarjeta en caso de que no lo haya hecho antes
     public boolean registrarTarjeta(String titular, long numeroDeTarjeta)throws TarjetaInvalidaException {
         if(this.tarjeta != null) {

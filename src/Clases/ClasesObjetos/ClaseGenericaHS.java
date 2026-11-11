@@ -14,26 +14,21 @@ public class ClaseGenericaHS<T extends IObtenerID> {
 
     /// Agregar elemento
     public boolean agregarElemento(T elemento) {
-        if(this.elementos.contains(elemento)){
-            return false;
-        }
-        this.elementos.add(elemento);
-        return true;
+        return this.elementos.add(elemento);
     }
 
     /// Eliminar por Elemento
     public boolean eliminarElemento(T elemento) {
 
         if(this.elementos.contains(elemento)){
-            this.elementos.remove(elemento);
-            return true;
+            return this.elementos.remove(elemento);
         }
 
         return false;
     }
 
     /// Eliminar Elemento por Id
-    public boolean eliminarElemento(int id){
+    public boolean eliminarElemento(Integer id){
 
         for(T elemento : this.elementos){
             if(elemento.getID() == id){
@@ -44,9 +39,8 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         return false;
     }
 
-
     /// Obtener elemento por Indice
-    public T obtenerElemento(int id){
+    public T obtenerElemento(Integer id){
         if(id < 1){
             return null;
         }

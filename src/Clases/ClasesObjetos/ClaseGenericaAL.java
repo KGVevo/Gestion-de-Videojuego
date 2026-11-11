@@ -35,7 +35,7 @@ public class ClaseGenericaAL<T extends IObtenerID> {
     }
 
     /// Eliminar Elemento por Id
-    public boolean eliminarElemento(int id){
+    public boolean eliminarElemento(Integer id){
 
         for(T elemento : this.lista){
             if(elemento.getID() == id){
@@ -48,7 +48,7 @@ public class ClaseGenericaAL<T extends IObtenerID> {
 
 
     /// Obtener elemento por Indice
-    public T obtenerElemento(int id){
+    public T obtenerElemento(Integer id){
         if(id < 1){
             return null;
         }

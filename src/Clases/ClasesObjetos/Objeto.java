@@ -9,7 +9,7 @@ import java.util.Objects;
 public abstract class Objeto implements IObtenerID {
 
     private static int contador = 1;
-    private int id;
+    private Integer id;
     private String nombre;
     private int nivel;
 
@@ -58,7 +58,7 @@ public abstract class Objeto implements IObtenerID {
 
 
     @Override
-    public int getID() {
+    public Integer getID() {
         return this.id;
     }
 

@@ -1,5 +1,5 @@
 package Interfaces;
 
-public interface IObtenerID{
-    int getID();
+public interface IObtenerID<T>{
+    T getID();
 }

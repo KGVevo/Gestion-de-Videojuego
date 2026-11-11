@@ -7,10 +7,10 @@ import java.util.Objects;
 
 public class Tarjeta implements IObtenerID {
     private String titular;
-    private int numeroDeTarjeta;
+    private Integer numeroDeTarjeta;
     private double saldoDisponible;
 
-    public Tarjeta(String titular, int numeroDeTarjeta) {
+    public Tarjeta(String titular, Integer numeroDeTarjeta) {
         this.titular = titular;
         this.numeroDeTarjeta = numeroDeTarjeta;
         this.saldoDisponible = 0;
@@ -46,7 +46,7 @@ public class Tarjeta implements IObtenerID {
 
 
     @Override
-    public int getID() {
+    public Integer getID() {
         return this.numeroDeTarjeta;
     }
 

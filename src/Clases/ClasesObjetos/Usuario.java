@@ -7,7 +7,7 @@ import java.util.Objects;
 
 
 public class Usuario implements ISuscripcion, IObtenerID {
-    private int id;
+    private Integer id;
     private String userNombre;
     private String gmail;
     private Tarjeta tarjeta;
@@ -16,7 +16,7 @@ public class Usuario implements ISuscripcion, IObtenerID {
 
 
     /// Constructor 1: En caso de que el Usuario no quiera meter su Tarjeta
-    public Usuario( int id,String userNombre, String gmail) {
+    public Usuario(Integer id,String userNombre, String gmail) {
         this.id = id;
         this.userNombre = userNombre;
         this.gmail = gmail;
@@ -26,7 +26,7 @@ public class Usuario implements ISuscripcion, IObtenerID {
 
 
     /// Constructor 2: En caso de que el Usuario quiera meter la tarjeta de una
-    public Usuario( int id, String userNombre, String gmail, Tarjeta tarjeta) {
+    public Usuario(Integer id, String userNombre, String gmail, Tarjeta tarjeta) {
         this.id = id;
         this.userNombre = userNombre;
         this.gmail = gmail;
@@ -59,7 +59,7 @@ public class Usuario implements ISuscripcion, IObtenerID {
             this.tarjeta.restarSaldo(precioPremium);
             this.premium = true;
         }else{
-            throw new TarjetaInvalidaException("|No tiene tarjeta registrada|");
+            throw new TarjetaInvalidaException("| !!!No tiene tarjeta registrada!!! |");
         }
 
         return true;
@@ -69,7 +69,7 @@ public class Usuario implements ISuscripcion, IObtenerID {
     /// Funcion para Registrar la Tarjeta en caso de que no lo haya hecho antes
     public boolean registrarTarjeta(String titular, int numeroDeTarjeta)throws TarjetaInvalidaException {
         if(this.tarjeta != null) {
-            throw new TarjetaInvalidaException("|Ya tienes una tarjeta registrada|");
+            throw new TarjetaInvalidaException("|-> Ya tienes una tarjeta registrada <-|");
         }
 
         Tarjeta aux = new Tarjeta(titular, numeroDeTarjeta);
@@ -83,8 +83,8 @@ public class Usuario implements ISuscripcion, IObtenerID {
 
 
     @Override
-    public int getID() {
-        return this.id;
+    public String getID() {
+        return this.gmail;
     }
 
     @Override
@@ -98,13 +98,13 @@ public class Usuario implements ISuscripcion, IObtenerID {
         }
 
         Usuario aux = (Usuario) obj;
-        return this.id == aux.id;
+        return this.gmail.equals(aux.getGmail());
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id);
+        return Objects.hash(this.gmail);
     }
 
 

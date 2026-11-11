@@ -1,8 +1,10 @@
 package Clases.ClasesObjetos;
 
+import Interfaces.IInterfazDeCombate;
+
 import java.util.Objects;
 
-public abstract class Jugador extends Entidad {
+public abstract class Jugador extends Entidad implements IInterfazDeCombate {
 
     private int idUsuario;
     private int expAcumuladaNivel;
@@ -28,10 +30,6 @@ public abstract class Jugador extends Entidad {
         return expAcumuladaNivel;
     }
 
-    public void setExpAcumuladaNivel(int expAcumuladaNivel) {
-        this.expAcumuladaNivel = expAcumuladaNivel;
-    }
-
     public Inventario getInventario() {
         return inventario;
     }
@@ -41,6 +39,7 @@ public abstract class Jugador extends Entidad {
     }
 
     /////////////////////////////////////////////
+
 
 
 

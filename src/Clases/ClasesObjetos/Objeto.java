@@ -1,10 +1,12 @@
 package Clases.ClasesObjetos;
 
 import Exceptions.RangoException;
+import Interfaces.IObtenerID;
 
+import javax.imageio.stream.IIOByteBuffer;
 import java.util.Objects;
 
-public abstract class Objeto {
+public abstract class Objeto implements IObtenerID {
 
     private static int contador = 1;
     private int id;
@@ -17,10 +19,9 @@ public abstract class Objeto {
     //Constructor
     public Objeto(String nombre, int nivel) throws RangoException
     {
-
-        if(nivel < 0)
+        if(nivel < 1)
         {
-            throw new RangoException("ERROR: El nivel debe ser mayor o igual a 0");
+            throw new RangoException("ERROR: El nivel debe ser mayor o igual a 1");
         }
 
         if(nivel > 20)
@@ -56,6 +57,10 @@ public abstract class Objeto {
     }
 
 
+    @Override
+    public int getID() {
+        return this.id;
+    }
 
     @Override
     public boolean equals(Object obj)

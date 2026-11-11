@@ -11,4 +11,27 @@ public class JugadorMago extends Jugador {
         this.arma = null;
     }
 
+    public int getMana() {
+        return mana;
+    }
+    public ArmaMago getArma() {
+        return arma;
+    }
+
+
+    @Override
+    public String atacar() {
+        return "";
+    }
+
+    @Override
+    public String defenderse() {
+        return "";
+    }
+
+    @Override
+    public String huir() {
+        return "";
+    }
+
 }

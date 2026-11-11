@@ -1,12 +1,13 @@
 package Clases.ClasesObjetos;
+import Interfaces.IObtenerID;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
-public class ClaseGenerica <T> {
-    private ArrayList<T> lista;
+public class ClaseGenerica <T extends IObtenerID> {
+    private HashSet<T> lista;
 
     public ClaseGenerica() {
-        this.lista = new ArrayList<>();
+        this.lista = new HashSet<>();
     }
 
 
@@ -20,9 +21,9 @@ public class ClaseGenerica <T> {
         return true;
     }
 
-
     /// Eliminar por Elemento
     public boolean eliminarElemento(T elemento) {
+
         if(this.lista.contains(elemento)){
             this.lista.remove(elemento);
             return true;
@@ -31,23 +32,32 @@ public class ClaseGenerica <T> {
         return false;
     }
 
-    /// Eliminar Elemento por Indice
-    public boolean eliminarElemento(int indice){
-        if(this.lista.contains(indice)){
-            this.lista.remove(indice);
-            return true;
+    /// Eliminar Elemento por Id
+    public boolean eliminarElemento(int id){
+
+        for(T elemento : this.lista){
+            if(elemento.getID() == id){
+                return this.lista.remove(elemento);
+            }
         }
 
         return false;
     }
 
+
     /// Obtener elemento por Indice
-    public T obtenerElemento(int indice){
-        if(indice < 0 || indice >= this.lista.size()){
+    public T obtenerElemento(int id){
+        if(id < 1){
             return null;
         }
 
-        return this.lista.get(indice);
+        for(T elemento : lista){
+            if (elemento.getID() == id){
+                return elemento;
+            }
+        }
+
+        return null;
     }
 
 

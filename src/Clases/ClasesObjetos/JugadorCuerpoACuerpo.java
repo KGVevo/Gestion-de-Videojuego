@@ -11,5 +11,30 @@ public class JugadorCuerpoACuerpo extends Jugador {
         this.arma = null;
     }
 
+    public ArmaCuerpoACuerpo getArma() {
+        return arma;
+    }
+    public int getEnergia() {
+        return energia;
+    }
+
+
+
+    @Override
+    public String atacar() {
+        return "";
+    }
+
+    @Override
+    public String defenderse() {
+        return "";
+    }
+
+    @Override
+    public String huir() {
+        return "";
+    }
+
+
 
 }

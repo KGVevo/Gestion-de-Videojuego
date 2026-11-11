@@ -1,13 +1,38 @@
 package Clases.ClasesObjetos;
 
-public class Enemigo extends Entidad {
+import Enums.E_TipoDeEnemigo;
+import Interfaces.IInterfazDeCombate;
+import Interfaces.IObtenerID;
 
-    /// PENSE AGREGAR UN ENUM CON RAZAS O FACCIONES O ALGUN TIPO DE DEBILIDAD PARA QUE NO QUEDEN VACIOS LOS ATRIBUTOS DE LOS ENEMIGOS
+public class Enemigo extends Entidad implements IInterfazDeCombate {
+
+    private E_TipoDeEnemigo ETipoDeEnemigo;
 
 
-    public Enemigo(String nombreEnemigo, int vida, int dañoBase, int nivel) {
-        super(nombreEnemigo, vida, dañoBase, nivel);
+    public Enemigo(String nombreEnemigo, int vida, int danioBase, int nivel, E_TipoDeEnemigo ETipoDeEnemigo) {
+        super(nombreEnemigo, vida, danioBase, nivel);
+        this.ETipoDeEnemigo = ETipoDeEnemigo;
     }
 
-    
+    public E_TipoDeEnemigo getTipoDeEnemigo() {
+        return ETipoDeEnemigo;
+    }
+
+
+    @Override
+    public String atacar() {
+        return "";
+    }
+
+    @Override
+    public String defenderse() {
+        return "";
+    }
+
+    @Override
+    public String huir() {
+        return "";
+    }
+
+
 }

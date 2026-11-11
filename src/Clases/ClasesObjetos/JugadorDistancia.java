@@ -10,4 +10,30 @@ public class JugadorDistancia extends Jugador {
         this.municion = 50;
         this.arma = null;
     }
+
+    public int getMunicion() {
+        return municion;
+    }
+    public ArmaDistancia getArma() {
+        return arma;
+    }
+
+
+
+    @Override
+    public String atacar() {
+        return "";
+    }
+
+    @Override
+    public String defenderse() {
+        return "";
+    }
+
+    @Override
+    public String huir() {
+        return "";
+    }
+
+
 }

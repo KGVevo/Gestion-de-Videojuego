@@ -4,7 +4,7 @@ import Interfaces.IInterfazDeCombate;
 
 import java.util.Objects;
 
-public abstract class Jugador extends Entidad implements IInterfazDeCombate {
+public abstract class Jugador extends Entidad {
 
     private int idUsuario;
     private int expAcumuladaNivel;

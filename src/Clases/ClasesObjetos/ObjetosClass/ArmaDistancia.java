@@ -22,4 +22,9 @@ public class ArmaDistancia extends Arma {
         return this.consumoMunicion;
     }
 
+    public String toString()
+    {
+        return "Arma Distancia ["+super.toString()+" | Consumo Municion: "+this.consumoMunicion+"]";
+    }
+
 }

@@ -60,5 +60,10 @@ public abstract class Arma extends Objeto implements IComprobarClase {
         return mensaje;
     }
 
+    public String toString()
+    {
+        return "Daño Base: "+this.danioBase+" | Clase: "+this.claseAsociada.getClaseAsociada()+" | Calidad: "+
+                this.calidad.getCalidad()+"";
+    }
 
 }

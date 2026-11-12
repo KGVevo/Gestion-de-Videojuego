@@ -11,7 +11,7 @@ public class ArmaDistancia extends Arma {
     //Constructor
     public ArmaDistancia(String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumoMunicion) throws RangoException
     {
-        super(nombre, nivel, dañoBase, E_ClaseAsociada.DISTANCIA, calidad);
+        super(nombre, nivel, calidad, dañoBase, E_ClaseAsociada.DISTANCIA);
         this.consumoMunicion = consumoMunicion;
     }
 

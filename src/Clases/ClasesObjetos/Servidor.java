@@ -99,15 +99,15 @@ public class Servidor {
     }
 
     /// Agregar Armadura
-    public boolean crearArmadura(String cuitAdmin, String nombre, int nivel, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws NoAdminException, RangoException {
+    public boolean crearArmadura(String cuitAdmin, String nombre, int nivel, E_Calidad calidad, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws NoAdminException, RangoException {
         verificacionUsuario(cuitAdmin);
-        return objetos.agregarElemento(new Armadura(nombre, nivel, proteccion, claseAsociada));
+        return objetos.agregarElemento(new Armadura(nombre, nivel, calidad ,proteccion, claseAsociada));
     }
 
     /// Agregar Pocion
-    public boolean crearPocion(String cuitAdmin, String nombre, int nivel, double efecto, E_TipoPocion tipoPocion) throws NoAdminException, RangoException {
+    public boolean crearPocion(String cuitAdmin, String nombre, int nivel, double efecto, E_TipoPocion tipoPocion, E_Calidad calidad) throws NoAdminException, RangoException {
         verificacionUsuario(cuitAdmin);
-        return objetos.agregarElemento(new Pocion(nombre, nivel, efecto, tipoPocion));
+        return objetos.agregarElemento(new Pocion(nombre, nivel, efecto, tipoPocion, calidad));
     }
 
     /// Eliminar Objeto

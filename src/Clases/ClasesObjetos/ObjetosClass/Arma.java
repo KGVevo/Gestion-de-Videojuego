@@ -12,14 +12,12 @@ public abstract class Arma extends Objeto implements IComprobarClase {
 
     private final int danioBase;
     private final E_ClaseAsociada claseAsociada;
-    private final E_Calidad calidad;
 
-    public Arma(String nombre, int nivel, int danioBase, E_ClaseAsociada claseAsociada, E_Calidad calidad) throws RangoException
+    public Arma(String nombre, int nivel, E_Calidad calidad , int danioBase, E_ClaseAsociada claseAsociada) throws RangoException
     {
-        super(nombre, nivel);
+        super(nombre, nivel, calidad);
         this.danioBase = danioBase;
         this.claseAsociada = claseAsociada;
-        this.calidad = calidad;
     }
 
     public int getDanioBase()
@@ -30,11 +28,6 @@ public abstract class Arma extends Objeto implements IComprobarClase {
     public E_ClaseAsociada getClaseAsociada()
     {
         return this.claseAsociada;
-    }
-
-    public E_Calidad getCalidad()
-    {
-        return this.calidad;
     }
 
 
@@ -62,8 +55,7 @@ public abstract class Arma extends Objeto implements IComprobarClase {
 
     public String toString()
     {
-        return "Daño Base: "+this.danioBase+" | Clase: "+this.claseAsociada.getClaseAsociada()+" | Calidad: "+
-                this.calidad.getCalidad()+"";
+        return "Daño Base: "+this.danioBase+" | Clase: "+this.claseAsociada.getClaseAsociada()+"|";
     }
 
 }

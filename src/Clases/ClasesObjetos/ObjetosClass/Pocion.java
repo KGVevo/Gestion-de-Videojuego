@@ -1,5 +1,6 @@
 package Clases.ClasesObjetos.ObjetosClass;
 
+import Enums.E_Calidad;
 import Enums.E_TipoPocion;
 import Exceptions.RangoException;
 
@@ -8,9 +9,9 @@ public class Pocion extends Objeto {
     private double efecto;
     private E_TipoPocion tipoPocion;
 
-    public Pocion(String nombre, int nivel, double efecto, E_TipoPocion tipoPocion) throws RangoException
+    public Pocion(String nombre, int nivel, double efecto, E_TipoPocion tipoPocion, E_Calidad calidad) throws RangoException
     {
-        super(nombre, nivel);
+        super(nombre, nivel, calidad);
         this.efecto = efecto;
         this.tipoPocion = tipoPocion;
     }

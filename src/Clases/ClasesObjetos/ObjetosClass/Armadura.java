@@ -1,5 +1,6 @@
 package Clases.ClasesObjetos.ObjetosClass;
 
+import Enums.E_Calidad;
 import Enums.E_ClaseAsociada;
 import Exceptions.ClaseAsociadaException;
 import Exceptions.RangoException;
@@ -11,9 +12,9 @@ public class Armadura extends Objeto implements IComprobarClase {
     private double proteccion;
     private final E_ClaseAsociada claseAsociada;
 
-    public Armadura(String nombre, int nivel, double proteccion, E_ClaseAsociada claseAsociada) throws RangoException
+    public Armadura(String nombre, int nivel, E_Calidad calidad, double proteccion, E_ClaseAsociada claseAsociada) throws RangoException
     {
-        super(nombre, nivel);
+        super(nombre, nivel, calidad);
 
         if(proteccion > 100.00 || proteccion < 0.00)
         {

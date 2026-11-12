@@ -69,6 +69,14 @@ public class Servidor {
         return usuarios.agregarElemento(usuario);
     }
 
+    /// Agregar Objeto
+    public boolean agregarObjeto(String cuitAdmin, String nombre, int nivel) throws NoAdminException, RangoException
+    {
+        verificacionUsuario(cuitAdmin);
+        return objetos.agregarElemento(new Objeto(nombre, nivel)); /// Esta funcion crea objetos que no tienen ninguna funcionalidad (huesos, piedra, palo, etc)
+    }
+
+    /// Agregar Arma
     public boolean crearArma(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumo, E_ClaseAsociada claseAsociada) throws NoAdminException, RangoException
     {
         verificacionUsuario(cuitAdmin); //Verifica que exista el administrador
@@ -89,16 +97,19 @@ public class Servidor {
         return false;
     }
 
+    /// Agregar Armadura
     public boolean crearArmadura(String cuitAdmin, String nombre, int nivel, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws NoAdminException, RangoException {
         verificacionUsuario(cuitAdmin);
         return objetos.agregarElemento(new Armadura(nombre, nivel, proteccion, claseAsociada));
     }
 
+    /// Agregar Pocion
     public boolean crearPocion(String cuitAdmin, String nombre, int nivel, double efecto, E_TipoPocion tipoPocion) throws NoAdminException, RangoException {
         verificacionUsuario(cuitAdmin);
         return objetos.agregarElemento(new Pocion(nombre, nivel, efecto, tipoPocion));
     }
 
+    /// Eliminar Objeto
     public boolean eliminarObjeto(String cuitAdmin, int id) throws NoAdminException {
         verificacionUsuario(cuitAdmin);
         return objetos.eliminarElemento(id);

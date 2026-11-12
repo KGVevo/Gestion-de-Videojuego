@@ -58,4 +58,10 @@ public class Armadura extends Objeto implements IComprobarClase {
         return mensaje;
     }
 
+    public String toString()
+    {
+        return "Armadura [Proteccion: "+this.proteccion+"% | Clase: "+this.claseAsociada.getClaseAsociada()+
+                " | Efecto: "+this.efecto+"]";
+    }
+
 }

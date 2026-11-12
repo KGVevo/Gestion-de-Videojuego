@@ -19,4 +19,9 @@ public class ArmaMago extends Arma {
         return this.consumoMana;
     }
 
+    public String toString()
+    {
+        return "Arma Mago ["+super.toString()+" | Consumo Mana: "+this.consumoMana+"]";
+    }
+
 }

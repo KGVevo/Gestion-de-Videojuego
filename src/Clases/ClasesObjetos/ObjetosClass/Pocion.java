@@ -25,4 +25,10 @@ public class Pocion extends Objeto {
         return this.tipoPocion;
     }
 
+    @Override
+    public String toString()
+    {
+        return "Pocion ["+super.toString()+" | Efecto: "+this.efecto+" | Tipo de Pocion: "+this.tipoPocion+"]";
+    }
+
 }

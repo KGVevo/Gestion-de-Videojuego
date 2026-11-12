@@ -20,4 +20,9 @@ public class ArmaCuerpoACuerpo extends Arma {
         return this.consumoEnergia;
     }
 
+    public String toString()
+    {
+        return "Arma Cuerpo a Cuerpo ["+super.toString()+" | Consumo Energia: "+this.consumoEnergia+"]";
+    }
+
 }

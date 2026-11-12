@@ -3,6 +3,7 @@ package Clases.ClasesObjetos.Entidades;
 import Clases.ClasesObjetos.Inventario;
 import Clases.ClasesObjetos.SistemaDeProbabilidad;
 import Enums.E_ClaseAsociada;
+import Interfaces.IInterfazDeCombate;
 
 import java.util.Objects;
 
@@ -30,6 +31,10 @@ public abstract class Jugador extends Entidad {
         return idUsuario;
     }
 
+    public E_ClaseAsociada getClaseAsociada() {
+        return claseAsociada;
+    }
+
     public int getExpAcumuladaNivel() {
         return expAcumuladaNivel;
     }
@@ -47,7 +52,7 @@ public abstract class Jugador extends Entidad {
 
 
     /// Metodos ///
-    public boolean modificadorDeNivel(int valor) {
+    private boolean modificadorDeNivel(int valor) {
         this.setNivel(this.getNivel() + valor);
         return true;
     }
@@ -108,6 +113,13 @@ public abstract class Jugador extends Entidad {
     @Override
     public int hashCode() {
         return Objects.hashCode(idUsuario);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ID Usuario: "+this.idUsuario+" | Clase: "+this.claseAsociada.getClaseAsociada()+" | XP Acumulada"+
+                this.expAcumuladaNivel+" | Monedas: "+this.monedas+"";
     }
 
 

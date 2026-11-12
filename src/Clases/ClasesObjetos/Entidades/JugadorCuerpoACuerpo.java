@@ -22,9 +22,6 @@ public class JugadorCuerpoACuerpo extends Jugador {
         return energia;
     }
 
-
-
-
     @Override
      public int golpeCritico() {
         int golpe = this.getDanioBase() + arma.getDanioBase();
@@ -57,5 +54,11 @@ public class JugadorCuerpoACuerpo extends Jugador {
 
         this.energia -= this.energia;
         return arma.getDanioBase() * 2;
+    }
+
+    public String toString()
+    {
+        return "Clase Cuerpo a Cuerpo ["+super.toString()+" | Energia: "+this.energia+"]\n"
+                +super.getInventario().toString();
     }
 }

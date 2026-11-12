@@ -70,4 +70,10 @@ public class JugadorDistancia extends Jugador {
 
         return 0;
     }
+
+    public String toString()
+    {
+        return "Clase Distancia ["+super.toString()+" | Municion: "+this.municion+"]\n"
+                +super.getInventario().toString();
+    }
 }

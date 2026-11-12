@@ -5,6 +5,7 @@ import Exceptions.InventarioException;
 import Exceptions.ObjetoInvalidoException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Inventario {
     private ArrayList<Objeto> objetos;
@@ -98,10 +99,18 @@ public class Inventario {
 
     }
 
+    @Override
+    public String toString()
+    {
+        String mensaje = "Inventario [Capacidad Maxima "+this.capacidadMaxima+"]\n" +
+                "|Objetos actuales|\n";
 
+        Iterator<Objeto> it = objetos.iterator();
+        while (it.hasNext())
+        {
+            mensaje += " |=| " + it.next().toString() + "\n";
+        }
 
-
-
-
-
+        return mensaje;
+    }
 }

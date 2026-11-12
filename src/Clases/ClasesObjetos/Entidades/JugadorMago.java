@@ -63,4 +63,10 @@ public class JugadorMago extends Jugador {
         return 0;
     }
 
+    public String toString()
+    {
+        return "Clase Cuerpo a Cuerpo ["+super.toString()+" | Mana: "+this.mana+"]\n"
+                +super.getInventario().toString();
+    }
+
 }

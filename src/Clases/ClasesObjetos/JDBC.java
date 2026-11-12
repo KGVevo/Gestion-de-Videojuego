@@ -39,6 +39,15 @@ public class JDBC {
 
     private static String MOSTRAR_ENEMIGOS = "SELECT * FROM Enemigo;";
 
+    private static String ACTUALIZAR_LEVEL = "UPDATE Player SET level = ? WHERE id = ?;";
+
+    private static String ACTUALIZAR_VIDA = "UPDATE Player SET vida = ? WHERE id = ?;";
+
+    private static String ACTUALIZAR_EXP_ACUMULADA = "UPDATE Player SET expAcumulada = ? WHERE id = ?;";
+
+    private static String ACTUALIZAR_MONEDAS = "UPDATE Player SET monedas = ? WHERE id = ?;";
+
+
 
 
     public static String probarConexcion(){
@@ -237,6 +246,62 @@ public class JDBC {
         return jugadores;
     }
 
+    public static void actualizarLevelJugador(int nuevoLevelJugador, int idJugador){
+
+        try(Connection connection = DriverManager.getConnection(URL);
+                PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_LEVEL)){
+
+            ps.setInt(1, nuevoLevelJugador);
+            ps.setInt(2, idJugador);
+
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void actualizarVidaJugador(int nuevaVidaJugador, int idJugador){
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_VIDA)){
+
+            ps.setInt(1, nuevaVidaJugador);
+            ps.setInt(2, idJugador);
+
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void actualizarXPJugador(int expAcumulada, int idJugador){
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_EXP_ACUMULADA)){
+
+            ps.setInt(1, expAcumulada);
+            ps.setInt(2, idJugador);
+
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void actualizarMonedasJugador(int nuevasMonedas, int idJugador){
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_MONEDAS)){
+
+            ps.setInt(1, nuevasMonedas);
+            ps.setInt(2, idJugador);
+
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     /*public static Objeto obtenerObjetoPorId(int idObjeto) throws RangoException{
         Objeto objeto = null;
 
@@ -297,5 +362,5 @@ public class JDBC {
 
     }
     */
-     
+
 }

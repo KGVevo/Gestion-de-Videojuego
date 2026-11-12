@@ -1,14 +1,15 @@
 package Clases.ClasesObjetos.Entidades;
 
 import Clases.ClasesObjetos.ObjetosClass.ArmaMago;
+import Clases.ClasesObjetos.SistemaDeProbabilidad;
 
 public class JugadorMago extends Jugador {
 
     private int mana;
     private ArmaMago arma;
 
-    public JugadorMago(String nombreJugador, int vida, int dañoBase, int idUsuario) {
-        super(nombreJugador, vida, dañoBase, idUsuario);
+    public JugadorMago(String nombreJugador, int vida, int danioBase, int idUsuario) {
+        super(nombreJugador, vida, danioBase, idUsuario);
         this.mana = 100;
         this.arma = null;
     }
@@ -16,24 +17,36 @@ public class JugadorMago extends Jugador {
     public int getMana() {
         return mana;
     }
+
     public ArmaMago getArma() {
         return arma;
     }
 
 
     @Override
-    public String atacar() {
-        return "";
+    public int golpeCritico() {
+        int golpe = this.getDanioBase() + arma.getDanioBase();
+        if(SistemaDeProbabilidad.generarProb(20)){
+            return golpe * 2;
+        }
+
+        return golpe;
     }
 
     @Override
-    public String defenderse() {
-        return "";
+    public int atacar() {
+        int golpeFinal = 0;
+
+        if(SistemaDeProbabilidad.generarProb(90)){
+            golpeFinal = this.golpeCritico();
+        }
+        return golpeFinal;
     }
 
+
     @Override
-    public String huir() {
-        return "";
+    public boolean habilidadArma() {
+        return false;
     }
 
 }

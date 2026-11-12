@@ -31,7 +31,7 @@ public abstract class Entidad implements IInterfazDeCombate, IObtenerID {
         return vida;
     }
 
-    public int getDañoBase() {
+    public int getDanioBase() {
         return dañoBase;
     }
 

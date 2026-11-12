@@ -24,20 +24,6 @@ public class Enemigo extends Entidad {
         return super.getID();
     }
 
-    @Override
-    public String atacar() {
-        return "";
-    }
-
-    @Override
-    public String defenderse() {
-        return "";
-    }
-
-    @Override
-    public String huir() {
-        return "";
-    }
 
     @Override
     public String toString()
@@ -52,5 +38,32 @@ public class Enemigo extends Entidad {
                 " | Estado: "+estadoActual+"]";
     }
 
+
+
+
+    @Override
+    public int golpeCritico() {
+        return 0;
+    }
+
+    @Override
+    public int atacar() {
+        return 0;
+    }
+
+    @Override
+    public boolean habilidadArma() {
+        return false;
+    }
+
+    @Override
+    public boolean defenderse() {
+        return false;
+    }
+
+    @Override
+    public boolean huir() {
+        return false;
+    }
 
 }

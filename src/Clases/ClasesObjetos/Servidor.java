@@ -71,10 +71,10 @@ public class Servidor {
     }
 
     /// Agregar Objeto
-    public boolean agregarObjeto(String cuitAdmin, String nombre, int nivel) throws NoAdminException, RangoException
+    public boolean agregarObjeto(String cuitAdmin, String nombre, int nivel, E_Calidad calidad) throws NoAdminException, RangoException
     {
         verificacionUsuario(cuitAdmin);
-        return objetos.agregarElemento(new Objeto(nombre, nivel)); /// Esta funcion crea objetos que no tienen ninguna funcionalidad (huesos, piedra, palo, etc)
+        return objetos.agregarElemento(new Objeto(nombre, nivel, calidad)); /// Esta funcion crea objetos que no tienen ninguna funcionalidad (huesos, piedra, palo, etc)
     }
 
     /// Agregar Arma

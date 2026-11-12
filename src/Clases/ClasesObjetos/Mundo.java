@@ -14,69 +14,67 @@ public class Mundo {
     private E_Fases fase;
     private Jugador jugadorActual;
     private E_Dificultad dificultad;
-    private ArrayList<Enemigo> enemigos;
+    private ArrayList<Enemigo> enemigosMundo;
     private Tienda tienda;
 
-    public Mundo(String nombreMundo, Jugador jugadorActual, Tienda tienda)
-    {
+    public Mundo(String nombreMundo, Jugador jugadorActual, Tienda tienda, E_Dificultad dificultad) {
         this.nombreMundo = nombreMundo;
         this.fase = E_Fases.FACE_I;
+        this.dificultad = dificultad;
         this.jugadorActual = jugadorActual;
         this.tienda = tienda;
-    }
-
-    public void generarMundo(ArrayList<Enemigo> enemigosAuxiliares, int limiteNivel)
-    {
-        int cantidadEnemigos = (int) (10 * this.dificultad.obtenerDificultad());
-
-        if(this.fase == E_Fases.FACE_II)
-        {
-            cantidadEnemigos = (int) (cantidadEnemigos * this.fase.obtenerNumeroEnemigos());
-        }
-        else if(this.fase == E_Fases.FACE_III)
-        {
-            cantidadEnemigos = (int) (cantidadEnemigos * this.fase.obtenerNumeroEnemigos());
-        }
-        else if(this.fase == E_Fases.FACE_FINAL)
-        {
-            cantidadEnemigos = (int) (cantidadEnemigos * this.fase.obtenerNumeroEnemigos());
-        }
-
-        for (int i = 0; i < cantidadEnemigos; i++)
-        {
-            int numeroRandom = SistemaDeProbabilidad.generadorInt(enemigosAuxiliares.size());
-            Enemigo enemigoAux = enemigosAuxiliares.get(numeroRandom);
-            if(enemigoAux.getNivel() <= limiteNivel)
-            {
-                this.enemigos.add(enemigoAux);
-            }
-        }
-    }
-
-    public String cambiarFace() {
-
-        String verificacion = "La Fase Maxima solo es hasta la Fase Final";
-
-        if(this.fase == E_Fases.FACE_I)
-        {
-            this.fase = E_Fases.FACE_II;
-            verificacion = "Se cambio a Fase II";
-        }
-        else if(this.fase == E_Fases.FACE_II)
-        {
-            this.fase = E_Fases.FACE_III;
-            verificacion = "Se cambio a Fase III";
-        }
-        else if(this.fase == E_Fases.FACE_III)
-        {
-            this.fase = E_Fases.FACE_FINAL;
-            verificacion = "Se cambio a Fase Final";
-        }
-
-        return verificacion;
+        this.enemigosMundo = new ArrayList<>();
     }
 
     public Tienda obtenerTienda() {
         return this.tienda;
     }
+
+
+    public boolean avanzarFace(){
+        switch (this.fase){
+            case FACE_I -> this.fase = E_Fases.FACE_II;
+            case FACE_II -> this.fase = E_Fases.FACE_III;
+            case FACE_III -> this.fase = E_Fases.FACE_FINAL;
+            case FACE_FINAL -> {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean generarEnemigosMundo(ArrayList<Enemigo> enemigosGlobal, E_Dificultad  dificultad, int nivelPlayer)throws RangoException {
+        ArrayList<Enemigo> auxiliar = new ArrayList<>();
+
+
+        /// Filtra a los enemigos por el nivel del jugador y por la dificultadad del mundo
+        for (int i = 0; i < this.enemigosMundo.size(); i++){
+            if(dificultad.obtenerCantidadEnemigos() <= enemigosGlobal.size()){
+                if(enemigosGlobal.get(i).getNivel() <= nivelPlayer){
+                    auxiliar.add(enemigosGlobal.get(i));
+                }
+            }else{
+                throw new RangoException("| !! No hay suficientes enemigos para jugar en esta Dificultad !! |");
+            }
+        }
+
+
+
+        /// Elegi un enemigo random del arraylist auxiliar
+        for (int i = 0; i < dificultad.obtenerCantidadEnemigos(); i++){
+            enemigosMundo.add(auxiliar.get(SistemaDeProbabilidad.generadorInt(auxiliar.size())));
+        }
+
+        return true;
+    }
+    
+
+
+
+
+
+
+
+
 }

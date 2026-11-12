@@ -2,18 +2,24 @@ package Enums;
 
 public enum E_Dificultad {
 
-    FACIL(1), NORMAL(1.7), DIFICIL(2.4);
+    /// La dificultadad y la cantidad de enemigos por fase
+    FACIL(3, 5), NORMAL(5, 10), DIFICIL(8, 20);
 
-    private double numDificultad;
+    private double cantidadEnemigos;
+    private int nivelDeEnemigos;
 
-    E_Dificultad(double numDificultad)
+    E_Dificultad(double cantidadEnemigos, int  nivelDeEnemigos)
     {
-        this.numDificultad = numDificultad;
+        this.cantidadEnemigos = cantidadEnemigos;
     }
 
-    public double obtenerDificultad()
+    public double obtenerCantidadEnemigos()
     {
-        return this.numDificultad;
+        return this.cantidadEnemigos;
+    }
+
+    public int obtenerNivel(){
+        return this.nivelDeEnemigos;
     }
 
 }

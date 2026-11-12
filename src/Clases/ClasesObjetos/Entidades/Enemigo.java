@@ -39,5 +39,18 @@ public class Enemigo extends Entidad {
         return "";
     }
 
+    @Override
+    public String toString()
+    {
+        String estadoActual = "Muerto";
+        if(this.estado == true)
+        {
+            estadoActual = "Vivo";
+        }
+
+        return "Enemigo ["+super.toString()+" | Tipo: "+this.ETipoDeEnemigo.getTipoDeEnemigo()+
+                " | Estado: "+estadoActual+"]";
+    }
+
 
 }

@@ -63,6 +63,11 @@ public abstract class Entidad implements IInterfazDeCombate, IObtenerID {
         return Objects.hash(this.nombreEntidad);
     }
 
-
+    @Override
+    public String toString()
+    {
+        return "ID: "+this.id+" | Nombre: "+this.nombreEntidad+" | Vida Actual: "+this.vida+" | Daño Base: "
+                +this.dañoBase+" | Nivel: "+this.nivel+"";
+    }
 
 }

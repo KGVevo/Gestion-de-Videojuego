@@ -4,17 +4,17 @@ import java.util.Objects;
 
 public class Administrador extends Usuario {
 
-    private String cuit;
+    private String cuil;
 
-    public Administrador(Integer id, String userNombre, String gmail, String cuit)
+    public Administrador(Integer id, String userNombre, String gmail, String cuil)
     {
         super(id, userNombre, gmail);
-        this.cuit = cuit;
+        this.cuil = cuil;
     }
 
     public String obtenerCuitAdmin()
     {
-        return this.cuit;
+        return this.cuil;
     }
 
     @Override
@@ -28,13 +28,13 @@ public class Administrador extends Usuario {
         }
 
         Administrador aux = (Administrador) obj;
-        return this.cuit.equals(aux.obtenerCuitAdmin());
+        return this.cuil.equals(aux.obtenerCuitAdmin());
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.cuit);
+        return Objects.hash(this.cuil);
     }
 
 }

@@ -39,7 +39,7 @@ public class ClaseGenericaAL<T extends IObtenerID> {
     public boolean eliminarElemento(Integer id){
 
         for(T elemento : this.lista){
-            if(elemento.getID() == id){
+            if(elemento.getID().equals(id)){
                 return this.lista.remove(elemento);
             }
         }
@@ -54,7 +54,7 @@ public class ClaseGenericaAL<T extends IObtenerID> {
         }
 
         for(T elemento : lista){
-            if (elemento.getID() == id){
+            if (elemento.getID().equals(id)){
                 return elemento;
             }
         }
@@ -67,8 +67,7 @@ public class ClaseGenericaAL<T extends IObtenerID> {
         String devuelve = "";
 
         Iterator<T> it = lista.iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()){
             devuelve += it.toString() + "\n";
         }
 

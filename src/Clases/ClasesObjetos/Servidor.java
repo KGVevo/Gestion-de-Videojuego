@@ -69,19 +69,24 @@ public class Servidor {
         return usuarios.agregarElemento(usuario);
     }
 
-    public boolean crearArmaCuerpoACuerpo(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumoEnergia) throws NoAdminException, RangoException {
-        verificacionUsuario(cuitAdmin);
-        return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumoEnergia));
-    }
+    public boolean crearArma(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumo, E_ClaseAsociada claseAsociada) throws NoAdminException, RangoException
+    {
+        verificacionUsuario(cuitAdmin); //Verifica que exista el administrador
 
-    public boolean crearArmaDistancia(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumoMunicion) throws NoAdminException, RangoException {
-        verificacionUsuario(cuitAdmin);
-        return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumoMunicion));
-    }
+        if(claseAsociada == E_ClaseAsociada.CUERPO_A_CUERPO)
+        {
+            return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumo));
+        }
+        else if(claseAsociada == E_ClaseAsociada.DISTANCIA)
+        {
+            return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumo));
+        }
+        else if(claseAsociada == E_ClaseAsociada.MAGO)
+        {
+            return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumo));
+        }
 
-    public boolean crearArmaMago(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumoMana) throws NoAdminException, RangoException {
-        verificacionUsuario(cuitAdmin);
-        return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumoMana));
+        return false;
     }
 
     public boolean crearArmadura(String cuitAdmin, String nombre, int nivel, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws NoAdminException, RangoException {

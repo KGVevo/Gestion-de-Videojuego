@@ -1,6 +1,14 @@
 package Clases.ClasesObjetos;
 
+import Clases.ClasesObjetos.Entidades.Jugador;
+import Clases.ClasesObjetos.Entidades.JugadorCuerpoACuerpo;
+import Clases.ClasesObjetos.Entidades.JugadorDistancia;
+import Clases.ClasesObjetos.Entidades.JugadorMago;
+import Clases.ClasesObjetos.ObjetosClass.*;
+import Exceptions.RangoException;
+
 import java.sql.*;
+import java.util.HashSet;
 
 public class JDBC {
 
@@ -25,11 +33,13 @@ public class JDBC {
 
     private static String MOSTRAR_JUGADORES = "SELECT * FROM Player;";
 
-    private static String MOSTRAR_INVENTARIO = "SELECT * FROM Inventario;";
+    private static String MOSTRAR_INVENTARIO_POR_ID = "SELECT * FROM Inventario WHERE id_player = ?;";
 
-    private static String MOSTRAR_OBJETOS = "SELECT * FROM Objetos;";
+    private static String MOSTRAR_OBJETO_POR_ID = "SELECT * FROM Objetos WHERE id = ?;";
 
     private static String MOSTRAR_ENEMIGOS = "SELECT * FROM Enemigo;";
+
+
 
     public static String probarConexcion(){
         String conexion = "|----> Error <----|";
@@ -160,5 +170,132 @@ public class JDBC {
         }
         return idAgregado;
     }
-    
+
+    public static HashSet<Usuario> descargarUsuarios(){
+        HashSet<Usuario> usuarios = new HashSet<>();
+        Usuario usuario;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+                PreparedStatement ps = connection.prepareStatement(MOSTRAR_USUARIOS)){
+
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    int idUsuario = rs.getInt("id");
+                    String nombre = rs.getString("nombre");
+                    String gmail = rs.getString("gmail");
+
+                    usuario = new Usuario(idUsuario, nombre, gmail);
+                    usuarios.add(usuario);
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
+
+
+    public static HashSet<Jugador> descargarJugadores(){
+        HashSet<Jugador> jugadores = new HashSet<>();
+        Jugador jugador;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(MOSTRAR_JUGADORES)){
+
+            try(ResultSet rs = ps.executeQuery()){
+                while (rs.next()){
+                    int idUsuario = rs.getInt("id_Usuario");
+                    String nombreJugador = rs.getString("nombrePlayer");
+                    int expAcumulada = rs.getInt("expAcumulada");
+                    int monedas = rs.getInt("monedas");
+
+                    String tipoJugador = rs.getString("tipoPlayer");
+
+
+                    switch (tipoJugador.toUpperCase()) {
+                        case "GUERRERO":
+                            jugador = new JugadorCuerpoACuerpo(nombreJugador, idUsuario, expAcumulada, monedas);
+                            break;
+                        case "MAGO":
+                            jugador = new JugadorMago(nombreJugador, idUsuario, expAcumulada, monedas);
+                            break;
+                        case "ARQUERO":
+                            jugador = new JugadorDistancia(nombreJugador, idUsuario, expAcumulada, monedas);
+                            break;
+                        default:
+
+                            continue;
+                    }
+
+                    jugadores.add(jugador);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return jugadores;
+    }
+
+    /*public static Objeto obtenerObjetoPorId(int idObjeto) throws RangoException{
+        Objeto objeto = null;
+
+        try (Connection connection = DriverManager.getConnection(URL);
+             PreparedStatement ps = connection.prepareStatement(MOSTRAR_OBJETO_POR_ID)) {
+
+            ps.setInt(1, idObjeto);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String nombre = rs.getString("nombre");
+                    int nivel = rs.getInt("nivel");
+                    String descripcion = rs.getString("descripcion");
+
+                    String tipoObjeto = rs.getString("tipoObjeto");
+
+                    switch (tipoObjeto.toUpperCase()) {
+                        case "ARMA_GUERRO":
+                            objeto = new ArmaCuerpoACuerpo(nombre, nivel);
+                            break;
+                        case "ARMA_ARQUERO":
+                            objeto = new ArmaDistancia(nombre, nivel);
+                            break;
+                        case "ARMA_MAGO":
+                            objeto = new ArmaMago(nombre, nivel);
+                            break;
+                        case "ARMADURA":
+                            objeto = new Armadura(nombre, nivel);
+                            break;
+                        case "POCION":
+                            objeto = new Pocion(nombre, nivel);
+                            break;
+                        default:
+                            continue;
+                    }
+                }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return objeto;
+    }
+
+    public static Inventario obtenerInventarioPorIdJugador(int idJugador){
+        Inventario inventario;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+                PreparedStatement ps = connection.prepareStatement(MOSTRAR_INVENTARIO_POR_ID)){
+
+            ps.setInt(1, idJugador);
+
+            try(ResultSet rs = ps.executeQuery()){
+                if (rs.next()){
+                    int idObjeto = rs.getInt("id_objeta");
+                }
+            }
+        }
+
+    }
+    */
+     
 }

@@ -26,22 +26,40 @@ public abstract class Entidad implements IInterfazDeCombate, IObtenerID {
     public String getNombreEntidad() {
         return nombreEntidad;
     }
-
     public int getVida() {
         return vida;
     }
-
     public int getDanioBase() {
         return dañoBase;
     }
-
     public int getNivel() {
         return nivel;
     }
-
-    public Integer getID()
-    {
+    public Integer getID() {
         return this.id;
+    }
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
+    }
+
+
+    /// Modificar de vida tanto para restar como para sumar
+    public int modificadorDeVida(int valor, int opcion){
+        if(opcion == -1){
+            this.vida -= valor;
+
+            if(this.vida < 0) {
+                this.vida = 0;
+            }
+
+        } else if (opcion == 1){
+            this.vida += valor;
+            if(this.vida > 100){
+                this.vida = 100;
+            }
+        }
+
+        return this.vida;
     }
 
 
@@ -58,6 +76,7 @@ public abstract class Entidad implements IInterfazDeCombate, IObtenerID {
         return this.nombreEntidad.equals(aux.getNombreEntidad());
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(this.nombreEntidad);
@@ -66,8 +85,8 @@ public abstract class Entidad implements IInterfazDeCombate, IObtenerID {
     @Override
     public String toString()
     {
-        return "ID: "+this.id+" | Nombre: "+this.nombreEntidad+" | Vida Actual: "+this.vida+" | Daño Base: "
-                +this.dañoBase+" | Nivel: "+this.nivel+"";
+        return "|ID: " + this.id + "|Nombre: "+this.nombreEntidad+"|Vida Actual: "+this.vida+"|Daño Base: "
+                + this.dañoBase + "|Nivel: " +this.nivel + "|.\n";
     }
 
 }

@@ -2,6 +2,7 @@ package Clases.ClasesObjetos.Entidades;
 
 import Clases.ClasesObjetos.ObjetosClass.ArmaCuerpoACuerpo;
 import Clases.ClasesObjetos.SistemaDeProbabilidad;
+import Enums.E_ClaseAsociada;
 
 public class JugadorCuerpoACuerpo extends Jugador {
 
@@ -9,7 +10,7 @@ public class JugadorCuerpoACuerpo extends Jugador {
     private ArmaCuerpoACuerpo arma;
 
     public JugadorCuerpoACuerpo(String nombreJugador, int vida, int danioBase, int idUsuario) {
-        super(nombreJugador, vida, danioBase, idUsuario);
+        super(nombreJugador, vida, danioBase, idUsuario, E_ClaseAsociada.CUERPO_A_CUERPO);
         this.energia = 100;
         this.arma = null;
     }
@@ -27,6 +28,8 @@ public class JugadorCuerpoACuerpo extends Jugador {
     @Override
      public int golpeCritico() {
         int golpe = this.getDanioBase() + arma.getDanioBase();
+
+        /// 20% de hacer un golpe critico
         if(SistemaDeProbabilidad.generarProb(20)){
             return golpe * 2;
         }
@@ -38,6 +41,7 @@ public class JugadorCuerpoACuerpo extends Jugador {
     public int atacar() {
         int golpeFinal = 0;
 
+        /// 90% de no fallar el golpe
         if(SistemaDeProbabilidad.generarProb(90)){
             golpeFinal = golpeCritico();
         }
@@ -45,7 +49,13 @@ public class JugadorCuerpoACuerpo extends Jugador {
     }
 
     @Override
-    public boolean habilidadArma() {
-        return false;
+    public int habilidadArma() {
+
+        if(arma.getConsumoEnergia() < this.energia){
+            return arma.getDanioBase();
+        }
+
+        this.energia -= this.energia;
+        return arma.getDanioBase() * 2;
     }
 }

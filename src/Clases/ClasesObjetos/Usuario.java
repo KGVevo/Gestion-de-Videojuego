@@ -80,8 +80,6 @@ public class Usuario implements ISuscripcion, IObtenerID {
 
 
 
-
-
     @Override
     public String getID() {
         return this.gmail;

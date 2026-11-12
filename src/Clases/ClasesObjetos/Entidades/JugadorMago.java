@@ -2,6 +2,7 @@ package Clases.ClasesObjetos.Entidades;
 
 import Clases.ClasesObjetos.ObjetosClass.ArmaMago;
 import Clases.ClasesObjetos.SistemaDeProbabilidad;
+import Enums.E_ClaseAsociada;
 
 public class JugadorMago extends Jugador {
 
@@ -9,8 +10,8 @@ public class JugadorMago extends Jugador {
     private ArmaMago arma;
 
     public JugadorMago(String nombreJugador, int vida, int danioBase, int idUsuario) {
-        super(nombreJugador, vida, danioBase, idUsuario);
-        this.mana = 100;
+        super(nombreJugador, vida, danioBase, idUsuario, E_ClaseAsociada.MAGO);
+        this.mana = 100; /// Mana default de cada Jugador
         this.arma = null;
     }
 
@@ -37,16 +38,29 @@ public class JugadorMago extends Jugador {
     public int atacar() {
         int golpeFinal = 0;
 
-        if(SistemaDeProbabilidad.generarProb(90)){
-            golpeFinal = this.golpeCritico();
+        if(this.mana > this.arma.getConsumoMana()){
+            if(SistemaDeProbabilidad.generarProb(90)){
+                golpeFinal = this.golpeCritico();
+                this.mana -= this.arma.getConsumoMana();
+            }
         }
+
+
         return golpeFinal;
     }
 
 
     @Override
-    public boolean habilidadArma() {
-        return false;
+    public int habilidadArma() {
+        /// Gasta mana y se cura vida al mismo tiempo
+        if(this.mana > (this.arma.getConsumoMana() * 2)){
+            this.mana -= this.arma.getConsumoMana() * 2;
+            this.modificadorDeVida(15, 1);
+
+            return arma.getDanioBase() * 2;
+        }
+
+        return 0;
     }
 
 }

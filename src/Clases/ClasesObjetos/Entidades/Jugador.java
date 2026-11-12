@@ -2,20 +2,23 @@ package Clases.ClasesObjetos.Entidades;
 
 import Clases.ClasesObjetos.Inventario;
 import Clases.ClasesObjetos.SistemaDeProbabilidad;
+import Enums.E_ClaseAsociada;
 
 import java.util.Objects;
 
 public abstract class Jugador extends Entidad {
 
     private int idUsuario;
+    private E_ClaseAsociada claseAsociada;
     private int expAcumuladaNivel;
     private Inventario inventario;
     private int monedas;
 
 
-    public Jugador(String nombreJugador, int vida, int danioBase, int idUsuario) {
+    public Jugador(String nombreJugador, int vida, int danioBase, int idUsuario, E_ClaseAsociada claseAsociada) {
         super(nombreJugador, vida, danioBase, 1); //Por defecto el nivel esta en 1
         this.idUsuario = idUsuario; //Deberiamos usar la Base de Datos para saber si existe el jugador, caso contrario lanzar un "UserException"
+        this.claseAsociada = null;
         this.expAcumuladaNivel = 0;
         this.inventario = new Inventario();
         this.monedas = 0;
@@ -39,7 +42,35 @@ public abstract class Jugador extends Entidad {
         return monedas;
     }
 
-    /////////////////////////////////////////////
+
+    public abstract int habilidadArma();
+
+
+    /// Metodos ///
+    public boolean modificadorDeNivel(int valor) {
+        this.setNivel(this.getNivel() + valor);
+        return true;
+    }
+
+    /// Verifica si tiene la suficiente exp Para subir de nivel
+    public int modificadorDeExp(int valor, int nivelActual) {
+        int flag = 1;
+
+        while(flag == 1){
+            int expMaxima = 100 * nivelActual;
+            this.expAcumuladaNivel += valor;
+
+            if(this.expAcumuladaNivel > expMaxima){
+                this.expAcumuladaNivel = (valor - expMaxima);
+                modificadorDeNivel(1);
+            }else{
+                flag = 0;
+            }
+        }
+
+
+        return this.expAcumuladaNivel;
+    }
 
 
 
@@ -56,12 +87,14 @@ public abstract class Jugador extends Entidad {
     @Override
     public boolean huir() {
 
-        if(SistemaDeProbabilidad.generarProb(10)){
+        if(SistemaDeProbabilidad.generarProb(20)){
             return true;
         }
 
         return false;
     }
+
+
 
 
 

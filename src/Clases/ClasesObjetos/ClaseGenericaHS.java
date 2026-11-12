@@ -71,10 +71,8 @@ public class ClaseGenericaHS<T extends IObtenerID> {
     public boolean existeElemento(Integer id){
 
         Iterator<T> it = elementos.iterator();
-        while (it.hasNext())
-        {
-            if(it.next().getID().equals(id))
-            {
+        while (it.hasNext()) {
+            if(it.next().getID().equals(id)) {
                 return true;
             }
         }
@@ -86,10 +84,8 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         boolean devuelve = false;
 
         Iterator<T> it = elementos.iterator();
-        while (it.hasNext())
-        {
-            if(it.next().getID().equals(id))
-            {
+        while (it.hasNext()){
+            if(it.next().getID().equals(id)) {
                 devuelve = true;
             }
         }

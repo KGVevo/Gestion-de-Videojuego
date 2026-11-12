@@ -10,21 +10,21 @@ public class Armadura extends Objeto implements IComprobarClase {
 
     private double proteccion;
     private final E_ClaseAsociada claseAsociada;
-    private double efecto;
 
-    public Armadura(String nombre, int nivel, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws RangoException
+    public Armadura(String nombre, int nivel, double proteccion, E_ClaseAsociada claseAsociada) throws RangoException
     {
+        super(nombre, nivel);
 
         if(proteccion > 100.00 || proteccion < 0.00)
         {
             throw new RangoException("ERROR: La proteccion no puede ser Mayor a 100 o Menor a 0");
         }
 
-        super(nombre, nivel);
+
         this.proteccion = proteccion;
         this.claseAsociada = claseAsociada;
-        this.efecto = efecto;
     }
+
 
     public double getProteccion()
     {
@@ -36,10 +36,6 @@ public class Armadura extends Objeto implements IComprobarClase {
         return this.claseAsociada;
     }
 
-    public double getEfecto()
-    {
-        return this.efecto;
-    }
 
     //Cabe aclarar, que entre los parametros debe ir la Clase Player para saber que tipo de Clase es.
     public String equipar(E_ClaseAsociada claseActual) throws ClaseAsociadaException
@@ -60,8 +56,8 @@ public class Armadura extends Objeto implements IComprobarClase {
 
     public String toString()
     {
-        return "Armadura [Proteccion: "+this.proteccion+"% | Clase: "+this.claseAsociada.getClaseAsociada()+
-                " | Efecto: "+this.efecto+"]";
+        return "|Armadura [Proteccion: "+this.proteccion+"% | Clase: " + this.claseAsociada.getClaseAsociada() +
+                "|.";
     }
 
 }

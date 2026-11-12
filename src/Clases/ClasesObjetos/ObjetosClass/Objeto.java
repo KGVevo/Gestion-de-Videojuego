@@ -5,7 +5,7 @@ import Interfaces.IObtenerID;
 
 import java.util.Objects;
 
-public abstract class Objeto implements IObtenerID {
+public class Objeto implements IObtenerID {
 
     private static int contador = 1;
     private Integer id;

@@ -1,7 +1,7 @@
 package Clases.ClasesObjetos.Entidades;
 
+import Clases.ClasesObjetos.SistemaDeProbabilidad;
 import Enums.E_TipoDeEnemigo;
-import Interfaces.IObtenerID;
 
 public class Enemigo extends Entidad {
 
@@ -25,45 +25,45 @@ public class Enemigo extends Entidad {
     }
 
 
-    @Override
-    public String toString()
-    {
-        String estadoActual = "Muerto";
-        if(this.estado == true)
-        {
-            estadoActual = "Vivo";
+    public void cambiarEstado(){
+        if(this.estado){
+            this.estado = false;
+        }else {
+            this.estado = true;
         }
-
-        return "Enemigo ["+super.toString()+" | Tipo: "+this.ETipoDeEnemigo.getTipoDeEnemigo()+
-                " | Estado: "+estadoActual+"]";
     }
+
 
 
 
 
     @Override
     public int golpeCritico() {
-        return 0;
+        if(SistemaDeProbabilidad.generarProb(20)){
+            return this.getDanioBase() * 2;
+        }
+        return this.getDanioBase();
     }
 
     @Override
     public int atacar() {
-        return 0;
-    }
-
-    @Override
-    public boolean habilidadArma() {
-        return false;
+        return this.golpeCritico();
     }
 
     @Override
     public boolean defenderse() {
-        return false;
+        return SistemaDeProbabilidad.generarProb(35);
     }
 
     @Override
     public boolean huir() {
-        return false;
+        return SistemaDeProbabilidad.generarProb(10);
     }
 
+    @Override
+    public String toString()
+    {
+        return "Enemigo [" + super.toString() + "|Tipo: "+ this.ETipoDeEnemigo.getTipoDeEnemigo()+
+                "|Estado: "+ this.estado +"]";
+    }
 }

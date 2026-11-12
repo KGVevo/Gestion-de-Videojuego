@@ -2,6 +2,7 @@ package Clases.ClasesObjetos.Entidades;
 
 import Clases.ClasesObjetos.ObjetosClass.ArmaDistancia;
 import Clases.ClasesObjetos.SistemaDeProbabilidad;
+import Enums.E_ClaseAsociada;
 
 public class JugadorDistancia extends Jugador {
 
@@ -9,8 +10,8 @@ public class JugadorDistancia extends Jugador {
     private ArmaDistancia arma;
 
     public JugadorDistancia(String nombreJugador, int vida, int dañoBase, int idUsuario){
-        super(nombreJugador, vida, dañoBase, idUsuario);
-        this.municion = 50;
+        super(nombreJugador, vida, dañoBase, idUsuario, E_ClaseAsociada.DISTANCIA);
+        this.municion = 25; /// Municion por defecto
         this.arma = null;
     }
 
@@ -37,15 +38,36 @@ public class JugadorDistancia extends Jugador {
     public int atacar() {
         int golpeFinal = 0;
 
-        if(SistemaDeProbabilidad.generarProb(90)){
-            golpeFinal = this.golpeCritico();
+        if(this.municion > this.arma.getConsumoMunicion()){
+            if(SistemaDeProbabilidad.generarProb(90)){
+                golpeFinal = this.golpeCritico();
+                this.municion -= this.arma.getConsumoMunicion();
+
+            }
+        }else{
+            this.recargar();
         }
+
         return golpeFinal;
     }
 
 
-    @Override
-    public boolean habilidadArma() {
-        return false;
+    public boolean recargar(){
+        if(this.municion == 25){
+            return false;
+        }else{
+            this.municion = 25;
+            return true;
+        }
+
+    }
+
+    public int habilidadArma() {
+        if(this.municion == 25){
+            this.municion = 0;
+            return arma.getDanioBase() * 3;
+        }
+
+        return 0;
     }
 }

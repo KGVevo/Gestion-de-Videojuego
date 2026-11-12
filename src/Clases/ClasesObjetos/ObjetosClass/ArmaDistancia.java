@@ -17,7 +17,7 @@ public class ArmaDistancia extends Arma {
 
 
     //Metodos
-    private int getConsumoMunicion()
+    public int getConsumoMunicion()
     {
         return this.consumoMunicion;
     }

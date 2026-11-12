@@ -1,6 +1,7 @@
 package Clases.ClasesObjetos.Entidades;
 
 import Clases.ClasesObjetos.Inventario;
+import Clases.ClasesObjetos.SistemaDeProbabilidad;
 
 import java.util.Objects;
 
@@ -40,6 +41,27 @@ public abstract class Jugador extends Entidad {
 
     /////////////////////////////////////////////
 
+
+
+
+    @Override
+    public boolean defenderse() {
+        if(SistemaDeProbabilidad.generarProb(50)){
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean huir() {
+
+        if(SistemaDeProbabilidad.generarProb(10)){
+            return true;
+        }
+
+        return false;
+    }
 
 
 

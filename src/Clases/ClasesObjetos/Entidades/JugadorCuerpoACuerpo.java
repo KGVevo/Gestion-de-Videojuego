@@ -1,6 +1,7 @@
 package Clases.ClasesObjetos.Entidades;
 
 import Clases.ClasesObjetos.ObjetosClass.ArmaCuerpoACuerpo;
+import Clases.ClasesObjetos.SistemaDeProbabilidad;
 
 public class JugadorCuerpoACuerpo extends Jugador {
 
@@ -22,21 +23,29 @@ public class JugadorCuerpoACuerpo extends Jugador {
 
 
 
+
     @Override
-    public String atacar() {
-        return "";
+     public int golpeCritico() {
+        int golpe = this.getDanioBase() + arma.getDanioBase();
+        if(SistemaDeProbabilidad.generarProb(20)){
+            return golpe * 2;
+        }
+
+        return golpe;
     }
 
     @Override
-    public String defenderse() {
-        return "";
+    public int atacar() {
+        int golpeFinal = 0;
+
+        if(SistemaDeProbabilidad.generarProb(90)){
+            golpeFinal = golpeCritico();
+        }
+        return golpeFinal;
     }
 
     @Override
-    public String huir() {
-        return "";
+    public boolean habilidadArma() {
+        return false;
     }
-
-
-
 }

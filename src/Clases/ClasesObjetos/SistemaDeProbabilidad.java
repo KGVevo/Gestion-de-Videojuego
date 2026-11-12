@@ -10,7 +10,7 @@ public class SistemaDeProbabilidad {
     public static boolean generarProb(double probabilidad){
         double generadorProb =  random.nextDouble(100);
 
-        if(generadorProb < probabilidad){
+        if(generadorProb <= probabilidad){
             return true;
         }
 

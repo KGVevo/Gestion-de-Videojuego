@@ -1,7 +1,9 @@
 package Interfaces;
 
 public interface IInterfazDeCombate {
-    String atacar();
-    String defenderse();
-    String huir();
+    int golpeCritico();
+    int atacar();
+    boolean habilidadArma();
+    boolean defenderse();
+    boolean huir();
 }

@@ -107,5 +107,15 @@ public class Usuario implements ISuscripcion, IObtenerID {
         return Objects.hash(this.gmail);
     }
 
+    public String toString()
+    {
+        String premiumMensaje = "Si";
+        if(this.premium == false)
+        {
+            premiumMensaje = "No";
+        }
+        return "Usuario [ID: "+this.id+" | Nombre Usuario: "+this.userNombre+" | Gmail: "+this.gmail+" | Tarjeta: "+
+                this.tarjeta+" | Premium: "+premiumMensaje+"]";
+    }
 
 }

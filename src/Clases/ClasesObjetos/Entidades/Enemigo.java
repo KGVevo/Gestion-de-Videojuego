@@ -1,6 +1,7 @@
 package Clases.ClasesObjetos.Entidades;
 
 import Enums.E_TipoDeEnemigo;
+import Interfaces.IObtenerID;
 
 public class Enemigo extends Entidad {
 
@@ -18,6 +19,10 @@ public class Enemigo extends Entidad {
         return ETipoDeEnemigo;
     }
 
+    public Integer obtenerID()
+    {
+        return super.getID();
+    }
 
     @Override
     public String atacar() {

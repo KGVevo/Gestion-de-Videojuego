@@ -3,6 +3,7 @@ package Clases.ClasesObjetos;
 import Interfaces.IObtenerID;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class ClaseGenericaAL<T extends IObtenerID> {
@@ -46,7 +47,6 @@ public class ClaseGenericaAL<T extends IObtenerID> {
         return false;
     }
 
-
     /// Obtener elemento por Indice
     public T obtenerElemento(Integer id){
         if(id < 1){
@@ -60,5 +60,18 @@ public class ClaseGenericaAL<T extends IObtenerID> {
         }
 
         return null;
+    }
+
+    /// Obtener todos los elementos
+    public String obtenerElementoTodos(){
+        String devuelve = "";
+
+        Iterator<T> it = lista.iterator();
+        while (it.hasNext())
+        {
+            devuelve += it.toString() + "\n";
+        }
+
+        return devuelve;
     }
 }

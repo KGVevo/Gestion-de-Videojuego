@@ -18,11 +18,20 @@ public class Servidor {
     private ClaseGenericaHS<Usuario> usuarios;
     private ClaseGenericaHS<Objeto> objetos;
     private ClaseGenericaHS<Tarjeta> tarjetas;
+    private ClaseGenericaAL<Enemigo> enemigos;
 
     public Servidor() {
         this.usuarios = new ClaseGenericaHS<>();
         this.objetos = new ClaseGenericaHS<>();
         this.tarjetas = new ClaseGenericaHS<>();
+    }
+
+    private void verificacionUsuario(String cuit) throws NoAdminException
+    {
+        if(usuarios.existeElemento(cuit) == false)
+        {
+            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
+        }
     }
 
     /// Agrega tarjeta -> se usa para agregar un usuario con tarjeta
@@ -63,74 +72,74 @@ public class Servidor {
 
     public boolean crearArmaCuerpoACuerpo(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumoEnergia) throws NoAdminException, RangoException
     {
-        if(usuarios.existeElemento(cuitAdmin) == false)
-        {
-            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
-        }
+        verificacionUsuario(cuitAdmin);
         return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumoEnergia));
     }
 
     public boolean crearArmaDistancia(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumoMunicion) throws NoAdminException, RangoException
     {
-        if(usuarios.existeElemento(cuitAdmin) == false)
-        {
-            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
-        }
+        verificacionUsuario(cuitAdmin);
         return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumoMunicion));
     }
 
     public boolean crearArmaMago(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumoMana) throws NoAdminException, RangoException
     {
-        if(usuarios.existeElemento(cuitAdmin) == false)
-        {
-            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
-        }
+        verificacionUsuario(cuitAdmin);
         return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumoMana));
     }
 
     public boolean crearArmadura(String cuitAdmin, String nombre, int nivel, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws NoAdminException, RangoException
     {
-        if(usuarios.existeElemento(cuitAdmin) == false)
-        {
-            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
-        }
+        verificacionUsuario(cuitAdmin);
         return objetos.agregarElemento(new Armadura(nombre, nivel, proteccion, claseAsociada, efecto));
     }
 
     public boolean crearPocion(String cuitAdmin, String nombre, int nivel, double efecto, E_TipoPocion tipoPocion) throws NoAdminException, RangoException
     {
-        if(usuarios.existeElemento(cuitAdmin) == false)
-        {
-            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
-        }
+        verificacionUsuario(cuitAdmin);
         return objetos.agregarElemento(new Pocion(nombre, nivel, efecto, tipoPocion));
     }
 
     public boolean eliminarObjeto(String cuitAdmin, int id) throws NoAdminException
     {
-        if(usuarios.existeElemento(cuitAdmin) == false)
-        {
-            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
-        }
+        verificacionUsuario(cuitAdmin);
         return objetos.eliminarElemento(id);
     }
 
     public String verObjetoID(String cuitAdmin, int id) throws NoAdminException
     {
-        if(usuarios.existeElemento(cuitAdmin) == false)
-        {
-            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
-        }
+        verificacionUsuario(cuitAdmin);
         return objetos.obtenerElemento(id).toString();
     }
 
     public String verObjetoTodos(String cuitAdmin) throws NoAdminException
     {
-        if(usuarios.existeElemento(cuitAdmin) == false)
-        {
-            throw new NoAdminException("ERROR: El administrador ingresado no existe.");
-        }
+        verificacionUsuario(cuitAdmin);
         return objetos.obtenerElementoTodos();
+    }
+
+    public boolean agregarEnemigo(String cuitAdmin, String nombreEnemigo, int vida, int danioBase, int nivel, E_TipoDeEnemigo ETipoDeEnemigo) throws NoAdminException
+    {
+        verificacionUsuario(cuitAdmin);
+        return enemigos.agregarElemento(new Enemigo(nombreEnemigo, vida, danioBase, nivel, ETipoDeEnemigo));
+    }
+
+    public boolean eliminarEnemigo(String cuitAdmin, int id) throws NoAdminException
+    {
+        verificacionUsuario(cuitAdmin);
+        return enemigos.eliminarElemento(id);
+    }
+
+    public String verEnemigoID(String cuitAdmin, int id) throws NoAdminException
+    {
+        verificacionUsuario(cuitAdmin);
+        return enemigos.obtenerElemento(id).toString();
+    }
+
+    public String verEnemigoTodos(String cuitAdmin) throws NoAdminException
+    {
+        verificacionUsuario(cuitAdmin);
+        return enemigos.obtenerElementoTodos();
     }
 
 }

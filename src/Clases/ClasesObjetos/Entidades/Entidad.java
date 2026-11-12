@@ -1,16 +1,21 @@
 package Clases.ClasesObjetos.Entidades;
 
 import Interfaces.IInterfazDeCombate;
+import Interfaces.IObtenerID;
 
 import java.util.Objects;
 
-public abstract class Entidad implements IInterfazDeCombate {
+public abstract class Entidad implements IInterfazDeCombate, IObtenerID {
+
+    private static int contador = 1;
+    private Integer id;
     private String nombreEntidad;
     private int vida;
     private int dañoBase;
     private int nivel;
 
     public Entidad(String nombre, int vida, int dañoBase, int nivel) {
+        this.id = contador++;
         this.nombreEntidad = nombre;
         this.vida = vida;
         this.dañoBase = dañoBase;
@@ -32,6 +37,11 @@ public abstract class Entidad implements IInterfazDeCombate {
 
     public int getNivel() {
         return nivel;
+    }
+
+    public Integer getID()
+    {
+        return this.id;
     }
 
 

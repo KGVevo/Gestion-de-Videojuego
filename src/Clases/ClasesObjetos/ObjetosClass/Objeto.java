@@ -1,5 +1,6 @@
 package Clases.ClasesObjetos.ObjetosClass;
 
+import Enums.E_Calidad;
 import Exceptions.RangoException;
 import Interfaces.IObtenerID;
 
@@ -11,12 +12,13 @@ public class Objeto implements IObtenerID {
     private Integer id;
     private String nombre;
     private int nivel;
+    private E_Calidad calidad;
 
     private String descripcion;
 
 
     //Constructor
-    public Objeto(String nombre, int nivel) throws RangoException
+    public Objeto(String nombre, int nivel, E_Calidad calidad) throws RangoException
     {
         if(nivel < 1)
         {
@@ -31,6 +33,7 @@ public class Objeto implements IObtenerID {
         this.id = contador++;
         this.nombre = nombre;
         this.nivel = nivel;
+        this.calidad = calidad;
         this.descripcion = "No tiene ninguna descripcion";
     }
 
@@ -55,6 +58,9 @@ public class Objeto implements IObtenerID {
         return this.descripcion;
     }
 
+    public E_Calidad getCalidad() {
+        return calidad;
+    }
 
     @Override
     public Integer getID() {

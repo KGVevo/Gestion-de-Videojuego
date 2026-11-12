@@ -5,15 +5,15 @@ public enum E_Dificultad {
     /// La dificultadad y la cantidad de enemigos por fase
     FACIL(3, 5), NORMAL(5, 10), DIFICIL(8, 20);
 
-    private double cantidadEnemigos;
+    private int cantidadEnemigos;
     private int nivelDeEnemigos;
 
-    E_Dificultad(double cantidadEnemigos, int  nivelDeEnemigos)
+    E_Dificultad(int cantidadEnemigos, int  nivelDeEnemigos)
     {
         this.cantidadEnemigos = cantidadEnemigos;
     }
 
-    public double obtenerCantidadEnemigos()
+    public int obtenerCantidadEnemigos()
     {
         return this.cantidadEnemigos;
     }

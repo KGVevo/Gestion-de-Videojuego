@@ -86,6 +86,6 @@ public abstract class Objeto implements IObtenerID {
 
     @Override
     public String toString() {
-        return "|ID: " + this.id + "|Nombre: " + this.nombre+"|Nivel: " + this.nivel +  "|Descripcion: " + this.descripcion + "|.";
+        return "ID: " + this.id + " | Nombre: " + this.nombre+" | Nivel: " + this.nivel +  " | Descripcion: " + this.descripcion + "";
     }
 }

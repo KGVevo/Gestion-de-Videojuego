@@ -2,23 +2,23 @@ package Enums;
 
 public enum E_Fases {
 
-    FACE_I(1, 1), FACE_II(2, 1.5), FACE_III(3, 2.2), FACE_FINAL(4, 2.7);
+    FACE_I("FASE 1", 1), FACE_II("FASE 2", 2), FACE_III("FASE 3", 3), FACE_FINAL("FASE FINAL", 4);
 
-    private int numFace;
-    private double numEnemigos;
+    private String faceActual;
+    private int numEnemigos;
 
-    E_Fases(int numFace, double numEnemigos)
+    E_Fases(String numFace, int numEnemigos)
     {
-        this.numFace = numFace;
+        this.faceActual = numFace;
         this.numEnemigos = numEnemigos;
     }
 
-    public int obtenerNumeroFace()
+    public String obtenerFaceActual()
     {
-        return this.numFace;
+        return this.faceActual;
     }
 
-    public double obtenerNumeroEnemigos()
+    public int obtenerNumeroEnemigos()
     {
         return this.numEnemigos;
     }

@@ -8,10 +8,11 @@ import Clases.ClasesObjetos.ObjetosClass.Objeto;
 import Clases.ClasesObjetos.ObjetosClass.Pocion;
 import Enums.*;
 import Exceptions.NoAdminException;
+import Exceptions.ObjetoInvalidoException;
 import Exceptions.RangoException;
 import Exceptions.TarjetaInvalidaException;
 
-
+import java.util.ArrayList;
 
 
 public class Servidor {
@@ -88,16 +89,16 @@ public class Servidor {
 
 
     /// Agregar Objeto
-    public boolean agregarObjeto(String cuitAdmin, String nombre, int nivel, E_Calidad calidad) throws NoAdminException, RangoException
+    public boolean agregarObjeto(String nombre, int nivel, E_Calidad calidad) throws NoAdminException, RangoException
     {
-        verificacionUsuario(cuitAdmin);
+
         return objetos.agregarElemento(new Objeto(nombre, nivel, calidad)); /// Esta funcion crea objetos que no tienen ninguna funcionalidad (huesos, piedra, palo, etc)
     }
 
     /// Agregar Arma
-    public boolean crearArma(String cuitAdmin, String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumo, E_ClaseAsociada claseAsociada) throws NoAdminException, RangoException
+    public boolean crearArma(String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumo, E_ClaseAsociada claseAsociada) throws NoAdminException, RangoException
     {
-        verificacionUsuario(cuitAdmin); //Verifica que exista el administrador
+
 
         if(claseAsociada == E_ClaseAsociada.CUERPO_A_CUERPO)
         {
@@ -116,50 +117,48 @@ public class Servidor {
     }
 
     /// Agregar Armadura
-    public boolean crearArmadura(String cuitAdmin, String nombre, int nivel, E_Calidad calidad, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws NoAdminException, RangoException {
-        verificacionUsuario(cuitAdmin);
+    public boolean crearArmadura(String nombre, int nivel, E_Calidad calidad, double proteccion, E_ClaseAsociada claseAsociada, double efecto) throws NoAdminException, RangoException {
+
         return objetos.agregarElemento(new Armadura(nombre, nivel, calidad ,proteccion, claseAsociada));
     }
 
     /// Agregar Pocion
-    public boolean crearPocion(String cuitAdmin, String nombre, int nivel, double efecto, E_TipoPocion tipoPocion, E_Calidad calidad) throws NoAdminException, RangoException {
-        verificacionUsuario(cuitAdmin);
+    public boolean crearPocion( String nombre, int nivel, double efecto, E_TipoPocion tipoPocion, E_Calidad calidad) throws NoAdminException, RangoException {
+
         return objetos.agregarElemento(new Pocion(nombre, nivel, efecto, tipoPocion, calidad));
     }
 
     /// Eliminar Objeto
-    public boolean eliminarObjeto(String cuitAdmin, int id) throws NoAdminException {
-        verificacionUsuario(cuitAdmin);
+    public boolean eliminarObjeto(int id) throws NoAdminException {
         return objetos.eliminarElemento(id);
     }
 
-    public String verObjetoID(String cuitAdmin, int id) throws NoAdminException {
-        verificacionUsuario(cuitAdmin);
+    public String verObjetoID(int id) throws NoAdminException {
+
         return objetos.obtenerElemento(id).toString();
     }
 
-    public String verObjetoTodos(String cuitAdmin) throws NoAdminException {
-        verificacionUsuario(cuitAdmin);
+    public String verObjetoTodos() throws NoAdminException {
+
         return objetos.obtenerElementoTodos();
     }
 
-    public boolean agregarEnemigo(String cuitAdmin, String nombreEnemigo, int vida, int danioBase, int nivel, E_TipoDeEnemigo ETipoDeEnemigo) throws NoAdminException {
-        verificacionUsuario(cuitAdmin);
+    public boolean agregarEnemigo( String nombreEnemigo, int vida, int danioBase, int nivel, E_TipoDeEnemigo ETipoDeEnemigo) throws NoAdminException {
+
         return enemigos.agregarElemento(new Enemigo(nombreEnemigo, vida, danioBase, nivel, ETipoDeEnemigo));
     }
 
-    public boolean eliminarEnemigo(String cuitAdmin, int id) throws NoAdminException {
-        verificacionUsuario(cuitAdmin);
+    public boolean eliminarEnemigo( int id) throws NoAdminException {
+
         return enemigos.eliminarElemento(id);
     }
 
-    public String verEnemigoID(String cuitAdmin, int id) throws NoAdminException {
-        verificacionUsuario(cuitAdmin);
+    public String verEnemigoID(int id) throws NoAdminException {
+
         return enemigos.obtenerElemento(id).toString();
     }
 
-    public String verEnemigoTodos(String cuitAdmin) throws NoAdminException {
-        verificacionUsuario(cuitAdmin);
+    public String verEnemigoTodos() throws NoAdminException {
         return enemigos.obtenerElementoTodos();
     }
 
@@ -229,12 +228,85 @@ public class Servidor {
         return jugadores.obtenerElementoTodos();
     }
 
-    /// Crear un Mundo
-    public boolean crearMundo(Jugador jugador,String nombrMundo, E_Dificultad dificultad){
-        Mundo aux = new Mundo(nombrMundo, jugador, dificultad);
-        return mundos.agregarElemento(aux);
 
+    /// Generador de tienda para Mundo
+    private ArrayList generarTienda(Mundo mundoCreado)throws ObjetoInvalidoException {
+        ArrayList<Objeto> aux = new ArrayList<>();
+
+        if(objetos.cantidadElementos() < mundoCreado.getCantidadObjetosTienda()){
+            throw new ObjetoInvalidoException("|No hay suficientes objetos para rellenar la Tienda|");
+        }
+
+
+        for(int i = 0; i < mundoCreado.getCantidadObjetosTienda(); i++){
+            aux.add(objetos.obtenerElemento(SistemaDeProbabilidad.generadorInt(objetos.cantidadElementos())));
+        }
+
+        return aux;
     }
+
+
+    /// Metodo para generar enemigos para el mundo
+    private ArrayList generarEnemigosMundo(Mundo mundoCreado, int nivelPlayer)throws RangoException {
+        /// Creamos un Arraylist auxiliar para guardar los enemigos filtrados
+        ArrayList<Enemigo> auxiliar = new ArrayList<>();
+        int i = 0;
+        /// Calculamos la cantidad de enemigos totales
+        int cantidadEnemigos = mundoCreado.getDificultad().obtenerCantidadEnemigos() + mundoCreado.getFase().obtenerNumeroEnemigos();
+
+        /// Filtra a los enemigos por el nivel del jugador y por la dificultadad del mundo
+        while(auxiliar.size() <= cantidadEnemigos && i < enemigos.cantidadElementos()){
+
+            if(cantidadEnemigos <= enemigos.cantidadElementos()){
+                if(enemigos.obtenerElemento(i).getNivel() <= nivelPlayer){
+                    auxiliar.add(enemigos.obtenerElemento(i));
+                }
+            }else{
+                throw new RangoException("| !! No hay suficientes enemigos para jugar en esta Dificultad !! |");
+            }
+        }
+
+        return auxiliar;
+    }
+
+
+    /// Crear un Mundo
+    public Mundo generarMundo(Jugador jugador,String nombrMundo, E_Dificultad dificultad) throws RangoException, ObjetoInvalidoException {
+        Mundo mundo = new Mundo(nombrMundo, jugador, dificultad);
+
+        /// Se generan los Enemigos
+        mundo.modificarEnemigos(generarEnemigosMundo(mundo, jugador.getNivel()));
+        /// Se genera la tienda
+        mundo.modificarTienda(generarTienda(mundo));
+
+        return mundo;
+    }
+
+    public String sistemaCombate(int accion){
+        if(accion == 1){
+        }else if(accion == 2){
+
+        }else if(accion == 3){
+
+        }else if(accion == 4){
+
+        }
+
+        return "|--> Seleccion incorrecta <--|";
+    }
+
+    public boolean comenzarFase(Mundo mundo, Jugador jugador) {
+
+        if(true){
+
+        }
+
+        return false;
+    }
+
+
+
+
 
     public int modificadorDeExp(int idUsuario, int valor, int nivelActual)
     {

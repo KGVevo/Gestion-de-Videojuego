@@ -35,15 +35,47 @@ public class Mundo implements IObtenerID {
         this.cantidadObjetosTienda = 5; // 5 objetos por tienda por defecto
     }
 
-
+    /// Getters
     public ArrayList<Objeto> getTienda() {
         return tiendaObjetos;
+    }
+
+    public String getNombreMundo() {
+        return nombreMundo;
+    }
+
+    public E_Fases getFase() {
+        return fase;
+    }
+
+    public Jugador getJugadorActual() {
+        return jugadorActual;
+    }
+
+    public E_Dificultad getDificultad() {
+        return dificultad;
+    }
+
+    public ArrayList<Enemigo> getEnemigosMundo() {
+        return enemigosMundo;
+    }
+
+    public ArrayList<Objeto> getTiendaObjetos() {
+        return tiendaObjetos;
+    }
+
+    public int getCantidadObjetosTienda() {
+        return cantidadObjetosTienda;
     }
 
     @Override
     public Jugador getID() {
         return this.jugadorActual;
     }
+
+
+
+    /// Metodos ///
 
     /// Metodo para avanzar las fases
     public boolean avanzarFace(){
@@ -54,33 +86,6 @@ public class Mundo implements IObtenerID {
             case FACE_FINAL -> {
                 return false;
             }
-        }
-
-        return true;
-    }
-
-    /// Metodo para generar enemigos para el mundo
-    public boolean generarEnemigosMundo(ArrayList<Enemigo> enemigosGlobal, int nivelPlayer)throws RangoException {
-        /// Creamos un Arraylist auxiliar para guardar los enemigos filtrados
-        ArrayList<Enemigo> auxiliar = new ArrayList<>();
-        int cantidadEnemigos = this.dificultad.obtenerCantidadEnemigos() + this.fase.obtenerNumeroEnemigos();
-
-        /// Filtra a los enemigos por el nivel del jugador y por la dificultadad del mundo
-        for (int i = 0; i < this.enemigosMundo.size(); i++){
-            if(cantidadEnemigos <= enemigosGlobal.size()){
-                if(enemigosGlobal.get(i).getNivel() <= nivelPlayer){
-                    auxiliar.add(enemigosGlobal.get(i));
-                }
-            }else{
-                throw new RangoException("| !! No hay suficientes enemigos para jugar en esta Dificultad !! |");
-            }
-        }
-
-
-
-        /// Elegi un enemigo random del arraylist auxiliar
-        for (int i = 0; i < cantidadEnemigos; i++){
-            this.enemigosMundo.add(auxiliar.get(SistemaDeProbabilidad.generadorInt(auxiliar.size())));
         }
 
         return true;
@@ -108,19 +113,15 @@ public class Mundo implements IObtenerID {
         return calidad;
     }
 
-
-    /// Funcion para generar una tienda randomizada en base al Arraylist de Objetos global
-    public boolean generarTienda(ArrayList<Objeto> objetos)throws ObjetoInvalidoException {
-
-
-        if(objetos.size() < this.cantidadObjetosTienda){
-            throw new ObjetoInvalidoException("|No hay suficientes objetos para rellenar la Tienda|");
-        }
-
-        for(int i = 0; i < this.cantidadObjetosTienda; i++){
-            tiendaObjetos.add(objetos.get(SistemaDeProbabilidad.generadorInt(objetos.size())));
-        }
-
-        return true;
+    public void modificarEnemigos(ArrayList<Enemigo> enemigos){
+        this.enemigosMundo.clear();
+        this.enemigosMundo = enemigos;
     }
+
+    public void modificarTienda(ArrayList<Objeto> tiendas){
+        this.tiendaObjetos.clear();
+        this.tiendaObjetos = tiendas;
+    }
+
+
 }

@@ -73,4 +73,9 @@ public class ClaseGenericaAL<T extends IObtenerID> {
 
         return devuelve;
     }
+
+    /// Obtener la Cantidad de Elementos
+    public int cantidadElementos(){
+        return this.lista.size();
+    }
 }

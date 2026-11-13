@@ -28,6 +28,7 @@ public class Servidor {
         this.usuarios = new ClaseGenericaHS<>();
         this.tarjetas = new ClaseGenericaHS<>();
 
+
         this.mundos = new ClaseGenericaAL<>();
         this.objetos = new ClaseGenericaAL<>();
         this.enemigos = new ClaseGenericaAL<>();
@@ -149,6 +150,11 @@ public class Servidor {
         return objetos.agregarElemento(new Pocion(nombre, nivel, efecto, tipoPocion, calidad));
     }
 
+    /// Agregar Mundo
+    public boolean agregarMundo(String nombreMundo, Jugador  jugador,  E_Dificultad dificultad){
+        Mundo mundo = new Mundo(nombreMundo, jugador, dificultad);
+        return mundos.agregarElemento(mundo);
+    }
 
 
     ///////////////////////////// ELEMINAR ELEMETOS METODOS ////////////////////////////////////////////////////////////
@@ -245,8 +251,9 @@ public class Servidor {
         return aux;
     }
 
+
     /// Metodo para generar enemigos para el mundo
-    private ArrayList generarEnemigosMundo(Mundo mundoCreado, int nivelPlayer)throws RangoException {
+    private ArrayList generarEnemigosMundo(Mundo mundoCreado, int nivelPlayer) throws RangoException {
         // Creamos un Arraylist auxiliar para guardar los enemigos filtrados
         ArrayList<Enemigo> auxiliar = new ArrayList<>();
         int i = 0;
@@ -269,20 +276,33 @@ public class Servidor {
     }
 
 
-    /// Crear un Mundo
-    public Mundo generarMundo(Jugador jugador,String nombrMundo, E_Dificultad dificultad) throws RangoException, ObjetoInvalidoException {
-        Mundo mundo = new Mundo(nombrMundo, jugador, dificultad);
-
+    /// Generar Datos del Mundo
+    public Mundo generarMundo(Mundo mundoCreado,Jugador jugador,String nombrMundo, E_Dificultad dificultad) throws RangoException, ObjetoInvalidoException {
         // Se generan los Enemigos
-        mundo.modificarEnemigos(generarEnemigosMundo(mundo, jugador.getNivel()));
+        mundoCreado.modificarEnemigos(generarEnemigosMundo(mundoCreado, jugador.getNivel()));
         // Se genera la tienda
-        mundo.modificarTienda(generarTienda(mundo));
+        mundoCreado.modificarTienda(generarTienda(mundoCreado));
 
-        return mundo;
+        return mundoCreado;
     }
 
-    public boolean comenzarFase(Mundo mundo, Jugador jugador){
-        return true;
+    public String mostrarEnemigos(Mundo mundoCreado) {
+        StringBuilder lista = new StringBuilder();
+
+        for (int i = 0; i < enemigos.cantidadElementos(); i++) {
+            lista.append(enemigos.obtenerElemento(i).toString());
+        }
+
+        return lista.toString();
+    }
+
+
+    public void comenzarFase(Mundo mundo, Jugador jugador, int accion, int objetivo){
+
+        if(jugador.getVida() > 0 || mundo.getEnemigosMundo().size() > 0){
+            sistemaCombateJugador(accion, mundo.getEnemigosMundo().get(objetivo), jugador);
+        }
+        
     }
 
 

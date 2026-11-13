@@ -15,7 +15,10 @@ public class JDBC {
     private static String URL = "jdbc:sqlite:sistema_jdbc.db";
 
     ///Para agregar un Usuario a la base de datos(Debere retonar un id que es el que usaremos para guardarlo en la clase)
-    private static String INSERTAR_USUARIO = "INSERT INTO Usuario (nombre, gmail, password) VALUES (?, ?, ?);";
+    private static String INSERTAR_USUARIO = "INSERT INTO Usuario (nombre, gmail, password) VALUES (?, ?, ?)";
+
+    ///Para agregar un Administrador a la base de datos
+    private static String INSERTAR_ADMIN = "INSERT INTO Administrador(cuil, idUsuario) VALUES (?, ?)";
 
     ///Para agregar un Player de un Usuario
     private static String INSERTAR_JUGADOR = "INSERT INTO Player (id_usuario, nombrePlayer, vida, level, expacumulada, monedas) VALUES (?, ?, ?, ?, ?, ?);";
@@ -29,6 +32,9 @@ public class JDBC {
     ///Para agregar un Enemigo
     private static String INSERTAR_ENEMIGO = "INSERT INTO Enemigo (nombreEnemigo, vida, level) VALUES (?, ?, ?);";
 
+
+
+
     private static String MOSTRAR_USUARIOS = "SELECT * FROM Usuario;";
 
     private static String MOSTRAR_JUGADORES = "SELECT * FROM Player;";
@@ -38,6 +44,8 @@ public class JDBC {
     private static String MOSTRAR_OBJETO_POR_ID = "SELECT * FROM Objetos WHERE id = ?;";
 
     private static String MOSTRAR_ENEMIGOS = "SELECT * FROM Enemigo;";
+
+    private static String ACTUALIZAR_ADMIN = "UPDATE Administrador SET permitido = ? WHERE id_usuario = ?;";
 
     private static String ACTUALIZAR_LEVEL = "UPDATE Player SET level = ? WHERE id = ?;";
 
@@ -64,11 +72,13 @@ public class JDBC {
         return conexion;
     }
 
+
+    /// Agrega un Usuario a la Base de Datos
     public static int agregarUsuario(String nombre, String gmail, String password){
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO)){
+                PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO, Statement.RETURN_GENERATED_KEYS)){
 
             ps.setString(1, nombre);
             ps.setString(2, gmail);
@@ -86,6 +96,47 @@ public class JDBC {
         }
         return idAgregado;
     }
+
+    /// Agregar un Administrador a la Base de Datos
+    public static int agregarAdministrador(String nombre, String gmail, String password, String cuil){
+        int idAgregado = -1;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO, Statement.RETURN_GENERATED_KEYS)){
+
+            ps.setString(1, nombre);
+            ps.setString(2, gmail);
+            ps.setString(3, password);
+
+            ps.executeUpdate();
+
+            try(ResultSet rs = ps.getGeneratedKeys()){
+                if(rs.next()){
+                    idAgregado = rs.getInt(1);
+                }
+            }
+
+            try(PreparedStatement ps2 = connection.prepareStatement(INSERTAR_ADMIN)){
+                ps2.setString(1, cuil);
+                ps2.setInt(2, idAgregado);
+
+                ps2.executeUpdate();
+            }
+
+
+
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return idAgregado;
+
+
+    }
+
+
+
 
     public static int agregarJugador(int id_usuario, String nombrePlayer, int vida, int level, int expacumulada, int monedas){
         int idAgregado = -1;

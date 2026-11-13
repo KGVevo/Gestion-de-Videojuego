@@ -6,27 +6,32 @@ import Clases.ClasesObjetos.ObjetosClass.ArmaCuerpoACuerpo;
 import Clases.ClasesObjetos.ObjetosClass.Armadura;
 import Clases.ClasesObjetos.ObjetosClass.Objeto;
 import Clases.ClasesObjetos.ObjetosClass.Pocion;
-import Enums.E_Calidad;
-import Enums.E_ClaseAsociada;
-import Enums.E_TipoDeEnemigo;
-import Enums.E_TipoPocion;
+import Enums.*;
 import Exceptions.NoAdminException;
 import Exceptions.RangoException;
 import Exceptions.TarjetaInvalidaException;
 
+
+
+
 public class Servidor {
+    /// HashSets
     private ClaseGenericaHS<Usuario> usuarios;
     private ClaseGenericaHS<Tarjeta> tarjetas;
+    /// ArrayLists
+    private ClaseGenericaAL<Mundo> mundos;
     private ClaseGenericaAL<Objeto> objetos;
     private ClaseGenericaAL<Enemigo> enemigos;
     private ClaseGenericaAL<Jugador> jugadores;
 
     public Servidor() {
         this.usuarios = new ClaseGenericaHS<>();
-        this.objetos = new ClaseGenericaAL<>();
         this.tarjetas = new ClaseGenericaHS<>();
-        enemigos = new ClaseGenericaAL<>();
-        jugadores = new ClaseGenericaAL<>();
+
+        this.mundos = new ClaseGenericaAL<>();
+        this.objetos = new ClaseGenericaAL<>();
+        this.enemigos = new ClaseGenericaAL<>();
+        this.jugadores = new ClaseGenericaAL<>();
     }
 
     private void verificacionUsuario(String cuit) throws NoAdminException {
@@ -36,7 +41,7 @@ public class Servidor {
     }
 
     /// Agrega tarjeta -> se usa para agregar un usuario con tarjeta
-    public Tarjeta agregarTarjeta(String titular, int numeroDeTarjeta)throws TarjetaInvalidaException {
+    private Tarjeta agregarTarjeta(String titular, int numeroDeTarjeta)throws TarjetaInvalidaException {
         Tarjeta tarjeta = new Tarjeta(titular, numeroDeTarjeta);
 
         if (!tarjetas.agregarElemento(tarjeta)) {
@@ -69,6 +74,18 @@ public class Servidor {
 
         return usuarios.agregarElemento(usuario);
     }
+
+    public boolean agregarAdministrador(String nombreUsuario, String gmail, String password,String cuil) {
+        int id = JDBC.agregarAdministrador(nombreUsuario, gmail, password, cuil);
+
+        if (id != -1) {
+            Administrador admin = new Administrador(id, nombreUsuario, gmail, cuil);
+            return usuarios.agregarElemento(admin);
+        }
+
+        return false;
+    }
+
 
     /// Agregar Objeto
     public boolean agregarObjeto(String cuitAdmin, String nombre, int nivel, E_Calidad calidad) throws NoAdminException, RangoException
@@ -172,6 +189,8 @@ public class Servidor {
         return jugadorActual;
     }
 
+
+    /// Crear un Jugador
     public boolean crearJugador(String nombreJugador, int vida, int danioBase, int idUsuario, int opcion)
     {
         //Envez de hacerlo con ENUM, me ahorro haciendolo con enteros.
@@ -191,20 +210,30 @@ public class Servidor {
         return false;
     }
 
+    /// Elimina un Jugador por id de Usuario
     public boolean eliminarJugador(int idUsuario)
     {
         return jugadores.eliminarElemento(idUsuario);
     }
 
+    /// Elimina un Jugador por Elemento Jugador
     public boolean eliminarJugador(Jugador j)
     {
         return jugadores.eliminarElemento(j);
     }
 
+    /// Mostrar Todos los Jugadores -> solo visible para admin
     public String mostrarJugadores(String cuitAdmin) throws NoAdminException
     {
         verificacionUsuario(cuitAdmin);
         return jugadores.obtenerElementoTodos();
+    }
+
+    /// Crear un Mundo
+    public boolean crearMundo(Jugador jugador,String nombrMundo, E_Dificultad dificultad){
+        Mundo aux = new Mundo(nombrMundo, jugador, dificultad);
+        return mundos.agregarElemento(aux);
+
     }
 
     public int modificadorDeExp(int idUsuario, int valor, int nivelActual)
@@ -241,6 +270,9 @@ public class Servidor {
     public int jugadorHabilidadArma(int idUsuario) {
         return resultadoClase(idUsuario).habilidadArma();
     }
+
+
+
 
     /*==============================================================================================================*/
 

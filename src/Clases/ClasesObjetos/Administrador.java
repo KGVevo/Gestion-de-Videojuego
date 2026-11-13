@@ -5,17 +5,18 @@ import java.util.Objects;
 public class Administrador extends Usuario {
 
     private String cuil;
+    private boolean permitido;
 
-    public Administrador(Integer id, String userNombre, String gmail, String cuil)
-    {
+    public Administrador(Integer id, String userNombre, String gmail, String cuil) {
         super(id, userNombre, gmail);
         this.cuil = cuil;
+        this.permitido = false;
     }
 
-    public String obtenerCuitAdmin()
-    {
+    public String getCuil() {
         return this.cuil;
     }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -28,7 +29,7 @@ public class Administrador extends Usuario {
         }
 
         Administrador aux = (Administrador) obj;
-        return this.cuil.equals(aux.obtenerCuitAdmin());
+        return this.cuil.equals(aux.getCuil());
 
     }
 

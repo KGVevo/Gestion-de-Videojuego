@@ -8,10 +8,11 @@ import Enums.E_Dificultad;
 import Enums.E_Fases;
 import Exceptions.ObjetoInvalidoException;
 import Exceptions.RangoException;
+import Interfaces.IObtenerID;
 
 import java.util.ArrayList;
 
-public class Mundo {
+public class Mundo implements IObtenerID {
 
     private String nombreMundo;
     private E_Fases fase;
@@ -39,7 +40,10 @@ public class Mundo {
         return tiendaObjetos;
     }
 
-
+    @Override
+    public Jugador getID() {
+        return this.jugadorActual;
+    }
 
     /// Metodo para avanzar las fases
     public boolean avanzarFace(){
@@ -82,7 +86,7 @@ public class Mundo {
         return true;
     }
 
-    /// Genera la calidad del Loot, se va a implementar tanto en la tienda como en loot de enemigos
+    /// Genera la calidad del Loot de enemigos
     public E_Calidad generarCalidadObjeto(){
         E_Calidad calidad = E_Calidad.COMUN;
 

@@ -64,14 +64,13 @@ public class ClaseGenericaAL<T extends IObtenerID> {
 
     /// Obtener todos los elementos
     public String obtenerElementoTodos(){
-        String devuelve = "";
+        StringBuilder sb = new StringBuilder();
 
-        Iterator<T> it = lista.iterator();
-        while (it.hasNext()){
-            devuelve += it.toString() + "\n";
+        for(T elemento : this.lista){
+            sb.append(elemento.toString());
         }
 
-        return devuelve;
+        return sb.toString();
     }
 
     /// Obtener la Cantidad de Elementos

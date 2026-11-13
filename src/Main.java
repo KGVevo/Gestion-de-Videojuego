@@ -3,6 +3,7 @@ import Clases.ClasesObjetos.Servidor;
 import Enums.*;
 import Exceptions.RangoException;
 import Exceptions.TarjetaInvalidaException;
+import Exceptions.UserInvalidException;
 
 import java.util.Scanner;
 
@@ -82,21 +83,25 @@ public class Main {
                 break;
                 case 3:{
 
-                    /*System.out.println("|-> Nombre de Usuario: ");
-                    String nombre = input.nextLine();
+                    System.out.println("|-> Gmail: ");
+                    String gmail = input.nextLine();
                     System.out.println("|-> Contraseña: ");
-                    String password = input.nextLine();*/
+                    String password = input.nextLine();
 
-                    /*if()
-                    {
-                        //Si es admin pasa al primer case
-                        seleccion = 1;
+
+                    try {
+                        if(servidor.confirmarAdministrador(gmail)) {
+                            System.out.println("|--> HAS INICIADO COMO ADMINISTRADOR <--|");
+                            seleccion = 1;
+                        }
+                        else{
+                            System.out.println("|--> HAS INICIADO SESION COMO USUARIO <--|");
+                            seleccion = 2;
+                        }
+                    }catch (UserInvalidException e){
+                        e.getMessage();
                     }
-                    else
-                    {
-                        //Si es Usuario pasa al segundo case
-                        seleccion = 2;
-                    }*/
+
 
                     switch(1){
                         case 1:{
@@ -111,7 +116,7 @@ public class Main {
                             System.out.println("7.|--> Ver Objeto por ID <--|");
                             System.out.println("8.|--> Ver todos los Objetos <--|");
                             System.out.println("===========================================");
-                            System.out.println("9.|--> Agregar un Enemigo <--|");
+                            System.out.println("9.|-->  Agregar un Enemigo <--|");
                             System.out.println("10.|--> Eliminar un Enemigo <--|");
                             System.out.println("11.|--> Ver Enemigo por ID <--|");
                             System.out.println("12.|--> Ver todos los Enemigos <--|");
@@ -556,13 +561,13 @@ public class Main {
                                     System.out.println("|-> Ingrese la ID del objeto: ");
                                     id = input.nextInt();
 
-                                    System.out.println(servidor.verObjetoID(id));
+                                    System.out.println(servidor.mostrarObjetoID(id));
 
                                     break;
                                 case 8:
 
                                     System.out.println("|-> Lista de Todos los Objetos");
-                                    System.out.println(servidor.verObjetoTodos());
+                                    System.out.println(servidor.mostrarObjetoTodos());
 
                                     break;
                                 case 9:
@@ -615,7 +620,6 @@ public class Main {
                                         }
                                     }
 
-                                    JDBC.agregarEnemigo(nombre, vida, nivel);
                                     servidor.agregarEnemigo(nombre, vida, daño, nivel, tipoEnemigo);
                                     System.out.println("|---> ENEMIGO CREADO CON EXITO <---|");
 
@@ -635,13 +639,13 @@ public class Main {
                                     System.out.println("|-> Ingrese la ID del Enemigo: ");
                                     id = input.nextInt();
 
-                                    System.out.println(servidor.verEnemigoID(id));
+                                    System.out.println(servidor.mostrarEnemigoID(id));
 
                                     break;
                                 case 12:
 
                                     System.out.println("|-> Lista de Todos los Enemigos");
-                                    System.out.println(servidor.verEnemigoTodos());
+                                    System.out.println(servidor.mostrarEnemigosTodos());
 
                                     break;
                                 case 13:

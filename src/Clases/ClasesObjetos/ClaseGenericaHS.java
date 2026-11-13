@@ -12,7 +12,7 @@ public class ClaseGenericaHS<T extends IObtenerID> {
     }
 
     /// Agregar elemento
-    public boolean agregarElemento(T elemento) {
+    public boolean agregarElemento(T elemento){
         return this.elementos.add(elemento);
     }
 
@@ -33,7 +33,7 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         while (it.hasNext())
         {
             T devuelve = it.next();
-            if(devuelve.getID() == id){
+            if(devuelve.getID().equals(id)){
                 return this.elementos.remove(devuelve);
             }
         }
@@ -47,7 +47,7 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         while (it.hasNext())
         {
             T devuelve = it.next();
-            if (devuelve.getID() == id){
+            if (devuelve.getID().equals(id)){
                 return devuelve;
             }
         }
@@ -55,17 +55,29 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         return null;
     }
 
-    /// Obtener todos los elementos
-    public String obtenerElementoTodos(){
-        String devuelve = "";
-
+    public T obtenerElemento(String id){
         Iterator<T> it = elementos.iterator();
         while (it.hasNext())
         {
-            devuelve += it.toString() + "\n";
+            T devuelve = it.next();
+            if (devuelve.getID().equals(id)){
+                return devuelve;
+            }
         }
 
-        return devuelve;
+        return null;
+    }
+
+
+    /// Mostrar todos los elementos
+    public String obtenerElementoTodos(){
+        StringBuilder sb = new StringBuilder();
+
+        for(T elemento : elementos){
+            sb.append(elemento.toString());
+        }
+
+        return sb.toString();
     }
 
     public boolean existeElemento(Integer id){
@@ -92,6 +104,7 @@ public class ClaseGenericaHS<T extends IObtenerID> {
 
         return devuelve;
     }
+
 
 
 }

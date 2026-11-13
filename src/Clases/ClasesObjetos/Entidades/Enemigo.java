@@ -64,6 +64,6 @@ public class Enemigo extends Entidad {
     public String toString()
     {
         return "Enemigo [" + super.toString() + "|Tipo: "+ this.ETipoDeEnemigo.getTipoDeEnemigo()+
-                "|Estado: "+ this.estado +"]";
+                "|Estado: "+ this.estado +"|.\n";
     }
 }

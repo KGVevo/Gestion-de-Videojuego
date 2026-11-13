@@ -38,11 +38,6 @@ public class Objeto implements IObtenerID {
     }
 
 
-    public int getIdentificador()
-    {
-        return this.id;
-    }
-
     public String getNombre()
     {
         return this.nombre;
@@ -79,7 +74,7 @@ public class Objeto implements IObtenerID {
         }
 
         Objeto aux = (Objeto) obj;
-        return this.id.equals(aux.getIdentificador());
+        return this.id.equals(aux.getID());
 
     }
 

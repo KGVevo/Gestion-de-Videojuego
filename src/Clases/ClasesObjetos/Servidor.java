@@ -10,7 +10,9 @@ import Enums.*;
 import Exceptions.ObjetoInvalidoException;
 import Exceptions.RangoException;
 import Exceptions.TarjetaInvalidaException;
+import Exceptions.UserInvalidException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -110,7 +112,7 @@ public class Servidor {
     /// Agrega un Enemigo
     public boolean agregarEnemigo(String nombreEnemigo, int vida, int danioBase, int nivel, E_TipoDeEnemigo ETipoDeEnemigo) {
         if(enemigos.agregarElemento(new Enemigo(nombreEnemigo, vida, danioBase, nivel, ETipoDeEnemigo))){
-            JDBC.agregarEnemigo(nombreEnemigo,vida, nivel);
+            JDBC.agregarEnemigo(nombreEnemigo,vida, nivel, danioBase, ETipoDeEnemigo);
             return true;
         }
         return false;
@@ -159,13 +161,28 @@ public class Servidor {
 
     ///////////////////////////// ELEMINAR ELEMETOS METODOS ////////////////////////////////////////////////////////////
 
+    public boolean eliminarUsuario(int id){
+        int afectado = JDBC.eliminarUsuario(id);
+        if(afectado != -1){
+            usuarios.eliminarElemento(id);
+            return true;
+        }
+        return false;
+    }
+
     /// Eliminar Objeto
     public boolean eliminarObjeto(int id){
         return objetos.eliminarElemento(id);
     }
+    /// Eliminar Enemigo
+    public boolean eliminarEnemigo(int id){
+        int afectado = JDBC.eliminarEnemigo(id);
 
-    public boolean eliminarEnemigo( int id){
-        return enemigos.eliminarElemento(id);
+        if(afectado != -1){
+            return enemigos.eliminarElemento(id);
+        }
+
+        return false;
     }
 
     /// Elimina un Jugador por id de Usuario
@@ -179,22 +196,23 @@ public class Servidor {
     }
 
 
+///////////////////////// MOSTRAR ELEMENTOS METODOS ////////////////////////////////////////////////////////////////////
 
-
-    public String verObjetoID(int id) {
+    public String mostrarObjetoID(int id) {
         return objetos.obtenerElemento(id).toString();
     }
 
-    public String verObjetoTodos() {
+    public String mostrarObjetoTodos() {
         return objetos.obtenerElementoTodos();
     }
 
 
-    public String verEnemigoID(int id) {
+    public String mostrarEnemigoID(int id) {
         return enemigos.obtenerElemento(id).toString();
     }
 
-    public String verEnemigoTodos() {
+    public String mostrarEnemigosTodos() {
+        enemigos = JDBC.descargarEnemigos();
         return enemigos.obtenerElementoTodos();
     }
 
@@ -229,11 +247,18 @@ public class Servidor {
         return jugadores.obtenerElementoTodos();
     }
 
+    /// Verifica si el Gmail es realmente de un Administrador
+    public boolean confirmarAdministrador(String gmail) throws UserInvalidException {
+        if(!usuarios.existeElemento(gmail)){
+            throw new UserInvalidException("|ERROR: !! Usuario/Administrador no encontrado !!|");
+        }
+        Object obj = usuarios.obtenerElemento(gmail);
+        return obj instanceof Administrador;
+    }
 
 
 
     ////////////////////////// METODOS PARA EL MUNDO ///////////////////////////////////////////////////////////////////
-
 
     /// Generador de tienda para Mundo
     private ArrayList generarTienda(Mundo mundoCreado)throws ObjetoInvalidoException {
@@ -302,7 +327,7 @@ public class Servidor {
         if(jugador.getVida() > 0 || mundo.getEnemigosMundo().size() > 0){
             sistemaCombateJugador(accion, mundo.getEnemigosMundo().get(objetivo), jugador);
         }
-        
+
     }
 
 

@@ -86,7 +86,7 @@ public abstract class Entidad implements IInterfazDeCombate, IObtenerID {
     public String toString()
     {
         return "|ID: " + this.id + "|Nombre: "+this.nombreEntidad+"|Vida Actual: "+this.vida+"|Daño Base: "
-                + this.dañoBase + "|Nivel: " +this.nivel + "|.\n";
+                + this.dañoBase + "|Nivel: " +this.nivel + "|";
     }
 
 }

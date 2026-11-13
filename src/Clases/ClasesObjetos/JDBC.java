@@ -1,61 +1,59 @@
 package Clases.ClasesObjetos;
 
-import Clases.ClasesObjetos.Entidades.Jugador;
-import Clases.ClasesObjetos.Entidades.JugadorCuerpoACuerpo;
-import Clases.ClasesObjetos.Entidades.JugadorDistancia;
-import Clases.ClasesObjetos.Entidades.JugadorMago;
+import Clases.ClasesObjetos.Entidades.*;
 import Clases.ClasesObjetos.ObjetosClass.*;
+import Enums.E_TipoDeEnemigo;
 import Exceptions.RangoException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class JDBC {
 
     private static String URL = "jdbc:sqlite:sistema.db";
 
-    ///Para agregar un Usuario a la base de datos(Debere retonar un id que es el que usaremos para guardarlo en la clase)
+    //Para agregar un Usuario a la base de datos(Debere retonar un id que es el que usaremos para guardarlo en la clase)
     private static String INSERTAR_USUARIO = "INSERT INTO Usuario (nombre, gmail, password) VALUES (?, ?, ?)";
 
-    ///Para agregar un Administrador a la base de datos
+    //Para agregar un Administrador a la base de datos
     private static String INSERTAR_ADMIN = "INSERT INTO Administrador(cuil, idUsuario) VALUES (?, ?)";
 
-    ///Para agregar un Player de un Usuario
+    //Para agregar un Player de un Usuario
     private static String INSERTAR_JUGADOR = "INSERT INTO Player (id_usuario, nombrePlayer, vida, level, expacumulada, monedas) VALUES (?, ?, ?, ?, ?, ?);";
 
-    ///Para agregar un Inventario(se debe crear al mismo tiempo que player y conectarlo con el id que retorne Player)
-    private static String INSERTAR_INVENTARIO = "INSERT INTO Inventario (id_player, nombrePlayer) VALUES (?, ?);";
+    //Para agregar un Inventario(se debe crear al mismo tiempo que player y conectarlo con el id que retorne Player)
+    private static String INSERTAR_INVENTARIO = "INSERT INTO Inventario (id_player, nombrePlayer) VALUES (?, ?)";
 
-    ///Para agregar Objetos a la base de datos
-    private static String INSERTAR_OBJETOS = "INSERT INTO Objetos (nombre, nivel, descripcion) VALUES (?, ?, ?);";
+    //Para agregar Objetos a la base de datos
+    private static String INSERTAR_OBJETOS = "INSERT INTO Objetos (nombre, nivel, descripcion) VALUES (?, ?, ?)";
 
-    ///Para agregar un Enemigo
-    private static String INSERTAR_ENEMIGO = "INSERT INTO Enemigo (nombreEnemigo, vida, level) VALUES (?, ?, ?)";
-
-
+    //Para agregar un Enemigo
+    private static String INSERTAR_ENEMIGO = "INSERT INTO Enemigo (nombreEnemigo, vida, level, danio, tipo) VALUES (?, ?, ?, ?, ?)";
 
 
-    private static String MOSTRAR_USUARIOS = "SELECT * FROM Usuario;";
-
-    private static String MOSTRAR_JUGADORES = "SELECT * FROM Player;";
-
-    private static String MOSTRAR_INVENTARIO_POR_ID = "SELECT * FROM Inventario WHERE id_player = ?;";
-
-    private static String MOSTRAR_OBJETO_POR_ID = "SELECT * FROM Objetos WHERE id = ?;";
-
-    private static String MOSTRAR_ENEMIGOS = "SELECT * FROM Enemigo;";
-
-    private static String ACTUALIZAR_ADMIN = "UPDATE Administrador SET permitido = ? WHERE id_usuario = ?;";
-
-    private static String ACTUALIZAR_LEVEL = "UPDATE Player SET level = ? WHERE id = ?;";
-
-    private static String ACTUALIZAR_VIDA = "UPDATE Player SET vida = ? WHERE id = ?;";
-
-    private static String ACTUALIZAR_EXP_ACUMULADA = "UPDATE Player SET expAcumulada = ? WHERE id = ?;";
-
-    private static String ACTUALIZAR_MONEDAS = "UPDATE Player SET monedas = ? WHERE id = ?;";
 
 
+    private static String MOSTRAR_USUARIOS = "SELECT * FROM Usuario";
+    private static String MOSTRAR_JUGADORES = "SELECT * FROM Player";
+    private static String MOSTRAR_INVENTARIO_POR_ID = "SELECT * FROM Inventario WHERE id_player = ?";
+    private static String MOSTRAR_OBJETO_POR_ID = "SELECT * FROM Objetos WHERE id = ?";
+    private static String MOSTRAR_ENEMIGOS = "SELECT * FROM Enemigo";
+
+
+
+    /// QUARY ACTUALIZAR ///
+
+    private static String ACTUALIZAR_ADMIN = "UPDATE Administrador SET permitido = ? WHERE id_usuario = ?";
+    private static String ACTUALIZAR_LEVEL = "UPDATE Player SET level = ? WHERE id = ?";
+    private static String ACTUALIZAR_VIDA = "UPDATE Player SET vida = ? WHERE id = ?";
+    private static String ACTUALIZAR_EXP_ACUMULADA = "UPDATE Player SET expAcumulada = ? WHERE id = ?";
+    private static String ACTUALIZAR_MONEDAS = "UPDATE Player SET monedas = ? WHERE id = ?";
+
+
+    /// QUARY ELIMINAR ///
+    private static String ELIMINAR_ENEMIGO = "DELETE FROM Enemigo WHERE id = ?";
+    private static String ELIMINAR_USUARIO = "DELETE FROM Usuario WHERE id = ?";
 
 
     public static String probarConexcion(){
@@ -137,7 +135,7 @@ public class JDBC {
 
 
 
-
+    /// Agrega un Jugador a la Base de Datos
     public static int agregarJugador(int id_usuario, String nombrePlayer, int vida, int level, int expacumulada, int monedas){
         int idAgregado = -1;
 
@@ -164,6 +162,8 @@ public class JDBC {
         return idAgregado;
     }
 
+
+    /// Agregar Inventario
     public static int agregarInventario(int idPlayer, String nombrePlayer){
         int idAgregado = -1;
 
@@ -186,6 +186,7 @@ public class JDBC {
         return idAgregado;
     }
 
+    /// Agregar Objeto
     public static int agregarObjeto(String nombre, int level, String descripcion){
         int idAgregado = -1;
 
@@ -208,7 +209,8 @@ public class JDBC {
         return idAgregado;
     }
 
-    public static int agregarEnemigo(String nombreEnemigo, int vida, int level){
+    /// Agrega un enemigo a la Base de Datos
+    public static int agregarEnemigo(String nombreEnemigo, int vida, int level, int danio, E_TipoDeEnemigo tipoDeEnemigo){
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -217,6 +219,8 @@ public class JDBC {
             ps.setString(1, nombreEnemigo);
             ps.setInt(2, vida);
             ps.setInt(3, level);
+            ps.setInt(4, danio);
+            ps.setString(5, tipoDeEnemigo.getTipoDeEnemigo());
 
             ps.executeUpdate();
 
@@ -229,6 +233,43 @@ public class JDBC {
             e.printStackTrace();
         }
         return idAgregado;
+    }
+
+    /// Descargar Enemigos de la Base de Datos
+    public static ClaseGenericaAL descargarEnemigos(){
+        ClaseGenericaAL enemigos = new ClaseGenericaAL<>();
+        Enemigo enemigo;
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(MOSTRAR_ENEMIGOS)){
+
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    String nombre = rs.getString("nombreEnemigo");
+                    int vida  = rs.getInt("vida");
+                    int danio = rs.getInt("danio");
+                    int nivel = rs.getInt("level");
+                    String tipo = rs.getString("tipo");
+                    E_TipoDeEnemigo tipoE = null;
+                    switch (tipo){
+                        case "NORMAL":{
+                            tipoE = E_TipoDeEnemigo.NORMAL;
+                        }
+                        case "ELITE":{
+                            tipoE = E_TipoDeEnemigo.ELITE;
+                        }
+                        case "JEFE":{
+                            tipoE = E_TipoDeEnemigo.JEFE;
+                        }
+                    }
+
+                    enemigo = new Enemigo(nombre, vida, danio, nivel, tipoE);
+                    enemigos.agregarElemento(enemigo);
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return enemigos;
     }
 
     public static HashSet<Usuario> descargarUsuarios(){
@@ -352,6 +393,46 @@ public class JDBC {
             e.printStackTrace();
         }
     }
+
+    public static int eliminarEnemigo(int id){
+        int afectado = -1;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(ELIMINAR_ENEMIGO)){
+
+            ps.setInt(1, id);
+
+            afectado = ps.executeUpdate();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return  afectado;
+    }
+
+
+    public static int eliminarUsuario(int id){
+        int afectado = -1;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(ELIMINAR_USUARIO)){
+
+            ps.setInt(1, id);
+
+            afectado = ps.executeUpdate();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return  afectado;
+    }
+
+
+
+
+
 
     /*public static Objeto obtenerObjetoPorId(int idObjeto) throws RangoException{
         Objeto objeto = null;

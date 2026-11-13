@@ -12,7 +12,18 @@ import java.util.HashSet;
 
 public class JDBC {
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              CONEXION                                                       ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private static String URL = "jdbc:sqlite:sistema.db";
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              QUERYS                                                         ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// QUARY INSERTAR ///
 
     //Para agregar un Usuario a la base de datos(Debere retonar un id que es el que usaremos para guardarlo en la clase)
     private static String INSERTAR_USUARIO = "INSERT INTO Usuario (nombre, gmail, password) VALUES (?, ?, ?)";
@@ -33,7 +44,7 @@ public class JDBC {
     private static String INSERTAR_ENEMIGO = "INSERT INTO Enemigo (nombreEnemigo, vida, level, danio, tipo) VALUES (?, ?, ?, ?, ?)";
 
 
-
+    /// QUARY MOSTRAR / OBTENER ///
 
     private static String MOSTRAR_USUARIOS = "SELECT * FROM Usuario";
     private static String MOSTRAR_ADMINISTRADORES = "SELECT * FROM Administrador";
@@ -42,7 +53,12 @@ public class JDBC {
     private static String MOSTRAR_OBJETO_POR_ID = "SELECT * FROM Objetos WHERE id = ?";
     private static String MOSTRAR_ENEMIGOS = "SELECT * FROM Enemigo";
 
+    private static String OBTENER_CONTRASEÑA = "SELECT * FROM Usuario WHERE gmail = ?";
+    private static String OBTENER_PLAYERS_POR_ID = "SELECT * FROM Player WHERE id_Usuario = ?;";
 
+    /// QUARY VERIFICAR ///
+
+    private static String VERIFICAR_ADMIN = "SELECT * FROM Administrador WHERE idUsuario = ?;";
 
     /// QUARY ACTUALIZAR ///
 
@@ -52,19 +68,15 @@ public class JDBC {
     private static String ACTUALIZAR_EXP_ACUMULADA = "UPDATE Player SET expAcumulada = ? WHERE id = ?";
     private static String ACTUALIZAR_MONEDAS = "UPDATE Player SET monedas = ? WHERE id = ?";
 
-
     /// QUARY ELIMINAR ///
+
     private static String ELIMINAR_ENEMIGO = "DELETE FROM Enemigo WHERE id = ?";
     private static String ELIMINAR_USUARIO = "DELETE FROM Usuario WHERE id = ?";
 
 
-    private static String VERIFICAR_ADMIN = "SELECT * FROM Administrador WHERE idUsuario = ?;";
-
-    private static String OBTENER_CONTRASEÑA = "SELECT * FROM Usuario WHERE gmail = ?";
-
-
-    private static String OBTENER_PLAYERS_POR_ID = "SELECT * FROM Player WHERE id_Usuario = ?;";
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                         PROBAR CONEXION                                                     ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static String probarConexcion(){
         String conexion = "|----> Error <----|";
@@ -76,17 +88,20 @@ public class JDBC {
             e.printStackTrace();
         }
 
-
         return conexion;
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              AGREGAR                                                        ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// Agrega un Usuario a la Base de Datos
     public static int agregarUsuario(String nombre, String gmail, String password){
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO, Statement.RETURN_GENERATED_KEYS)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO, Statement.RETURN_GENERATED_KEYS)){
 
             ps.setString(1, nombre);
             ps.setString(2, gmail);
@@ -131,19 +146,13 @@ public class JDBC {
                 ps2.executeUpdate();
             }
 
-
-
-
         }catch (SQLException e){
             e.printStackTrace();
         }
 
         return idAgregado;
 
-
     }
-
-
 
     /// Agrega un Jugador a la Base de Datos
     public static int agregarJugador(int id_usuario, String nombrePlayer, int opcion){
@@ -151,7 +160,7 @@ public class JDBC {
 
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(INSERTAR_JUGADOR)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_JUGADOR, PreparedStatement.RETURN_GENERATED_KEYS)){
 
             ps.setInt(1, id_usuario);
             ps.setString(2, nombrePlayer);
@@ -169,13 +178,12 @@ public class JDBC {
         return idAgregado;
     }
 
-
     /// Agregar Inventario
     public static int agregarInventario(int idPlayer, String nombrePlayer){
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(INSERTAR_INVENTARIO)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_INVENTARIO, PreparedStatement.RETURN_GENERATED_KEYS)){
 
             ps.setInt(1, idPlayer);
             ps.setString(2, nombrePlayer);
@@ -198,7 +206,7 @@ public class JDBC {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(INSERTAR_OBJETOS)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_OBJETOS, Statement.RETURN_GENERATED_KEYS)){
 
             ps.setString(1, nombre);
             ps.setInt(2, level);
@@ -221,7 +229,7 @@ public class JDBC {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(INSERTAR_ENEMIGO)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_ENEMIGO)){
 
             ps.setString(1, nombreEnemigo);
             ps.setInt(2, vida);
@@ -242,6 +250,11 @@ public class JDBC {
         return idAgregado;
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              DESCARGAR                                                      ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /// Descargar Enemigos de la Base de Datos
     public static ClaseGenericaAL descargarEnemigos(){
         ClaseGenericaAL enemigos = new ClaseGenericaAL<>();
@@ -258,14 +271,18 @@ public class JDBC {
                     String tipo = rs.getString("tipo");
                     E_TipoDeEnemigo tipoE = null;
                     switch (tipo){
+
                         case "NORMAL":{
                             tipoE = E_TipoDeEnemigo.NORMAL;
+                            break;
                         }
                         case "ELITE":{
                             tipoE = E_TipoDeEnemigo.ELITE;
+                            break;
                         }
                         case "JEFE":{
                             tipoE = E_TipoDeEnemigo.JEFE;
+                            break;
                         }
                     }
 
@@ -279,12 +296,13 @@ public class JDBC {
         return enemigos;
     }
 
+    /// Descargar Usuarios de la Base de Datos
     public static ClaseGenericaHS descargarUsuarios(){
         ClaseGenericaHS<Usuario> usuarios = new ClaseGenericaHS<>();
         Usuario usuario;
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(MOSTRAR_USUARIOS)){
+            PreparedStatement ps = connection.prepareStatement(MOSTRAR_USUARIOS)){
 
             try(ResultSet rs = ps.executeQuery()){
                 while(rs.next()){
@@ -302,6 +320,7 @@ public class JDBC {
         return usuarios;
     }
 
+    /// Descargar Administradores de la Base de Datos
     public static ClaseGenericaHS descargarAdministradores(){
         ClaseGenericaHS<Administrador> administrador = new ClaseGenericaHS<>();
         Administrador admin;
@@ -327,10 +346,7 @@ public class JDBC {
         return administrador;
     }
 
-
-
-
-
+    /// Descargar Jugadores de la Base de Datos
     public static HashSet<Jugador> descargarJugadores(){
         HashSet<Jugador> jugadores = new HashSet<>();
         Jugador jugador;
@@ -373,10 +389,153 @@ public class JDBC {
         return jugadores;
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              OBTENER / MOSTRAR                                              ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// Consigue la password de un Usuario para iniciar sesion
+    public static String getUsuarioPassword(String gmail){
+        String password = null;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(OBTENER_CONTRASEÑA)){
+
+
+            ps.setString(1, gmail);
+
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    password = rs.getString("password");
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return password;
+    }
+
+    /// Consigue el id de un Usuario a partir de su gmail
+    public static int getUsuarioId(String gmail){
+        int id = 0;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(OBTENER_CONTRASEÑA)){
+
+            ps.setString(1, gmail);
+
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    id = rs.getInt("id");
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+
+    /// Muestra los Jugadores de un Usuario
+    public static String mostrarJugadoresPorUsuario(int id){
+        Jugador jugador = null;
+        StringBuilder sb = new StringBuilder();
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(OBTENER_PLAYERS_POR_ID)){
+
+            ps.setInt(1, id);
+
+            try(ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int idUsuario = rs.getInt("id_Usuario");
+                    String nombreJugador = rs.getString("nombrePlayer");
+                    int vida = rs.getInt("vida");
+                    int expAcumulada = rs.getInt("expAcumulada");
+                    int monedas = rs.getInt("monedas");
+                    int nivel = rs.getInt("level");
+                    String tipoJugador = rs.getString("tipoPlayer");
+
+
+                    switch (tipoJugador.toUpperCase()) {
+                        case "GUERRERO":
+                            jugador = new JugadorCuerpoACuerpo(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
+                            break;
+                        case "MAGO":
+                            jugador = new JugadorMago(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
+                            break;
+                        case "ARQUERO":
+                            jugador = new JugadorDistancia(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
+                            break;
+                        default: {
+
+                        }
+
+                    }
+                    sb.append(jugador.toString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return sb.toString();
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              VERIFICAR                                                      ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static boolean verificarExistenciaAdmin(String gmail){
+        boolean select = false;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement("SELECT 1 FROM Administrador WHERE gmail = ?;")){
+
+            ps.setString(1, gmail);
+
+            try(ResultSet rs = ps.executeQuery()){
+                if (rs.next()){
+                    select = true;
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return select;
+    }
+
+    public static boolean verificarAdmin(int id_usuario){
+        boolean select = false;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(VERIFICAR_ADMIN)){
+
+            ps.setInt(1, id_usuario);
+
+            try(ResultSet rs = ps.executeQuery()){
+                if (rs.next()){
+                    select = true;
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return select;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              ACTUALIZAR                                                     ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static void actualizarLevelJugador(int nuevoLevelJugador, int idJugador){
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_LEVEL)){
+            PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_LEVEL)){
 
             ps.setInt(1, nuevoLevelJugador);
             ps.setInt(2, idJugador);
@@ -429,6 +588,11 @@ public class JDBC {
         }
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              ELIMINAR                                                       ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static int eliminarEnemigo(int id){
         int afectado = -1;
 
@@ -445,7 +609,6 @@ public class JDBC {
 
         return  afectado;
     }
-
 
     public static int eliminarUsuario(int id){
         int afectado = -1;
@@ -464,138 +627,6 @@ public class JDBC {
         return  afectado;
     }
 
-
-
-    /// Consigue la password de un Usuario para iniciar sesion
-    public static String getUsuarioPassword(String gmail){
-        String password = null;
-
-        try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement(OBTENER_CONTRASEÑA)){
-
-
-            ps.setString(1, gmail);
-
-            try(ResultSet rs = ps.executeQuery()){
-                while(rs.next()){
-                    password = rs.getString("password");
-                }
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-
-        return password;
-    }
-
-    public static boolean verificarExistenciaAdmin(String gmail){
-        boolean select = false;
-
-        try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement("SELECT 1 FROM Administrador WHERE gmail = ?;")){
-
-            ps.setString(1, gmail);
-
-            try(ResultSet rs = ps.executeQuery()){
-                if (rs.next()){
-                    select = true;
-                }
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return select;
-    }
-
-
-
-
-    public static boolean verificarAdmin(int id_usuario){
-        boolean select = false;
-
-        try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(VERIFICAR_ADMIN)){
-
-            ps.setInt(1, id_usuario);
-
-            try(ResultSet rs = ps.executeQuery()){
-                if (rs.next()){
-                    select = true;
-                }
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return select;
-    }
-
-
-    public static int getUsuarioId(String gmail){
-        int id = 0;
-
-        try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement(OBTENER_CONTRASEÑA)){
-
-            ps.setString(1, gmail);
-
-            try(ResultSet rs = ps.executeQuery()){
-                while(rs.next()){
-                    id = rs.getInt("id");
-                }
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-
-        return id;
-    }
-
-
-    public static String mostrarJugadoresPorUsuario(int id){
-        Jugador jugador = null;
-        StringBuilder sb = new StringBuilder();
-
-        try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement(OBTENER_PLAYERS_POR_ID)){
-
-            ps.setInt(1, id);
-
-            try(ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    int idUsuario = rs.getInt("id_Usuario");
-                    String nombreJugador = rs.getString("nombrePlayer");
-                    int vida = rs.getInt("vida");
-                    int expAcumulada = rs.getInt("expAcumulada");
-                    int monedas = rs.getInt("monedas");
-                    int nivel = rs.getInt("level");
-                    String tipoJugador = rs.getString("tipoPlayer");
-
-
-                    switch (tipoJugador.toUpperCase()) {
-                        case "GUERRERO":
-                            jugador = new JugadorCuerpoACuerpo(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
-                            break;
-                        case "MAGO":
-                            jugador = new JugadorMago(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
-                            break;
-                        case "ARQUERO":
-                            jugador = new JugadorDistancia(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
-                            break;
-                        default: {
-
-                        }
-
-                    }
-                    sb.append(jugador.toString());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        return sb.toString();
-    }
 
 
     /*public static Objeto obtenerObjetoPorId(int idObjeto) throws RangoException{

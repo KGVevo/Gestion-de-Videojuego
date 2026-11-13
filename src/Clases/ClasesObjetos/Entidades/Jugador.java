@@ -16,8 +16,8 @@ public abstract class Jugador extends Entidad {
     private int monedas;
 
 
-    public Jugador(String nombreJugador, int vida, int danioBase, int idUsuario, E_ClaseAsociada claseAsociada) {
-        super(nombreJugador, vida, danioBase, 1); //Por defecto el nivel esta en 1
+    public Jugador(String nombreJugador, int danioBase, int idUsuario, E_ClaseAsociada claseAsociada) {
+        super(nombreJugador, 100, danioBase, 1); //Por defecto el nivel esta en 1
         this.idUsuario = idUsuario; //Deberiamos usar la Base de Datos para saber si existe el jugador, caso contrario lanzar un "UserException"
         this.claseAsociada = null;
         this.expAcumuladaNivel = 0;

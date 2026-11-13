@@ -12,7 +12,7 @@ import java.util.HashSet;
 
 public class JDBC {
 
-    private static String URL = "jdbc:sqlite:sistema_jdbc.db";
+    private static String URL = "jdbc:sqlite:sistema.db";
 
     ///Para agregar un Usuario a la base de datos(Debere retonar un id que es el que usaremos para guardarlo en la clase)
     private static String INSERTAR_USUARIO = "INSERT INTO Usuario (nombre, gmail, password) VALUES (?, ?, ?)";
@@ -30,7 +30,7 @@ public class JDBC {
     private static String INSERTAR_OBJETOS = "INSERT INTO Objetos (nombre, nivel, descripcion) VALUES (?, ?, ?);";
 
     ///Para agregar un Enemigo
-    private static String INSERTAR_ENEMIGO = "INSERT INTO Enemigo (nombreEnemigo, vida, level) VALUES (?, ?, ?);";
+    private static String INSERTAR_ENEMIGO = "INSERT INTO Enemigo (nombreEnemigo, vida, level) VALUES (?, ?, ?)";
 
 
 
@@ -274,13 +274,13 @@ public class JDBC {
 
                     switch (tipoJugador.toUpperCase()) {
                         case "GUERRERO":
-                            jugador = new JugadorCuerpoACuerpo(nombreJugador, idUsuario, expAcumulada, monedas);
+                            jugador = new JugadorCuerpoACuerpo(nombreJugador, idUsuario, monedas);
                             break;
                         case "MAGO":
-                            jugador = new JugadorMago(nombreJugador, idUsuario, expAcumulada, monedas);
+                            jugador = new JugadorMago(nombreJugador, idUsuario, monedas);
                             break;
                         case "ARQUERO":
-                            jugador = new JugadorDistancia(nombreJugador, idUsuario, expAcumulada, monedas);
+                            jugador = new JugadorDistancia(nombreJugador, idUsuario, monedas);
                             break;
                         default:
 

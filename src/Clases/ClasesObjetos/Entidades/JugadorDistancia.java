@@ -9,8 +9,8 @@ public class JugadorDistancia extends Jugador {
     private int municion;
     private ArmaDistancia arma;
 
-    public JugadorDistancia(String nombreJugador, int vida, int dañoBase, int idUsuario){
-        super(nombreJugador, vida, dañoBase, idUsuario, E_ClaseAsociada.DISTANCIA);
+    public JugadorDistancia(String nombreJugador, int dañoBase, int idUsuario){
+        super(nombreJugador,dañoBase, idUsuario, E_ClaseAsociada.DISTANCIA);
         this.municion = 25; /// Municion por defecto
         this.arma = null;
     }

@@ -9,6 +9,13 @@ public class JugadorCuerpoACuerpo extends Jugador {
     private int energia;
     private ArmaCuerpoACuerpo arma;
 
+
+    public JugadorCuerpoACuerpo(String nombreJugador, int idUsuario, int vida, int nivel, int expAcumulada, int moneda) {
+        super(nombreJugador, 5, idUsuario, E_ClaseAsociada.CUERPO_A_CUERPO, vida, nivel, expAcumulada, moneda);
+        this.energia = 100;
+        this.arma = null;
+    }
+
     public JugadorCuerpoACuerpo(String nombreJugador, int danioBase, int idUsuario) {
         super(nombreJugador, danioBase, idUsuario, E_ClaseAsociada.CUERPO_A_CUERPO);
         this.energia = 100;

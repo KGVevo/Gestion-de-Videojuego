@@ -9,6 +9,13 @@ public class JugadorMago extends Jugador {
     private int mana;
     private ArmaMago arma;
 
+    public JugadorMago(String nombreJugador, int idUsuario, int vida, int nivel, int expAcumulada, int monedas) {
+        super(nombreJugador,6, idUsuario, E_ClaseAsociada.MAGO, vida,  nivel, expAcumulada, monedas);
+        this.mana = 100; /// Mana default de cada Jugador
+        this.arma = null;
+    }
+
+
     public JugadorMago(String nombreJugador, int danioBase, int idUsuario) {
         super(nombreJugador,  danioBase, idUsuario, E_ClaseAsociada.MAGO);
         this.mana = 100; /// Mana default de cada Jugador

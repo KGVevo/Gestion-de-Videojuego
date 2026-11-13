@@ -1,6 +1,7 @@
 import Clases.ClasesObjetos.JDBC;
 import Clases.ClasesObjetos.Servidor;
 import Enums.*;
+import Exceptions.ObjetoInvalidoException;
 import Exceptions.RangoException;
 import Exceptions.TarjetaInvalidaException;
 import Exceptions.UserInvalidException;
@@ -13,11 +14,24 @@ public class Main {
         int seleccion = 0;
         int flag = 1;
 
+
+
+
+
         Servidor servidor = new Servidor();
         servidor.descargarUsuarios();
 
+        if (servidor.agregarJugador("Pepito", 15, 3, 2)){
+            System.out.println("aaaaa");
+            servidor.mostrarJugadores();
+        }
+        servidor.agregarJugador("CuboPE", 12, 3, 1);
+
+
         System.out.println(JDBC.probarConexcion());
-        System.out.println(JDBC.getUsuarioPassword("juaneojeda122@gmail.com"));
+
+
+        System.out.println(servidor.mostrarJugadores());
 
 
 
@@ -28,28 +42,31 @@ public class Main {
         while(flag == 1){
             System.out.println("|--> Bienvenido <--|\n");
             System.out.println("|-Seleccione una opcion-|");
-            System.out.println("--> 1. Registrar Administrador");
+            System.out.println("--> 1. Registrar Administrador"); 
             System.out.println("--> 2. Registrar Usuario");
             System.out.println("--> 3. Iniciar Sesion");
             System.out.println("--> 4. Salir del sistema\n\n");
 
             switch(seleccion = input.nextInt()){
                 case 1:{
-                    input.nextLine();
-                    System.out.println("|-> Nombre Usuario: ");
-                    String nombre = input.nextLine();
-                    System.out.println("|-> Gmail: " );
-                    String gmail = input.nextLine();
-                    System.out.println("|-> Contraseña de la cuenta: ");
-                    String password = input.nextLine();
-                    System.out.println("|-> Cuil: ");
-                    String cuil = input.nextLine();
+                    try {
+                        input.nextLine();
+                        System.out.println("|-> Nombre Usuario: ");
+                        String nombre = input.nextLine();
+                        System.out.println("|-> Gmail: ");
+                        String gmail = input.nextLine();
+                        System.out.println("|-> Contraseña de la cuenta: ");
+                        String password = input.nextLine();
+                        System.out.println("|-> Cuil: ");
+                        String cuil = input.nextLine();
 
-                    servidor.agregarAdministrador(nombre, gmail,password, cuil);
-                    System.out.println("===========================================");
-                    System.out.println("|---> ADMINISTRADOR CREADO CON EXITO <---|");
-                    System.out.println("===========================================");
-
+                        servidor.agregarAdministrador(nombre, gmail, password, cuil);
+                        System.out.println("===========================================");
+                        System.out.println("|---> ADMINISTRADOR CREADO CON EXITO <---|");
+                        System.out.println("===========================================");
+                    }catch (ObjetoInvalidoException e){
+                        System.out.println(e.getMessage());
+                    }
 
                 }
                 break;
@@ -104,11 +121,10 @@ public class Main {
                     input.nextLine();
 
 
-                    System.out.println("|-> Gmail: ");
+                    System.out.println("|-> Gmail:");
                     String gmail = input.nextLine();
-                    System.out.println("|-> Contraseña: ");
+                    System.out.println("|-> Contraseña:");
                     String password = input.nextLine();
-
 
 
                     try {
@@ -121,7 +137,7 @@ public class Main {
                             seleccion = 2;
                         }
                     }catch (UserInvalidException e){
-                        e.getMessage();
+                        System.out.println(e.getMessage());
                     }
 
 
@@ -651,8 +667,7 @@ public class Main {
                                     System.out.println("|-> Ingrese la ID del Enemigo: ");
                                     id = input.nextInt();
 
-            ///***********                              JDBC.eliminarEnemigo(id); //No existe el metodo
-
+                                    JDBC.eliminarEnemigo(id);
                                     servidor.eliminarEnemigo(id);
 
                                     break;
@@ -670,11 +685,6 @@ public class Main {
                                     System.out.println(servidor.mostrarEnemigosTodos());
 
                                     break;
-                                case 13:
-
-                                    //Juan debe terminar con mundo
-
-                                    break;
                             }
                         }
                     break;
@@ -684,18 +694,66 @@ public class Main {
                             System.out.println("2.|--> Iniciar Partida <--|");
                             System.out.println("3.|--> Mostrar Tus Jugadores <--|");
                             System.out.println("4.|--> Borrar un Jugador <--|");
-                            System.out.println("5.|--> Cerrar Sesion <--|");
+                            System.out.println("5.|--> Agregar un Jugador <--|");
+                            System.out.println("6.|--> Cerrar Sesion <--|");
 
                             switch (seleccion = input.nextInt()){
                                 case 1:{
 
-                                }
-                                break;
-                                case 2:{
+                                    input.nextLine();
+
+                                    System.out.println("|-> Nombre del Mundo: ");
+                                    String nombre = input.nextLine();
+
+                                    System.out.println("|-> Ingrese el Id de su Jugador: ");
+                                    int id = input.nextInt();
+
+                                    input.nextLine();
+
+                                    E_Dificultad dificultad = null ;
+                                    boolean corte = false;
+
+                                    while(corte == false)
+                                    {
+                                        System.out.println("Seleccione una calidad de la Pocion: ");
+                                        System.out.println("1. |-> Facil <-|");
+                                        System.out.println("2. |-> Normal <-|");
+                                        System.out.println("3. |-> Dificil <-|");
+
+                                        seleccion = input.nextInt();
+
+                                        if(seleccion == 1)
+                                        {
+                                            corte = true;
+                                            dificultad = E_Dificultad.FACIL;
+                                        }
+                                        else if(seleccion == 2)
+                                        {
+                                            corte = true;
+                                            dificultad = E_Dificultad.NORMAL;
+                                        }
+                                        else if(seleccion == 3)
+                                        {
+                                            corte = true;
+                                            dificultad = E_Dificultad.DIFICIL;
+                                        }
+                                        else
+                                        {
+                                            System.out.println("Opcion no valida, vuelva a intentarlo");
+                                        }
+                                    }
+
+                                    servidor.agregarMundo(nombre, servidor.obtenerJugador(id), dificultad);
+                                    System.out.println("|---> MUNDO CREADO CON EXITO <---|");
 
                                 }
                                 break;
+                                case 2:{
+                                    System.out.println("ERROR: EN DESARROLLO");
+                                }
+                                break;
                                 case 3:{
+
 
 
 
@@ -704,6 +762,16 @@ public class Main {
                                 case 4:{
 
                                     System.out.println("|-> Ingrese la ID de su Jugador: ");
+                                    int id = input.nextInt();
+
+                                    servidor.eliminarJugador(id);
+
+                                }
+                                break;
+                                case 5:{
+
+                                    input.nextLine();
+                                    System.out.println("|-> Ingrese la ID de su Usuario: ");
                                     int id = input.nextInt();
 
                                     servidor.eliminarJugador(id);

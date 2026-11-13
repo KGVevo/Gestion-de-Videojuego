@@ -78,8 +78,14 @@ public class Servidor {
     }
 
     /// Agrega un Administrador
-    public boolean agregarAdministrador(String nombreUsuario, String gmail, String password,String cuil) {
+    public boolean agregarAdministrador(String nombreUsuario, String gmail, String password,String cuil) throws ObjetoInvalidoException {
+        if(!JDBC.verificarExistenciaAdmin(gmail)){
+            throw new ObjetoInvalidoException("!! Administrador ya registrado !!");
+        }
+
+
         int id = JDBC.agregarAdministrador(nombreUsuario, gmail, password, cuil);
+
 
         if (id != -1) {
             Administrador admin = new Administrador(id, nombreUsuario, gmail, cuil);
@@ -91,16 +97,19 @@ public class Servidor {
 
     /// Agregar un Jugador
     public boolean agregarJugador(String nombreJugador, int danioBase, int idUsuario, int opcion) {
+        int afectado = JDBC.agregarJugador(idUsuario, nombreJugador,opcion);
+
         /// En vez de hacerlo con ENUM, me ahorro haciendolo con enteros.
-        if(opcion == 1) {
+        if(opcion == 1 && afectado != -1) {
             /// Solo para Cuerpo a Cuerpo
+
             return jugadores.agregarElemento(new JugadorCuerpoACuerpo(nombreJugador, danioBase, idUsuario));
         }
-        else if(opcion == 2) {
+        else if(opcion == 2 && afectado != -1) {
             /// Solo para Distancia
             return jugadores.agregarElemento(new JugadorDistancia(nombreJugador, danioBase, idUsuario));
         }
-        else if(opcion == 3) {
+        else if(opcion == 3 && afectado != -1) {
             /// Solo para Mago
             return jugadores.agregarElemento(new JugadorMago(nombreJugador, danioBase, idUsuario));
         }
@@ -198,6 +207,12 @@ public class Servidor {
 
 ///////////////////////// MOSTRAR ELEMENTOS METODOS ////////////////////////////////////////////////////////////////////
 
+    public String mostrarJugadoresPorUsuario(String gmail){
+        String jugadores = JDBC.mostrarJugadoresPorUsuario(JDBC.getUsuarioId(gmail));
+        return jugadores;
+    }
+
+
     public String mostrarObjetoID(int id) {
         return objetos.obtenerElemento(id).toString();
     }
@@ -249,15 +264,26 @@ public class Servidor {
 
     /// Verifica si el Gmail es realmente de un Administrador
     public boolean confirmarAdministrador(String id, String password) throws UserInvalidException {
+        boolean select = false;
+
         if(!usuarios.existeElemento(id)){
             throw new UserInvalidException("|ERROR: !! Usuario/Administrador no encontrado !!|");
         }
 
         Object obj = usuarios.obtenerElemento(id);
-        if(obj != null){
-            return password.equals(JDBC.getUsuarioPassword(id));
+        if(obj != null && JDBC.verificarAdmin(JDBC.getUsuarioId(id))){
+            if(password.equals(JDBC.getUsuarioPassword(id))){
+                select = true;
+            }else if (!password.equals(JDBC.getUsuarioPassword(id))) {
+                throw new UserInvalidException("|!! La contraseña es incorrecta !!|");
+            }
+        }else if (obj != null && obj instanceof Usuario){
+            if (!password.equals(JDBC.getUsuarioPassword(id))) {
+                throw new UserInvalidException("|!! La contraseña es incorrecta !!|");
+            }
         }
-        return false;
+
+        return select;
     }
 
 
@@ -306,7 +332,7 @@ public class Servidor {
 
 
     /// Generar Datos del Mundo
-    public Mundo generarMundo(Mundo mundoCreado,Jugador jugador,String nombrMundo, E_Dificultad dificultad) throws RangoException, ObjetoInvalidoException {
+    public Mundo generarMundo(Mundo mundoCreado,Jugador jugador) throws RangoException, ObjetoInvalidoException {
         // Se generan los Enemigos
         mundoCreado.modificarEnemigos(generarEnemigosMundo(mundoCreado, jugador.getNivel()));
         // Se genera la tienda
@@ -326,38 +352,36 @@ public class Servidor {
     }
 
 
-    public void comenzarFase(Mundo mundo, Jugador jugador, int accion, int objetivo){
-
-        if(jugador.getVida() > 0 || mundo.getEnemigosMundo().size() > 0){
-            sistemaCombateJugador(accion, mundo.getEnemigosMundo().get(objetivo), jugador);
-        }
-
-    }
-
-
-
-
-    public String sistemaCombateEnemigo(){
-
-
-        return "";
-    }
-
-
-    public int sistemaCombateJugador(int accion, Enemigo objetivo, Jugador jugador){
-        if(accion == 1){
-            return objetivo.modificadorDeVida(jugador.atacar(),-1);
-        }else if(accion == 2){
-
-        }else if(accion == 3){
-
-        }else if(accion == 4){
-
-        }
-
-        return 1;
-    }
-
+//    public void comenzarFase(Mundo mundo, Jugador jugador, int accion, int objetivo){
+//        if(jugador.getVida() > 0 || mundo.getEnemigosMundo().size() > 0){
+//            sistemaCombateJugador(accion, mundo.getEnemigosMundo().get(objetivo), jugador);
+//
+//        }
+//
+//    }
+//
+//
+//    public String sistemaCombateEnemigo(){
+//
+//
+//        return "";
+//    }
+//
+//
+//    public int sistemaCombateJugador(int accion, Enemigo objetivo, Jugador jugador){
+//        if(accion == 1){
+//            return objetivo.modificadorDeVida(jugador.atacar(),-1);
+//        }else if(accion == 2){
+//
+//        }else if(accion == 3){
+//
+//        }else if(accion == 4){
+//
+//        }
+//
+//        return 1;
+//    }
+//
 
 
 

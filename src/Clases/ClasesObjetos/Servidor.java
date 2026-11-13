@@ -89,15 +89,13 @@ public class Servidor {
 
 
     /// Agregar Objeto
-    public boolean agregarObjeto(String nombre, int nivel, E_Calidad calidad) throws NoAdminException, RangoException
-    {
+    public boolean agregarObjeto(String nombre, int nivel, E_Calidad calidad) throws NoAdminException, RangoException {
 
         return objetos.agregarElemento(new Objeto(nombre, nivel, calidad)); /// Esta funcion crea objetos que no tienen ninguna funcionalidad (huesos, piedra, palo, etc)
     }
 
     /// Agregar Arma
-    public boolean crearArma(String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumo, E_ClaseAsociada claseAsociada) throws NoAdminException, RangoException
-    {
+    public boolean crearArma(String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumo, E_ClaseAsociada claseAsociada) throws NoAdminException, RangoException {
 
 
         if(claseAsociada == E_ClaseAsociada.CUERPO_A_CUERPO)
@@ -165,13 +163,11 @@ public class Servidor {
     /*==============================================================================================================*/
 
     // Metodos de Jugador
-    private Jugador obtenerJugador(int idUsuario)
-    {
+    private Jugador obtenerJugador(int idUsuario) {
         return jugadores.obtenerElemento(idUsuario);
     }
 
-    private Jugador resultadoClase(int idUsuario)
-    {
+    private Jugador resultadoClase(int idUsuario) {
         Jugador jugadorActual = obtenerJugador(idUsuario);
         if(jugadorActual.getClaseAsociada() == E_ClaseAsociada.CUERPO_A_CUERPO)
         {
@@ -190,8 +186,7 @@ public class Servidor {
 
 
     /// Crear un Jugador
-    public boolean crearJugador(String nombreJugador, int vida, int danioBase, int idUsuario, int opcion)
-    {
+    public boolean crearJugador(String nombreJugador, int vida, int danioBase, int idUsuario, int opcion) {
         //Envez de hacerlo con ENUM, me ahorro haciendolo con enteros.
         if(opcion == 1) //Solo para Cuerpo a Cuerpo
         {
@@ -210,21 +205,17 @@ public class Servidor {
     }
 
     /// Elimina un Jugador por id de Usuario
-    public boolean eliminarJugador(int idUsuario)
-    {
+    public boolean eliminarJugador(int idUsuario) {
         return jugadores.eliminarElemento(idUsuario);
     }
 
     /// Elimina un Jugador por Elemento Jugador
-    public boolean eliminarJugador(Jugador j)
-    {
+    public boolean eliminarJugador(Jugador j) {
         return jugadores.eliminarElemento(j);
     }
 
     /// Mostrar Todos los Jugadores -> solo visible para admin
-    public String mostrarJugadores(String cuitAdmin) throws NoAdminException
-    {
-        verificacionUsuario(cuitAdmin);
+    public String mostrarJugadores() throws NoAdminException {
         return jugadores.obtenerElementoTodos();
     }
 
@@ -282,7 +273,14 @@ public class Servidor {
         return mundo;
     }
 
-    public String sistemaCombate(int accion){
+
+    public String sistemaCombateEnemigo(){
+
+
+        return "";
+    }
+
+    public String sistemaCombateJugador(int accion){
         if(accion == 1){
         }else if(accion == 2){
 
@@ -308,8 +306,7 @@ public class Servidor {
 
 
 
-    public int modificadorDeExp(int idUsuario, int valor, int nivelActual)
-    {
+    public int modificadorDeExp(int idUsuario, int valor, int nivelActual) {
         return obtenerJugador(idUsuario).modificadorDeExp(valor, nivelActual);
     }
 

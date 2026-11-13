@@ -14,7 +14,10 @@ public class Main {
         int flag = 1;
 
         Servidor servidor = new Servidor();
+        servidor.descargarUsuarios();
+
         System.out.println(JDBC.probarConexcion());
+        System.out.println(JDBC.getUsuarioPassword("juaneojeda122@gmail.com"));
 
 
 
@@ -32,19 +35,33 @@ public class Main {
 
             switch(seleccion = input.nextInt()){
                 case 1:{
-                    // servidor.agregarAdministrador();
+                    input.nextLine();
+                    System.out.println("|-> Nombre Usuario: ");
+                    String nombre = input.nextLine();
+                    System.out.println("|-> Gmail: " );
+                    String gmail = input.nextLine();
+                    System.out.println("|-> Contraseña de la cuenta: ");
+                    String password = input.nextLine();
+                    System.out.println("|-> Cuil: ");
+                    String cuil = input.nextLine();
+
+                    servidor.agregarAdministrador(nombre, gmail,password, cuil);
+                    System.out.println("===========================================");
+                    System.out.println("|---> ADMINISTRADOR CREADO CON EXITO <---|");
+                    System.out.println("===========================================");
+
+
                 }
                 break;
                 case 2:{
                     System.out.println("1.|-> Registrar Usuario con Tarjeta <-|");
                     System.out.println("2.|-> Registrar Usuario sin tarjeta <-|");
                     System.out.println("3.|-> Volver...");
+                    seleccion = input.nextInt();
 
                     try{
-                        seleccion = input.nextInt();
                         input.nextLine();
                         if (seleccion == 1){
-                            input.nextLine();
                             System.out.println("|-> Nombre Usuario: " );
                             String nombre = input.nextLine();
                             System.out.println("|-> Gmail: " );
@@ -58,7 +75,9 @@ public class Main {
                             input.nextLine();
 
                             servidor.agregarUsuario(nombre, gmail, password , titular, numeroTarjeta);
+                            System.out.println("===========================================");
                             System.out.println("|---> USUARIO CREADO CON EXITO <---|");
+                            System.out.println("===========================================");
 
                         }else if(seleccion == 2){
                             System.out.println("|-> Nombre Usuario:" );
@@ -82,6 +101,8 @@ public class Main {
                 }
                 break;
                 case 3:{
+                    input.nextLine();
+
 
                     System.out.println("|-> Gmail: ");
                     String gmail = input.nextLine();
@@ -89,8 +110,9 @@ public class Main {
                     String password = input.nextLine();
 
 
+
                     try {
-                        if(servidor.confirmarAdministrador(gmail)) {
+                        if(servidor.confirmarAdministrador(gmail, password)) {
                             System.out.println("|--> HAS INICIADO COMO ADMINISTRADOR <--|");
                             seleccion = 1;
                         }
@@ -103,7 +125,7 @@ public class Main {
                     }
 
 
-                    switch(1){
+                    switch(seleccion){
                         case 1:{
                             System.out.println("===========================================");
                             System.out.println("1.|--> Ver Jugadores <--|");

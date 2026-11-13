@@ -35,6 +35,7 @@ public class JDBC {
 
 
     private static String MOSTRAR_USUARIOS = "SELECT * FROM Usuario";
+    private static String MOSTRAR_ADMINISTRADORES = "SELECT * FROM Administrador";
     private static String MOSTRAR_JUGADORES = "SELECT * FROM Player";
     private static String MOSTRAR_INVENTARIO_POR_ID = "SELECT * FROM Inventario WHERE id_player = ?";
     private static String MOSTRAR_OBJETO_POR_ID = "SELECT * FROM Objetos WHERE id = ?";
@@ -54,6 +55,11 @@ public class JDBC {
     /// QUARY ELIMINAR ///
     private static String ELIMINAR_ENEMIGO = "DELETE FROM Enemigo WHERE id = ?";
     private static String ELIMINAR_USUARIO = "DELETE FROM Usuario WHERE id = ?";
+
+
+
+
+    private static String OBTENER_CONTRASEÑA = "SELECT * FROM Usuario WHERE gmail = ?";
 
 
     public static String probarConexcion(){
@@ -272,8 +278,8 @@ public class JDBC {
         return enemigos;
     }
 
-    public static HashSet<Usuario> descargarUsuarios(){
-        HashSet<Usuario> usuarios = new HashSet<>();
+    public static ClaseGenericaHS descargarUsuarios(){
+        ClaseGenericaHS<Usuario> usuarios = new ClaseGenericaHS<>();
         Usuario usuario;
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -286,7 +292,7 @@ public class JDBC {
                     String gmail = rs.getString("gmail");
 
                     usuario = new Usuario(idUsuario, nombre, gmail);
-                    usuarios.add(usuario);
+                    usuarios.agregarElemento(usuario);
                 }
             }
         }catch (SQLException e){
@@ -294,6 +300,34 @@ public class JDBC {
         }
         return usuarios;
     }
+
+    public static ClaseGenericaHS descargarAdministradores(){
+        ClaseGenericaHS<Administrador> administrador = new ClaseGenericaHS<>();
+        Administrador admin;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(MOSTRAR_ADMINISTRADORES)){
+
+            try(ResultSet rs = ps.executeQuery()){
+
+                while(rs.next()){
+                    int idAdministrador = rs.getInt("id");
+                    String nombre = rs.getString("nombre");
+                    String gmail = rs.getString("gmail");
+                    String cuil = rs.getString("cuil");
+
+                    admin = new Administrador(idAdministrador, nombre, gmail, cuil);
+                    administrador.agregarElemento(admin);
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return administrador;
+    }
+
+
+
 
 
     public static HashSet<Jugador> descargarJugadores(){
@@ -427,6 +461,30 @@ public class JDBC {
         }
 
         return  afectado;
+    }
+
+
+
+    /// Consigue la password de un Usuario para iniciar sesion
+    public static String getUsuarioPassword(String gmail){
+        String password = null;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(OBTENER_CONTRASEÑA)){
+
+
+            ps.setString(1, gmail);
+
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    password = rs.getString("password");
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return password;
     }
 
 

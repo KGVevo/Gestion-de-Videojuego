@@ -17,6 +17,10 @@ public class Administrador extends Usuario {
         return this.cuil;
     }
 
+    @Override
+    public String getID() {
+        return this.cuil;
+    }
 
     @Override
     public boolean equals(Object obj) {

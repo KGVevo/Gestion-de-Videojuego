@@ -30,10 +30,10 @@ public class Inventario {
     //-------|METODOS|----------//
 
     /// Funcion para buscar un item y devolverlo  --> Moduralizacion
-    public Objeto buscarItem(int id){
+    public Objeto buscarItem(Integer id){
 
         for (Objeto obj : objetos) {
-            if(obj.getIdentificador() == id){
+            if(obj.getID().equals(id)){
                 return obj;
             }
         }

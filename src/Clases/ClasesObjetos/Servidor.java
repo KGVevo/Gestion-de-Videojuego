@@ -248,12 +248,16 @@ public class Servidor {
     }
 
     /// Verifica si el Gmail es realmente de un Administrador
-    public boolean confirmarAdministrador(String gmail) throws UserInvalidException {
-        if(!usuarios.existeElemento(gmail)){
+    public boolean confirmarAdministrador(String id, String password) throws UserInvalidException {
+        if(!usuarios.existeElemento(id)){
             throw new UserInvalidException("|ERROR: !! Usuario/Administrador no encontrado !!|");
         }
-        Object obj = usuarios.obtenerElemento(gmail);
-        return obj instanceof Administrador;
+
+        Object obj = usuarios.obtenerElemento(id);
+        if(obj != null){
+            return password.equals(JDBC.getUsuarioPassword(id));
+        }
+        return false;
     }
 
 
@@ -395,6 +399,9 @@ public class Servidor {
     }
 
 
+    public void descargarUsuarios(){
+        usuarios = JDBC.descargarUsuarios();
+    }
 
 
     /*==============================================================================================================*/

@@ -1,71 +1,104 @@
 package Clases.ClasesObjetos.Entidades;
 
+import Clases.ClasesObjetos.ObjetosClass.Arma;
 import Clases.ClasesObjetos.ObjetosClass.ArmaCuerpoACuerpo;
-import Clases.ClasesObjetos.SistemaDeProbabilidad;
+import Clases.ClasesObjetos.SistemaDeJuego.SistemaDeProbabilidad;
 import Enums.E_ClaseAsociada;
 
 public class JugadorCuerpoACuerpo extends Jugador {
 
+
     private int energia;
-    private ArmaCuerpoACuerpo arma;
 
-
-    public JugadorCuerpoACuerpo(String nombreJugador, int idUsuario, int vida, int nivel, int expAcumulada, int moneda) {
-        super(nombreJugador, 5, idUsuario, E_ClaseAsociada.CUERPO_A_CUERPO, vida, nivel, expAcumulada, moneda);
+    // CONSTRUCTOR 1: PARA RELLENAR DE LA JDBC A JAVA
+    public JugadorCuerpoACuerpo(Integer id, String nombreJugador, int idUsuario, int danio, ArmaCuerpoACuerpo arma, int vida, int nivel, int expAcumulada, int moneda) {
+        super(id, nombreJugador, idUsuario, danio, E_ClaseAsociada.CUERPO_A_CUERPO, arma, vida, nivel, expAcumulada, moneda);
         this.energia = 100;
-        this.arma = null;
     }
 
-    public JugadorCuerpoACuerpo(String nombreJugador, int danioBase, int idUsuario) {
-        super(nombreJugador, danioBase, idUsuario, E_ClaseAsociada.CUERPO_A_CUERPO);
+    // CONSTRUCTOR 2: PARA CREAR LOS JUGADORES
+    public JugadorCuerpoACuerpo(Integer id, String nombreJugador, int idUsuario, ArmaCuerpoACuerpo arma) {
+        super(id, nombreJugador, idUsuario, 5, 100, E_ClaseAsociada.CUERPO_A_CUERPO, arma);
         this.energia = 100;
-        this.arma = null;
     }
 
-    public ArmaCuerpoACuerpo getArma() {
-        return arma;
-    }
+    //GETTERS
     public int getEnergia() {
         return energia;
     }
 
+
+    //***************************** METODOS ******************************************//
+
+
+    /// obtenemos el arma de su clase
     @Override
-     public int golpeCritico() {
-        int golpe = this.getDanioBase() + arma.getDanioBase();
-
-        /// 20% de hacer un golpe critico
-        if(SistemaDeProbabilidad.generarProb(20)){
-            return golpe * 2;
-        }
-
-        return golpe;
+    public ArmaCuerpoACuerpo getArma() {
+        return (ArmaCuerpoACuerpo) super.getArma();
     }
 
+
+    /// Equipa armas solamente de su clase
+    @Override
+    public boolean equiparArma(Arma arma) {
+        if (!(arma instanceof ArmaCuerpoACuerpo)) {
+            return false;
+        }
+
+        return super.equiparArma(arma);
+    }
+
+
+    /// METODO DE ATAQUE
     @Override
     public int atacar() {
+
+        /// Sin arma equipada no puede atacar
+        if (!this.tieneArma()) {
+            return 0;
+        }
+
         int golpeFinal = 0;
 
-        /// 90% de no fallar el golpe
-        if(SistemaDeProbabilidad.generarProb(90)){
+        //90% probabilidad de no fallar el golpe
+        if (SistemaDeProbabilidad.generarProb(90)) {
             golpeFinal = golpeCritico();
         }
+
         return golpeFinal;
     }
 
+    /// Gasta energia y pega el doble del daño del arma. Sin arma o sin energia suficiente devuelve 0.
     @Override
     public int habilidadArma() {
-
-        if(arma.getConsumoEnergia() < this.energia){
-            return arma.getDanioBase();
+        if (!this.tieneArma()) {
+            return 0;
         }
 
-        this.energia -= this.energia;
-        return arma.getDanioBase() * 2;
+        ArmaCuerpoACuerpo arma = this.getArma();
+
+        if (this.energia >= arma.getConsumoEnergia()) {
+            this.energia -= arma.getConsumoEnergia();
+            return arma.getDanioFinal() * 2;
+        }
+
+        return 0;
     }
 
-    public String toString()
-    {
-        return "Clase Cuerpo a Cuerpo ["+super.toString()+" | Energia: "+this.energia+"]\n"
-                +super.getInventario().toString();
+    /// Recupera una cantidad de energia maxima, o sea, 100
+    @Override
+    public boolean recuperarEnergia(int cantidad) {
+        if (cantidad <= 0 || this.energia >= 100) {
+            return false;
+        }
+
+        this.energia = Math.min(100, this.energia + cantidad);
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Clase Cuerpo a Cuerpo [" + super.toString() + " | Energia: " + this.energia + "]\n"
+                + super.getInventario().toString();
     }
 }

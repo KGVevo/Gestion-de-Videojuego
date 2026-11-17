@@ -1,4 +1,4 @@
-package Clases.ClasesObjetos;
+package Clases.ClasesObjetos.SistemaDeJuego;
 import java.util.Random;
 
 public class SistemaDeProbabilidad {

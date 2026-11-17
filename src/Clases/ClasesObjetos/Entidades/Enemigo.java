@@ -1,40 +1,21 @@
 package Clases.ClasesObjetos.Entidades;
 
-import Clases.ClasesObjetos.SistemaDeProbabilidad;
+import Clases.ClasesObjetos.SistemaDeJuego.SistemaDeProbabilidad;
 import Enums.E_TipoDeEnemigo;
 
 public class Enemigo extends Entidad {
 
     private E_TipoDeEnemigo ETipoDeEnemigo;
-    private boolean estado; /// Estado de vivo o muerto
 
 
-    public Enemigo(String nombreEnemigo, int vida, int danioBase, int nivel, E_TipoDeEnemigo ETipoDeEnemigo) {
-        super(nombreEnemigo, vida, danioBase, nivel);
+    public Enemigo(int id ,String nombreEnemigo, int vida, int danioBase, int nivel, E_TipoDeEnemigo ETipoDeEnemigo) {
+        super(id ,nombreEnemigo, vida, danioBase, nivel);
         this.ETipoDeEnemigo = ETipoDeEnemigo;
-        this.estado = true;
     }
 
     public E_TipoDeEnemigo getTipoDeEnemigo() {
         return ETipoDeEnemigo;
     }
-
-    public Integer obtenerID()
-    {
-        return super.getID();
-    }
-
-
-    public void cambiarEstado(){
-        if(this.estado){
-            this.estado = false;
-        }else {
-            this.estado = true;
-        }
-    }
-
-
-
 
 
     @Override
@@ -63,7 +44,6 @@ public class Enemigo extends Entidad {
     @Override
     public String toString()
     {
-        return "Enemigo [" + super.toString() + "|Tipo: "+ this.ETipoDeEnemigo.getTipoDeEnemigo()+
-                "|Estado: "+ this.estado +"|.\n";
+        return "Enemigo [" + super.toString() + "|Tipo: "+ this.ETipoDeEnemigo.getTipoDeEnemigo()+"|.\n";
     }
 }

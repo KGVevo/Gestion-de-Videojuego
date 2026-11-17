@@ -1,78 +1,123 @@
 package Clases.ClasesObjetos.Entidades;
 
+import Clases.ClasesObjetos.ObjetosClass.Arma;
 import Clases.ClasesObjetos.ObjetosClass.ArmaMago;
-import Clases.ClasesObjetos.SistemaDeProbabilidad;
+import Clases.ClasesObjetos.SistemaDeJuego.SistemaDeProbabilidad;
 import Enums.E_ClaseAsociada;
 
 public class JugadorMago extends Jugador {
 
     private int mana;
-    private ArmaMago arma;
 
-    public JugadorMago(String nombreJugador, int idUsuario, int vida, int nivel, int expAcumulada, int monedas) {
-        super(nombreJugador,6, idUsuario, E_ClaseAsociada.MAGO, vida,  nivel, expAcumulada, monedas);
+
+    // CONSTRUCTOR 1: PARA RELLENAR DE LA JDBC A JAVA (misma estructura en las tres clases de Jugador)
+    public JugadorMago(Integer id, String nombreJugador, int idUsuario, int danioBase, ArmaMago arma, int vida, int nivel, int expAcumulada, int monedas) {
+        super(id, nombreJugador, idUsuario, danioBase, E_ClaseAsociada.MAGO, arma , vida, nivel, expAcumulada, monedas);
         this.mana = 100; /// Mana default de cada Jugador
-        this.arma = null;
+    }
+
+    // CONSTRUCTOR 2: PARA CREAR LOS JUGADORES
+    public JugadorMago(Integer id ,String nombreJugador, int idUsuario, ArmaMago arma) {
+        super(id, nombreJugador,  idUsuario, 10, 100, E_ClaseAsociada.MAGO, arma);
+        this.mana = 100; /// Mana default de cada Jugador
     }
 
 
-    public JugadorMago(String nombreJugador, int danioBase, int idUsuario) {
-        super(nombreJugador,  danioBase, idUsuario, E_ClaseAsociada.MAGO);
-        this.mana = 100; /// Mana default de cada Jugador
-        this.arma = null;
-    }
-
+    /// GETTERS
     public int getMana() {
         return mana;
     }
 
+
+
+
+
+
+    //***************************** METODOS ******************************************//
+
+    /// Obtenemos el arma de su clase
+    @Override
     public ArmaMago getArma() {
-        return arma;
+        return (ArmaMago) super.getArma();
     }
 
 
+    /// Solo armas de su clase
     @Override
-    public int golpeCritico() {
-        int golpe = this.getDanioBase() + arma.getDanioBase();
-        if(SistemaDeProbabilidad.generarProb(20)){
-            return golpe * 2;
+    public boolean equiparArma(Arma arma) {
+        if(!(arma instanceof  ArmaMago)) {
+            return false;
         }
 
-        return golpe;
+        return super.equiparArma(arma);
     }
 
+
+    /// METODO DE ATAQUE
     @Override
     public int atacar() {
-        int golpeFinal = 0;
-
-        if(this.mana > this.arma.getConsumoMana()){
-            if(SistemaDeProbabilidad.generarProb(90)){
-                golpeFinal = this.golpeCritico();
-                this.mana -= this.arma.getConsumoMana();
-            }
+        if (!this.tieneArma()) {
+            return 0;
         }
 
+        int consumo = this.getArma().getConsumoMana();
+        int golpeFinal = 0;
+
+        /// >= para poder usar el ultimo mana disponible
+        if (this.mana >= consumo) {
+            if (SistemaDeProbabilidad.generarProb(90)) {
+                golpeFinal = this.golpeCritico();
+                this.mana -= consumo;
+            }
+        } else {
+            /// Igual que recargar() en el jugador a Distancia
+            this.recuperarMana();
+        }
 
         return golpeFinal;
     }
 
+    /// Recupera el mana
+    public boolean recuperarMana() {
+        return this.recuperarMana(100);
+    }
 
+    /// Recupera una cantidad de mana maxima, o sea, 100
+    @Override
+    public boolean recuperarMana(int cantidad) {
+        if (cantidad <= 0 || this.mana >= 100) {
+            return false;
+        }
+
+        this.mana = Math.min(100, this.mana + cantidad);
+        return true;
+    }
+
+    /// Habilidad del Arma
     @Override
     public int habilidadArma() {
-        /// Gasta mana y se cura vida al mismo tiempo
-        if(this.mana > (this.arma.getConsumoMana() * 2)){
-            this.mana -= this.arma.getConsumoMana() * 2;
-            this.modificadorDeVida(15, 1);
+        // Sin arma equipada no hay habilidad
+        if (!this.tieneArma()) {
+            return 0;
+        }
 
-            return arma.getDanioBase() * 2;
+        // Gasta mana y se cura vida al mismo tiempo
+        if(this.mana > (this.getArma().getConsumoMana() * 2)){
+            this.mana -= this.getArma().getConsumoMana() * 2;
+            this.curar(15);
+
+            return this.getArma().getDanioFinal() * 2;
         }
 
         return 0;
     }
 
-    public String toString()
-    {
-        return "Clase Cuerpo a Cuerpo ["+super.toString()+" | Mana: "+this.mana+"]\n"
+
+
+
+    @Override
+    public String toString() {
+        return "Clase Mago ["+super.toString()+" | Mana: "+this.mana+"]\n"
                 +super.getInventario().toString();
     }
 

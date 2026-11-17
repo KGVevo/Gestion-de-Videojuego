@@ -1,45 +1,14 @@
 package Clases.ClasesObjetos;
 
-import java.util.Objects;
+import Enums.E_Rol;
+
 
 public class Administrador extends Usuario {
 
-    private String cuil;
-    private boolean permitido;
 
-    public Administrador(Integer id, String userNombre, String gmail, String cuil) {
-        super(id, userNombre, gmail);
-        this.cuil = cuil;
-        this.permitido = false;
-    }
-
-    public String getCuil() {
-        return this.cuil;
-    }
-
-    @Override
-    public String getID() {
-        return this.cuil;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj){
-            return true;
-        }
-
-        if(obj == null || this.getClass() != obj.getClass()){
-            return false;
-        }
-
-        Administrador aux = (Administrador) obj;
-        return this.cuil.equals(aux.getCuil());
-
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.cuil);
+    public Administrador(Integer id, String userNombre, String gmail) {
+        /// Los permisos del Administrador los asigna Usuario segun su rol
+        super(id, userNombre, gmail, E_Rol.ADMINISTRADOR);
     }
 
 }

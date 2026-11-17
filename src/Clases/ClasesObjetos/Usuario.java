@@ -1,42 +1,55 @@
 package Clases.ClasesObjetos;
 
-import Exceptions.TarjetaInvalidaException;
+import Enums.E_EstadoCuenta;
+import Enums.E_Permisos;
+import Enums.E_Rol;
 import Interfaces.IObtenerID;
-import Interfaces.ISuscripcion;
+import Interfaces.IPermisos;
+
+import java.util.HashSet;
 import java.util.Objects;
 
 
-public class Usuario implements ISuscripcion, IObtenerID {
+public class Usuario implements IObtenerID<String>, IPermisos {
     private Integer id;
     private String userNombre;
     private String gmail;
-    private Tarjeta tarjeta;
-    private boolean premium;
+    private E_Rol rol;
+    private HashSet<E_Permisos> permisos;
+    private E_EstadoCuenta estadoCuenta;
 
 
 
-    /// Constructor 1: En caso de que el Usuario no quiera meter su Tarjeta
-    public Usuario(Integer id,String userNombre, String gmail) {
+    /// Constructor para un usuario nuevo: la cuenta nace ACTIVA
+    public Usuario(Integer id,String userNombre, String gmail, E_Rol rol) {
+        this(id, userNombre, gmail, rol, E_EstadoCuenta.ACTIVA);
+    }
+
+    /// Constructor para cargar un usuario de la base de datos (con su estado de cuenta)
+    public Usuario(Integer id,String userNombre, String gmail, E_Rol rol, E_EstadoCuenta estadoCuenta) {
         this.id = id;
         this.userNombre = userNombre;
         this.gmail = gmail;
-        this.tarjeta = null;
-        this.premium = false;
+        this.rol = rol;
+
+        // usar el signo "?" es como usar un IF  y los ":" seria como el ELSE
+        // Osea que significa que si estadoCuenta es igual a NULL lo deja en ACTIVA y si no es NULL le aplica lo que le pasaron por parametros
+        this.estadoCuenta = (estadoCuenta == null) ? E_EstadoCuenta.ACTIVA : estadoCuenta;
+        this.permisos = new HashSet<>();
+
+
+        /// El Administrador tiene todos los permisos por su rol, asi no los pierde si se carga de la base de datos.
+        if (rol == E_Rol.ADMINISTRADOR) {
+            for (E_Permisos p : E_Permisos.values()) {
+                this.permisos.add(p);
+            }
+        }
     }
 
 
-    /// Constructor 2: En caso de que el Usuario quiera meter la tarjeta de una
-    public Usuario(Integer id, String userNombre, String gmail, Tarjeta tarjeta) {
-        this.id = id;
-        this.userNombre = userNombre;
-        this.gmail = gmail;
-        this.tarjeta = tarjeta;
-        this.premium = false;
-    }
 
-
-    public Tarjeta getTarjeta() {
-        return tarjeta;
+    public Integer getIdUsuario() {
+        return id;
     }
 
     public String getUserNombre() {
@@ -47,38 +60,58 @@ public class Usuario implements ISuscripcion, IObtenerID {
         return gmail;
     }
 
-    public boolean getPremium() {
-        return premium;
+    public E_Rol getRol() {
+        return this.rol;
     }
 
+    public E_EstadoCuenta getEstadoCuenta() {
+        return this.estadoCuenta;
+    }
 
-    /// Funcion para pagar Cuenta Premium
-    public boolean pagarSuscripcion()throws TarjetaInvalidaException {
+    /// Dice si la cuenta esta baneada
+    public boolean estaBaneada() {
+        return this.estadoCuenta == E_EstadoCuenta.BANEADA;
+    }
 
-        if(this.tarjeta != null) {
-            this.tarjeta.restarSaldo(precioPremium);
-            this.premium = true;
-        }else{
-            throw new TarjetaInvalidaException("| !!!No tiene tarjeta registrada!!! |");
+    /// Banea la cuenta. Devuelve false si ya estaba baneada.
+    public boolean banear() {
+        if (this.estaBaneada()) {
+            return false;
         }
 
+        this.estadoCuenta = E_EstadoCuenta.BANEADA;
+        return true;
+    }
+
+    /// Le saca el ban a la cuenta. Devuelve false si no estaba baneada.
+    public boolean desbanear() {
+        if (!this.estaBaneada()) {
+            return false;
+        }
+
+        this.estadoCuenta = E_EstadoCuenta.ACTIVA;
         return true;
     }
 
 
-    /// Funcion para Registrar la Tarjeta en caso de que no lo haya hecho antes
-    public boolean registrarTarjeta(String titular, int numeroDeTarjeta)throws TarjetaInvalidaException {
-        if(this.tarjeta != null) {
-            throw new TarjetaInvalidaException("|-> Ya tienes una tarjeta registrada <-|");
-        }
 
-        Tarjeta aux = new Tarjeta(titular, numeroDeTarjeta);
-        this.tarjeta = aux;
+    /// Dar permisos
+    public void darPermiso(E_Permisos permiso){
+        this.permisos.add(permiso);
+    }
 
-        return true;
+    public void quitarPermiso(E_Permisos permiso){
+        this.permisos.remove(permiso);
     }
 
 
+
+
+    /// Metodo para revisar si tiene permisos
+    @Override
+    public boolean tienePermiso(E_Permisos permiso) {
+        return this.permisos.contains(permiso);
+    }
 
     @Override
     public String getID() {
@@ -105,15 +138,10 @@ public class Usuario implements ISuscripcion, IObtenerID {
         return Objects.hash(this.gmail);
     }
 
-    public String toString()
-    {
-        String premiumMensaje = "Si";
-        if(this.premium == false)
-        {
-            premiumMensaje = "No";
-        }
-        return "Usuario [ID: "+this.id+" | Nombre Usuario: "+this.userNombre+" | Gmail: "+this.gmail+" | Tarjeta: "+
-                this.tarjeta+" | Premium: "+premiumMensaje+"]";
+    @Override
+    public String toString() {
+        return "Usuario [ID: "+this.id+" | Nombre Usuario: "+this.userNombre+" | Gmail: "+this.gmail
+                + "| Rol: " + this.rol.getRol() + " | Cuenta: " + this.estadoCuenta + "]";
     }
 
 }

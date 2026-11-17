@@ -8,9 +8,9 @@ public class ArmaMago extends Arma {
 
     private int consumoMana;
 
-    public ArmaMago(String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumoMana) throws RangoException
+    public ArmaMago(Integer id, String nombre, int nivel, int danioBase, E_Calidad calidad, int consumoMana) throws RangoException
     {
-        super(nombre, nivel, calidad, dañoBase, E_ClaseAsociada.MAGO);
+        super(id, nombre, nivel, calidad, danioBase, E_ClaseAsociada.MAGO);
         this.consumoMana = consumoMana;
     }
 

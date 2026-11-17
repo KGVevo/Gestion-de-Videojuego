@@ -1,10 +1,8 @@
 package Interfaces;
 
-import Enums.E_ClaseAsociada;
+import Clases.ClasesObjetos.Entidades.Jugador;
 import Exceptions.ClaseAsociadaException;
 
-public interface IComprobarClase {
-
-    String equipar(E_ClaseAsociada claseActual) throws ClaseAsociadaException;
-
+public interface IComprobarClase{
+    boolean equipar(Jugador jugador) throws ClaseAsociadaException;
 }

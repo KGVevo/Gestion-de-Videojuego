@@ -11,6 +11,7 @@ public enum E_Dificultad {
     E_Dificultad(int cantidadEnemigos, int  nivelDeEnemigos)
     {
         this.cantidadEnemigos = cantidadEnemigos;
+        this.nivelDeEnemigos = nivelDeEnemigos;
     }
 
     public int obtenerCantidadEnemigos()

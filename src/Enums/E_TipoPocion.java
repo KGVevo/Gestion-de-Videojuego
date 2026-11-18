@@ -3,7 +3,7 @@ package Enums;
 public enum E_TipoPocion {
 
     CURACION("CURACION"), MANA("MANA"), ENERGIA("ENERGIA"),
-    DAÑO("DAÑO"), CRITICO("CRITICO");
+    DANIO("DANIO"), CRITICO("CRITICO");
 
     private String opcionPocion;
 

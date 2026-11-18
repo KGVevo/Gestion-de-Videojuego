@@ -1,6 +1,7 @@
 package Clases.ClasesObjetos;
 
 import Clases.ClasesObjetos.Entidades.*;
+import Enums.E_EstadoCuenta;
 import Enums.E_Rol;
 import Enums.E_TipoDeEnemigo;
 import Exceptions.UserInvalidException;
@@ -59,6 +60,7 @@ public class JDBC {
     /// Servira para cuando cambiemos el estado de Usuario a BENEADO
     private static String CAMBIAR_ESTADO_USUARIO = "UPDATE Usuario SET estado = ? WHERE id = ?";
 
+    private static String OBTENER_USUARIO_POR_ID = "SELECT * FROM Usuario WHERE id = ?";
 
 
 
@@ -120,19 +122,28 @@ public class JDBC {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                         QUARY USUARIO                                                       ///
+    ///                                         QUERY USUARIO                                                       ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// Agrega un Usuario a la Base de Datos
-    public static int agregarUsuario(String nombre, String gmail, String password){
+    public static int agregarUsuario(String nombre, String gmail, String password, int rol){
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO, Statement.RETURN_GENERATED_KEYS)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO)){
 
             ps.setString(1, nombre);
             ps.setString(2, gmail);
             ps.setString(3, password);
+
+            if (rol == 1){
+                ps.setString(4, String.valueOf(E_Rol.USUARIO));
+            }else if (rol == 2){
+                ps.setString(4, String.valueOf(E_Rol.MODERADOR));
+            }else if (rol == 3){
+                ps.setString(4, String.valueOf(E_Rol.ADMINISTRADOR));
+            }
+
 
             ps.executeUpdate();
             try(ResultSet rs = ps.getGeneratedKeys()){
@@ -147,13 +158,52 @@ public class JDBC {
         return idAgregado;
     }
 
+    public static ClaseGenericaHS<Usuario> obtenerUsuarios(){
+        ClaseGenericaHS<Usuario> usuarios = new ClaseGenericaHS<>();
+        boolean flag;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+                PreparedStatement ps = connection.prepareStatement(OBTENER_USUARIOS)){
+
+            try(ResultSet rs = ps.executeQuery()){
+               while(rs.next()){
+                    int idUsuario = rs.getInt("id");
+                    String nombre = rs.getString("nombre");
+                    String gmail = rs.getString("gmail");
+                    E_Rol rol = E_Rol.valueOf(rs.getString("rol"));
+
+                    if (rol == E_Rol.MODERADOR){
+                        int permitido = rs.getInt("permitido");
+                        if(permitido == 0){
+                            flag = false;
+                        }else{
+                            flag = true;
+                        }
+
+                        Moderador mod = new Moderador(idUsuario, nombre, gmail, flag);
+                        usuarios.agregarElemento(mod);
+                    }
+                    if (rol == E_Rol.ADMINISTRADOR){
+                        Administrador admin = new Administrador(idUsuario, nombre, gmail);
+                    }if (rol == E_Rol.USUARIO){
+                        Usuario usuario = new Usuario(idUsuario, nombre, gmail, rol);
+                   }
+
+               }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
+
+
     /// Consigue la password de un Usuario para iniciar sesion
     public static String getUsuarioPassword(String gmail){
         String password = null;
 
         try(Connection connection = DriverManager.getConnection(URL);
             PreparedStatement ps = connection.prepareStatement(OBTENER_CONTRASEÑA)){
-
 
             ps.setString(1, gmail);
 
@@ -168,6 +218,124 @@ public class JDBC {
 
         return password;
     }
+
+    public static void actualizarModerador(boolean b, int idUsuario){
+        int permitido;
+        if (b == false){
+            permitido = 0;
+        }else {
+            permitido = 1;
+        }
+        try(Connection connection = DriverManager.getConnection(URL);
+                PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_MODERADOR)){
+
+            ps.setInt(1, permitido);
+            ps.setInt(2, idUsuario);
+
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static Usuario obtenerUsuario(String gmail){
+
+        Usuario usuario = null;
+
+        boolean flag;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+                PreparedStatement ps = connection.prepareStatement(OBTENER_USUARIO_POR_GMAIL)){
+
+            ps.setString(1, gmail);
+
+            try(ResultSet rs = ps.executeQuery()){
+                if (rs.next()){
+                    int idUsuario = rs.getInt("id");
+                    String nombre = rs.getString("nombre");
+                    E_Rol rol = E_Rol.valueOf(rs.getString("rol"));
+
+                    if (rol == E_Rol.MODERADOR){
+                        int permitido = rs.getInt("permitido");
+                        if(permitido == 0){
+                            flag = false;
+                        }else{
+                            flag = true;
+                        }
+                        usuario = new Moderador(idUsuario, nombre, gmail, flag);
+                    }
+                    if (rol == E_Rol.ADMINISTRADOR){
+                        usuario = new Administrador(idUsuario, nombre, gmail);
+                    }if (rol == E_Rol.USUARIO){
+                        usuario = new Usuario(idUsuario, nombre, gmail, rol);
+                    }
+                }
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return usuario;
+    }
+
+    public static Usuario obtenerUsuarioPorId(int idUsuario){
+
+        Usuario usuario = null;
+
+        boolean flag;
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(OBTENER_USUARIO_POR_ID)){
+
+            ps.setInt(1, idUsuario);
+
+            try(ResultSet rs = ps.executeQuery()){
+                if (rs.next()){
+                    String gmail = rs.getString("gmail");
+                    String nombre = rs.getString("nombre");
+                    E_Rol rol = E_Rol.valueOf(rs.getString("rol"));
+
+                    if (rol == E_Rol.MODERADOR){
+                        int permitido = rs.getInt("permitido");
+                        if(permitido == 0){
+                            flag = false;
+                        }else{
+                            flag = true;
+                        }
+                        usuario = new Moderador(idUsuario, nombre, gmail, flag);
+                    }
+                    if (rol == E_Rol.ADMINISTRADOR){
+                        usuario = new Administrador(idUsuario, nombre, gmail);
+                    }if (rol == E_Rol.USUARIO){
+                        usuario = new Usuario(idUsuario, nombre, gmail, rol);
+                    }
+                }
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return usuario;
+    }
+
+    public static void actualizarUsuario(int idUsuario){
+        Usuario usuario = obtenerUsuarioPorId(idUsuario);
+
+        try(Connection connection = DriverManager.getConnection(URL);
+                PreparedStatement ps = connection.prepareStatement(CAMBIAR_ESTADO_USUARIO)){
+            
+            if (usuario.getEstadoCuenta() == E_EstadoCuenta.ACTIVA){
+                ps.setString(1, String.valueOf(E_EstadoCuenta.BANEADA));
+            }else if (usuario.getEstadoCuenta() == E_EstadoCuenta.BANEADA){
+                ps.setString(1, String.valueOf(E_EstadoCuenta.ACTIVA));
+            }
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     public static int eliminarUsuario(int id){
         int afectado = -1;

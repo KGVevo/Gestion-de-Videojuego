@@ -124,15 +124,24 @@ public class JDBC {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// Agrega un Usuario a la Base de Datos
-    public static int agregarUsuario(String nombre, String gmail, String password){
+    public static int agregarUsuario(String nombre, String gmail, String password, int rol){
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO, Statement.RETURN_GENERATED_KEYS)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO)){
 
             ps.setString(1, nombre);
             ps.setString(2, gmail);
             ps.setString(3, password);
+
+            if (rol == 1){
+                ps.setString(4, String.valueOf(E_Rol.USUARIO));
+            }else if (rol == 2){
+                ps.setString(4, String.valueOf(E_Rol.MODERADOR));
+            }else if (rol == 3){
+                ps.setString(4, String.valueOf(E_Rol.ADMINISTRADOR));
+            }
+
 
             ps.executeUpdate();
             try(ResultSet rs = ps.getGeneratedKeys()){

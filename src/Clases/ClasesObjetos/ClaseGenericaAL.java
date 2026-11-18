@@ -77,4 +77,42 @@ public class ClaseGenericaAL<T extends IObtenerID> {
     public int cantidadElementos(){
         return this.lista.size();
     }
+
+    public boolean verificarElemento(Integer id)
+    {
+        if(id < 1){
+            return false;
+        }
+
+        for(T elemento : lista){
+            if (elemento.getID().equals(id)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean verificarElemento(String id)
+    {
+        for(T elemento : lista){
+            if (elemento.getID().equals(id)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// Obtener todos los elementos
+    public String verElementoTodos(){
+        StringBuilder sb = new StringBuilder();
+
+        for(T elemento : this.lista){
+            sb.append("[=] " + elemento.toString() + "\n");
+        }
+
+        return sb.toString();
+    }
+
 }

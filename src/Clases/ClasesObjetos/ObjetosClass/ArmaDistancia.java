@@ -15,6 +15,11 @@ public class ArmaDistancia extends Arma {
         this.consumoMunicion = consumoMunicion;
     }
 
+    public ArmaDistancia(Objeto obj, int danioBase, int consumoMunicion) throws RangoException
+    {
+        super(obj.getID(), obj.getNombre(), obj.getNivel(), obj.getCalidad(), danioBase, E_ClaseAsociada.DISTANCIA);
+        this.consumoMunicion = consumoMunicion;
+    }
 
     //Metodos
     public int getConsumoMunicion()

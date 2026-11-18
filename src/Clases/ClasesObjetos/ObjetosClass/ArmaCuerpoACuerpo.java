@@ -14,6 +14,11 @@ public class ArmaCuerpoACuerpo extends Arma {
         this.consumoEnergia = consumoEnergia;
     }
 
+    public ArmaCuerpoACuerpo(Objeto obj, int danioBase, int consumoEnergia) throws RangoException
+    {
+        super(obj.getID(), obj.getNombre(), obj.getNivel(), obj.getCalidad(), danioBase, E_ClaseAsociada.CUERPO_A_CUERPO);
+        this.consumoEnergia = consumoEnergia;
+    }
 
     public int getConsumoEnergia()
     {

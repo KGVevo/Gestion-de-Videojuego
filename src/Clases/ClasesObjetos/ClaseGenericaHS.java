@@ -55,36 +55,26 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         return null;
     }
 
-    public T obtenerElemento(String id){
-        Iterator<T> it = elementos.iterator();
-        while (it.hasNext())
-        {
-            T devuelve = it.next();
-            if (devuelve.getID().equals(id)){
-                return devuelve;
-            }
-        }
-
-        return null;
-    }
-
 
     /// Mostrar todos los elementos
-    public String obtenerElementoTodos(){
+    public String verTodosElemento(){
         StringBuilder sb = new StringBuilder();
 
         for(T elemento : elementos){
-            sb.append(elemento.toString());
+            sb.append(elemento.toString() + "\n");
         }
 
         return sb.toString();
     }
 
-    public boolean existeElemento(Integer id){
+    public boolean verificarElemento(Integer id)
+    {
+        if(id < 1){
+            return false;
+        }
 
-        Iterator<T> it = elementos.iterator();
-        while (it.hasNext()) {
-            if(it.next().getID().equals(id)) {
+        for(T elemento : elementos){
+            if (elemento.getID().equals(id)){
                 return true;
             }
         }
@@ -92,17 +82,14 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         return false;
     }
 
-    public boolean existeElemento(String id){
-        boolean devuelve = false;
-
-        Iterator<T> it = elementos.iterator();
-        while (it.hasNext()){
-            if(it.next().getID().equals(id)) {
-                devuelve = true;
+    public boolean verificarElemento(String id)
+    {
+        for(T elemento : elementos){
+            if (elemento.getID().equals(id)){
+                return true;
             }
         }
-
-        return devuelve;
+        return false;
     }
 
 

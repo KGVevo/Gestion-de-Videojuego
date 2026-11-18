@@ -9,9 +9,17 @@ public class Pocion extends Objeto {
     private double efecto;
     private E_TipoPocion tipoPocion;
 
-    public Pocion(String nombre, int nivel, double efecto, E_TipoPocion tipoPocion, E_Calidad calidad) throws RangoException
+    public Pocion(Integer id, String nombre, int nivel, double efecto, E_TipoPocion tipoPocion, E_Calidad calidad) throws RangoException
     {
-        super(nombre, nivel, calidad);
+        super(id, nombre, nivel, calidad);
+        this.efecto = efecto;
+        this.tipoPocion = tipoPocion;
+    }
+
+    // Cuando crea el objeto
+    public Pocion(Objeto obj, double efecto, E_TipoPocion tipoPocion) throws RangoException
+    {
+        super(obj.getID(), obj.getNombre(), obj.getNivel(), obj.getCalidad());
         this.efecto = efecto;
         this.tipoPocion = tipoPocion;
     }

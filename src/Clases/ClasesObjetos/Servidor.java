@@ -2,15 +2,9 @@ package Clases.ClasesObjetos;
 
 
 import Clases.ClasesObjetos.Entidades.*;
-import Clases.ClasesObjetos.ObjetosClass.ArmaCuerpoACuerpo;
-import Clases.ClasesObjetos.ObjetosClass.Armadura;
-import Clases.ClasesObjetos.ObjetosClass.Objeto;
-import Clases.ClasesObjetos.ObjetosClass.Pocion;
+import Clases.ClasesObjetos.ObjetosClass.*;
 import Enums.*;
-import Exceptions.ObjetoInvalidoException;
-import Exceptions.RangoException;
-import Exceptions.TarjetaInvalidaException;
-import Exceptions.UserInvalidException;
+import Exceptions.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -19,7 +13,6 @@ import java.util.ArrayList;
 public class Servidor {
     /// HashSets
     private ClaseGenericaHS<Usuario> usuarios;
-    private ClaseGenericaHS<Tarjeta> tarjetas;
     /// ArrayLists
     private ClaseGenericaAL<Mundo> mundos;
     private ClaseGenericaAL<Objeto> objetos;
@@ -28,7 +21,6 @@ public class Servidor {
 
     public Servidor() {
         this.usuarios = new ClaseGenericaHS<>();
-        this.tarjetas = new ClaseGenericaHS<>();
 
 
         this.mundos = new ClaseGenericaAL<>();
@@ -37,412 +29,348 @@ public class Servidor {
         this.jugadores = new ClaseGenericaAL<>();
     }
 
-
-
-
-
-    ////////////////////////////////// AGREGAR ELEMETOS METODOS ///////////////////////////////////////////////////////
-
-    /// Agrega tarjeta -> se usa para agregar un usuario con tarjeta
-    private Tarjeta agregarTarjeta(String titular, int numeroDeTarjeta)throws TarjetaInvalidaException {
-        Tarjeta tarjeta = new Tarjeta(titular, numeroDeTarjeta);
-
-        if (!tarjetas.agregarElemento(tarjeta)) {
-            throw new  TarjetaInvalidaException("| !!La tarjeta ya existe en el sistema!! |");
-        }
-
-        return tarjeta;
-    }
-
-    /// Agregar Usuario sin tarjeta
-    public boolean agregarUsuario(String nombreUsuario, String gmail, String password) {
-
-        int id = JDBC.agregarUsuario(nombreUsuario, gmail, password);
-
-        if (id != -1) {
-            Usuario usuario = new Usuario(id, nombreUsuario, gmail);
-            return usuarios.agregarElemento(usuario);
-        }
-
-        return false;
-    }
-
-    /// Agregar Usuario con tarjeta
-    public boolean agregarUsuario(String nombreUsuario, String gmail, String password, String titularTarjeta, int numeroDeTarjeta) throws TarjetaInvalidaException {
-        Tarjeta tarjeta = agregarTarjeta(titularTarjeta, numeroDeTarjeta);
-
-        Integer id = JDBC.agregarUsuario(nombreUsuario, gmail, password);
-        Usuario usuario = new Usuario(id, nombreUsuario, gmail, tarjeta);
-
-        return usuarios.agregarElemento(usuario);
-    }
-
-    /// Agrega un Administrador
-    public boolean agregarAdministrador(String nombreUsuario, String gmail, String password,String cuil) throws ObjetoInvalidoException {
-        if(!JDBC.verificarExistenciaAdmin(gmail)){
-            throw new ObjetoInvalidoException("!! Administrador ya registrado !!");
-        }
-
-
-        int id = JDBC.agregarAdministrador(nombreUsuario, gmail, password, cuil);
-
-
-        if (id != -1) {
-            Administrador admin = new Administrador(id, nombreUsuario, gmail, cuil);
-            return usuarios.agregarElemento(admin);
-        }
-
-        return false;
-    }
-
-    /// Agregar un Jugador
-    public boolean agregarJugador(String nombreJugador, int danioBase, int idUsuario, int opcion) {
-        int afectado = JDBC.agregarJugador(idUsuario, nombreJugador,opcion);
-
-        /// En vez de hacerlo con ENUM, me ahorro haciendolo con enteros.
-        if(opcion == 1 && afectado != -1) {
-            /// Solo para Cuerpo a Cuerpo
-
-            return jugadores.agregarElemento(new JugadorCuerpoACuerpo(nombreJugador, danioBase, idUsuario));
-        }
-        else if(opcion == 2 && afectado != -1) {
-            /// Solo para Distancia
-            return jugadores.agregarElemento(new JugadorDistancia(nombreJugador, danioBase, idUsuario));
-        }
-        else if(opcion == 3 && afectado != -1) {
-            /// Solo para Mago
-            return jugadores.agregarElemento(new JugadorMago(nombreJugador, danioBase, idUsuario));
-        }
-
-        return false;
-    }
-
-
-    /// Agrega un Enemigo
-    public boolean agregarEnemigo(String nombreEnemigo, int vida, int danioBase, int nivel, E_TipoDeEnemigo ETipoDeEnemigo) {
-        if(enemigos.agregarElemento(new Enemigo(nombreEnemigo, vida, danioBase, nivel, ETipoDeEnemigo))){
-            JDBC.agregarEnemigo(nombreEnemigo,vida, nivel, danioBase, ETipoDeEnemigo);
-            return true;
-        }
-        return false;
-    }
-
-
-    /// Agregar Objeto
-    public boolean agregarObjeto(String nombre, int nivel, E_Calidad calidad) throws  RangoException {
-        return objetos.agregarElemento(new Objeto(nombre, nivel, calidad)); /// Esta funcion crea objetos que no tienen ninguna funcionalidad (huesos, piedra, palo, etc)
-    }
-
-
-    /// Agregar Arma
-    public boolean agregarArma(String nombre, int nivel, int dañoBase, E_Calidad calidad, int consumo, E_ClaseAsociada claseAsociada) throws RangoException {
-
-        if(claseAsociada == E_ClaseAsociada.CUERPO_A_CUERPO) {
-            return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumo));
-        }
-        else if(claseAsociada == E_ClaseAsociada.DISTANCIA) {
-            return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumo));
-        }
-        else if(claseAsociada == E_ClaseAsociada.MAGO) {
-            return objetos.agregarElemento(new ArmaCuerpoACuerpo(nombre, nivel, dañoBase, calidad, consumo));
-        }
-
-        return false;
-    }
-
-    /// Agregar Armadura
-    public boolean agregarArmadura(String nombre, int nivel, E_Calidad calidad, int proteccion, E_ClaseAsociada claseAsociada) throws  RangoException {
-
-        return objetos.agregarElemento(new Armadura(nombre, nivel, calidad, proteccion, claseAsociada));
-    }
-
-    /// Agregar Pocion
-    public boolean agregarPocion( String nombre, int nivel, double efecto, E_TipoPocion tipoPocion, E_Calidad calidad) throws RangoException {
-        return objetos.agregarElemento(new Pocion(nombre, nivel, efecto, tipoPocion, calidad));
-    }
-
-    /// Agregar Mundo
-    public boolean agregarMundo(String nombreMundo, Jugador  jugador,  E_Dificultad dificultad){
-        Mundo mundo = new Mundo(nombreMundo, jugador, dificultad);
-        return mundos.agregarElemento(mundo);
-    }
-
-
-    ///////////////////////////// ELEMINAR ELEMETOS METODOS ////////////////////////////////////////////////////////////
-
-    public boolean eliminarUsuario(int id){
-        int afectado = JDBC.eliminarUsuario(id);
-        if(afectado != -1){
-            usuarios.eliminarElemento(id);
-            return true;
-        }
-        return false;
-    }
-
-    /// Eliminar Objeto
-    public boolean eliminarObjeto(int id){
-        return objetos.eliminarElemento(id);
-    }
-    /// Eliminar Enemigo
-    public boolean eliminarEnemigo(int id){
-        int afectado = JDBC.eliminarEnemigo(id);
-
-        if(afectado != -1){
-            return enemigos.eliminarElemento(id);
-        }
-
-        return false;
-    }
-
-    /// Elimina un Jugador por id de Usuario
-    public boolean eliminarJugador(int idUsuario) {
-        return jugadores.eliminarElemento(idUsuario);
-    }
-
-    /// Elimina un Jugador por Elemento Jugador
-    public boolean eliminarJugador(Jugador j) {
-        return jugadores.eliminarElemento(j);
-    }
-
-
-///////////////////////// MOSTRAR ELEMENTOS METODOS ////////////////////////////////////////////////////////////////////
-
-    public String mostrarJugadoresPorUsuario(String gmail){
-        String jugadores = JDBC.mostrarJugadoresPorUsuario(JDBC.getUsuarioId(gmail));
-        return jugadores;
-    }
-
-
-    public String mostrarObjetoID(int id) {
-        return objetos.obtenerElemento(id).toString();
-    }
-
-    public String mostrarObjetoTodos() {
-        return objetos.obtenerElementoTodos();
-    }
-
-
-    public String mostrarEnemigoID(int id) {
-        return enemigos.obtenerElemento(id).toString();
-    }
-
-    public String mostrarEnemigosTodos() {
-        enemigos = JDBC.descargarEnemigos();
-        return enemigos.obtenerElementoTodos();
-    }
-
-    /////////////////// OBTENER ELEMENTOS METODOS //////////////////////////////////////////////////////////////////////
-
-    /// Metodos de Jugador
-    public Jugador obtenerJugador(int idUsuario) {
-        return jugadores.obtenerElemento(idUsuario);
-    }
-
-
-    private Jugador resultadoClase(int idUsuario) {
-        Jugador jugadorActual = obtenerJugador(idUsuario);
-        if(jugadorActual.getClaseAsociada() == E_ClaseAsociada.CUERPO_A_CUERPO)
-        {
-            jugadorActual = (JugadorCuerpoACuerpo) jugadorActual;
-        }
-        else if(jugadorActual.getClaseAsociada() == E_ClaseAsociada.DISTANCIA)
-        {
-            jugadorActual = (JugadorDistancia) jugadorActual;
-        }
-        else if(jugadorActual.getClaseAsociada() == E_ClaseAsociada.MAGO)
-        {
-            jugadorActual = (JugadorMago) jugadorActual;
-        }
-        return jugadorActual;
-    }
-
-
-    /// Mostrar Todos los Jugadores -> solo visible para admin
-    public String mostrarJugadores() {
-        return jugadores.obtenerElementoTodos();
-    }
-
-    /// Verifica si el Gmail es realmente de un Administrador
-    public boolean confirmarAdministrador(String id, String password) throws UserInvalidException {
-        boolean select = false;
-
-        if(!usuarios.existeElemento(id)){
-            throw new UserInvalidException("|ERROR: !! Usuario/Administrador no encontrado !!|");
-        }
-
-        Object obj = usuarios.obtenerElemento(id);
-        if(obj != null && JDBC.verificarAdmin(JDBC.getUsuarioId(id))){
-            if(password.equals(JDBC.getUsuarioPassword(id))){
-                select = true;
-            }else if (!password.equals(JDBC.getUsuarioPassword(id))) {
-                throw new UserInvalidException("|!! La contraseña es incorrecta !!|");
-            }
-        }else if (obj != null && obj instanceof Usuario){
-            if (!password.equals(JDBC.getUsuarioPassword(id))) {
-                throw new UserInvalidException("|!! La contraseña es incorrecta !!|");
-            }
-        }
-
-        return select;
-    }
-
-
-
-    ////////////////////////// METODOS PARA EL MUNDO ///////////////////////////////////////////////////////////////////
-
-    /// Generador de tienda para Mundo
-    private ArrayList generarTienda(Mundo mundoCreado)throws ObjetoInvalidoException {
-        ArrayList<Objeto> aux = new ArrayList<>();
-
-        if(objetos.cantidadElementos() < mundoCreado.getCantidadObjetosTienda()){
-            throw new ObjetoInvalidoException("|No hay suficientes objetos para rellenar la Tienda|");
-        }
-
-
-        for(int i = 0; i < mundoCreado.getCantidadObjetosTienda(); i++){
-            aux.add(objetos.obtenerElemento(SistemaDeProbabilidad.generadorInt(objetos.cantidadElementos())));
-        }
-
-        return aux;
-    }
-
-
-    /// Metodo para generar enemigos para el mundo
-    private ArrayList generarEnemigosMundo(Mundo mundoCreado, int nivelPlayer) throws RangoException {
-        // Creamos un Arraylist auxiliar para guardar los enemigos filtrados
-        ArrayList<Enemigo> auxiliar = new ArrayList<>();
-        int i = 0;
-        // Calculamos la cantidad de enemigos totales
-        int cantidadEnemigos = mundoCreado.getDificultad().obtenerCantidadEnemigos() + mundoCreado.getFase().obtenerNumeroEnemigos();
-
-        // Filtra a los enemigos por el nivel del jugador y por la dificultadad del mundo
-        while(auxiliar.size() <= cantidadEnemigos && i < enemigos.cantidadElementos()){
-
-            if(cantidadEnemigos <= enemigos.cantidadElementos()){
-                if(enemigos.obtenerElemento(i).getNivel() <= nivelPlayer){
-                    auxiliar.add(enemigos.obtenerElemento(i));
-                }
-            }else{
-                throw new RangoException("| !! No hay suficientes enemigos para jugar en esta Dificultad !! |");
-            }
-        }
-
-        return auxiliar;
-    }
-
-
-    /// Generar Datos del Mundo
-    public Mundo generarMundo(Mundo mundoCreado,Jugador jugador) throws RangoException, ObjetoInvalidoException {
-        // Se generan los Enemigos
-        mundoCreado.modificarEnemigos(generarEnemigosMundo(mundoCreado, jugador.getNivel()));
-        // Se genera la tienda
-        mundoCreado.modificarTienda(generarTienda(mundoCreado));
-
-        return mundoCreado;
-    }
-
-    public String mostrarEnemigos(Mundo mundoCreado) {
-        StringBuilder lista = new StringBuilder();
-
-        for (int i = 0; i < enemigos.cantidadElementos(); i++) {
-            lista.append(enemigos.obtenerElemento(i).toString());
-        }
-
-        return lista.toString();
-    }
-
-
-//    public void comenzarFase(Mundo mundo, Jugador jugador, int accion, int objetivo){
-//        if(jugador.getVida() > 0 || mundo.getEnemigosMundo().size() > 0){
-//            sistemaCombateJugador(accion, mundo.getEnemigosMundo().get(objetivo), jugador);
-//
-//        }
-//
-//    }
-//
-//
-//    public String sistemaCombateEnemigo(){
-//
-//
-//        return "";
-//    }
-//
-//
-//    public int sistemaCombateJugador(int accion, Enemigo objetivo, Jugador jugador){
-//        if(accion == 1){
-//            return objetivo.modificadorDeVida(jugador.atacar(),-1);
-//        }else if(accion == 2){
-//
-//        }else if(accion == 3){
-//
-//        }else if(accion == 4){
-//
-//        }
-//
-//        return 1;
-//    }
-//
-
-
-
-
-
-
-    public int modificadorDeExp(int idUsuario, int valor, int nivelActual) {
-        return obtenerJugador(idUsuario).modificadorDeExp(valor, nivelActual);
-    }
-
-    public boolean jugadorDefenderse(int idUsuario) {
-        return obtenerJugador(idUsuario).defenderse();
-    }
-
-    public boolean jugadorHuir(int idUsuario) {
-        return obtenerJugador(idUsuario).huir();
-    }
-
-    public int jugadorGolpeCritico(int idUsuario) {
-        return resultadoClase(idUsuario).golpeCritico();
-    }
-
-    public int jugadorAtaca(int idUsuario) {
-        return resultadoClase(idUsuario).atacar();
-    }
-
-
-    public boolean jugadorRecargar(int idUsuario){
-
-        if(resultadoClase(idUsuario) instanceof JugadorDistancia)
-        {
-            return ((JugadorDistancia) resultadoClase(idUsuario)).recargar();
-        }
-        return false;
-    }
-
-    public int jugadorHabilidadArma(int idUsuario) {
-        return resultadoClase(idUsuario).habilidadArma();
-    }
-
-
-    public void descargarUsuarios(){
-        usuarios = JDBC.descargarUsuarios();
-    }
-
-
-    /*==============================================================================================================*/
-
-    // Entidades (Jugador y Enemigo)
-
-    /*public int modificadorVidaJugador()
+//*=====================================================================================================================================================================*//
+    // ============= METODOS DE USUARIO ============= //
+//*=====================================================================================================================================================================*//
+
+    //=== Metodos Publicos ===//
+
+    // Crea un Usuario sin Tarjeta
+    public String crearUsuario(int id, String userNombre, String gmail, String password, E_Rol rol)
+            throws RangoException, TextoContenidoException, ElementoExisteException,
+            ContraseñaException
     {
 
+        if (userNombre.length() < 8) {
+            throw new RangoException("ERROR: Solo se permite un nombre de 8 o mas caracteres.");
+        }
+
+        if (!gmail.contains("@") || !gmail.contains(".com")){ //asiodaadsjioasdjiodasjdoasjasid
+            throw new TextoContenidoException("ERROR: El correo debe contener '@' y '.com'.");
+        }
+
+        if (password.length() < 8) {
+            throw new ContraseñaException("ERROR: La contraseña debe ser como minimo 8 caracteres");
+        }
+
+        String mensaje = "=== Se creo un Usuario ===";
+        this.usuarios.agregarElemento(new Usuario(id, userNombre, gmail, rol));
+        return mensaje;
     }
 
-    public int modificadorVidaJugador()
+    // Elimina un Usuario
+    public String eliminarUsuario(Integer id)
+    {
+        String mensaje = "=== Se elimino el Usuario ===";
+        if (!this.usuarios.eliminarElemento(id)) {
+            mensaje = "=== Este usuario no existe ===";
+        }
+        return mensaje;
+    }
+
+    // Busca y muestra un Usuario especifico
+    public String verUsuarioID(Integer id) {
+        String mensaje = "[=] " + this.usuarios.obtenerElemento(id).toString();
+        if (mensaje.isBlank()) {
+            mensaje = "=== No hay usuarios disponibles ===";
+        }
+        return mensaje;
+    }
+
+    // Muestra todos los Usuarios
+    public String verTodosUsuario() {
+        String mensaje = this.usuarios.verTodosElemento();
+        if (mensaje.isBlank()) {
+            mensaje = "=== No hay usuarios disponibles ===";
+        }
+        return mensaje;
+    }
+
+//*=====================================================================================================================================================================*//
+    // ============= METODOS DE JUGADOR ============= //
+//*=====================================================================================================================================================================*//
+
+    public String crearJugador(Integer id, Integer idUsuario, String nombreJugador, E_ClaseAsociada claseAsociada)
+            throws RangoException, ElementoExisteException, UserInvalidException
     {
 
-    }*/
+        if (jugadores.verificarElemento(id)) {
+            throw new ElementoExisteException("ERROR: Este Jugador ya existe");
+        }
 
-    /*==============================================================================================================*/
+        if(!usuarios.verificarElemento(idUsuario))
+        {
+            throw new UserInvalidException("ERROR: Este Usuario no existe");
+        }
+
+        if (nombreJugador.length() < 8) {
+            throw new RangoException("ERROR: Solo se permite un nombre de 8 o mas caracteres.");
+        }
+
+        if(claseAsociada == E_ClaseAsociada.CUERPO_A_CUERPO)
+        {
+            // Hay un problema con Arma cuerpo a cuerpo y es la ID. De ultima puede generarse sin ID pero eso conlleva a que Arma tenga otro constructor.
+            ArmaCuerpoACuerpo melee = new ArmaCuerpoACuerpo(0, "Espada", 1, 12, E_Calidad.COMUN, 5); //Resolver problema
+            this.jugadores.agregarElemento(new JugadorCuerpoACuerpo(id, nombreJugador, idUsuario, melee));
+        }
+        else if(claseAsociada == E_ClaseAsociada.DISTANCIA)
+        {
+            // Hay un problema con Arma Distancia y es la ID. De ultima puede generarse sin ID pero eso conlleva a que Arma tenga otro constructor.
+            ArmaDistancia ranger = new ArmaDistancia(0, "Arco", 1, 7, E_Calidad.COMUN, 1); //Resolver problema
+            this.jugadores.agregarElemento(new JugadorDistancia(id, nombreJugador, idUsuario, ranger));
+        }
+        else if(claseAsociada == E_ClaseAsociada.MAGO)
+        {
+            // Hay un problema con Arma Mago y es la ID. De ultima puede generarse sin ID pero eso conlleva a que Arma tenga otro constructor.
+            ArmaMago mage = new ArmaMago(0, "Varita", 1, 10, E_Calidad.COMUN, 10); //Resolver problema
+            this.jugadores.agregarElemento(new JugadorMago(id, nombreJugador, idUsuario, mage));
+        }
+
+        return "=== Se creo un Jugador ===";
+    }
+
+    public String eliminarJugador(Integer id)
+    {
+        String mensaje = "=== Se elimino el Jugador ===";
+        if (!this.usuarios.eliminarElemento(id)) {
+            mensaje = "=== Este Jugador no existe ===";
+        }
+        this.jugadores.eliminarElemento(id);
+        return mensaje;
+    }
+
+    public String verJugadorID(Integer id, Integer idUsuario)
+    {
+        String mensaje = "[=] ";
+        Jugador j = this.jugadores.obtenerElemento(idUsuario);
+        if(j == null)
+        {
+            mensaje = "=== Este jugador no existe ===";
+        }
+
+
+
+        mensaje += j.toString();
+        return mensaje;
+    }
+
+    //Este metodo no funciona
+    public String verTodosJugadorEspecifico(Integer id) throws UserInvalidException
+    {
+        ///Aca deberia aver una funcion para que solo devuelva todos los jugadores de un Usuario por medio de la BDD
+        return "nada";
+    }
+
+    public String verTodosJugador()
+    {
+        return this.jugadores.verElementoTodos();
+    }
+
+//*=====================================================================================================================================================================*//
+    // ============= METODOS DE ENEMIGO ============= //
+//*=====================================================================================================================================================================*//
+
+    public String crearEnemigo(Integer id, String nombreEnemigo, int vida, int danioBase, int nivel,
+                               E_TipoDeEnemigo ETipoDeEnemigo)
+            throws NombreElementoException, RangoException, ElementoExisteException
+    {
+
+        if (enemigos.obtenerElemento(id) != null) {
+            throw new ElementoExisteException("ERROR: Este Enemigo ya existe");
+        }
+
+        if (nombreEnemigo.length() < 4 || !nombreEnemigo.matches("^[\\p{L}\\s]+$")) {
+            throw new NombreElementoException("ERROR: Solo se permite un nombre de 8 o mas caracteres.");
+        }
+
+        if(nivel < 1)
+        {
+            throw new RangoException("ERROR: Se permite como minimo Nivel 1");
+        }
+
+        if(vida < 10)
+        {
+            throw new RangoException("ERROR: Se permite como minimo de Vida 10");
+        }
+
+        this.enemigos.agregarElemento(new Enemigo(id, nombreEnemigo, vida, danioBase, nivel, ETipoDeEnemigo));
+
+        return "=== Se creo un Enemigo ===";
+    }
+
+    public String eliminarEnemigo(Integer id)
+    {
+        String mensaje = "=== Se elimino el Enemigo ===";
+        if (!this.enemigos.eliminarElemento(id)) {
+            mensaje = "=== Este Enemigo no existe ===";
+        }
+        this.enemigos.eliminarElemento(id);
+        return mensaje;
+    }
+
+    public String verEnemigoID(Integer id)
+    {
+        String mensaje = "[=] ";
+        Enemigo e = this.enemigos.obtenerElemento(id);
+        if(e == null)
+        {
+            mensaje = "=== Este Enemigo no existe ===";
+        }
+        mensaje += e.toString();
+        return mensaje;
+    }
+
+    public String verTodosEnemigo()
+    {
+        return this.enemigos.verElementoTodos();
+    }
+
+//*=====================================================================================================================================================================*//
+    // ============= METODOS DE OBJETOS ============= //
+//*=====================================================================================================================================================================*//
+
+    private Objeto crearObjetoAuxiliar(Integer id, String nombre, int nivel, E_Calidad calidad)
+            throws RangoException, NombreElementoException, ElementoExisteException
+    {
+        Objeto obj = this.objetos.obtenerElemento(id);
+
+        //En orden primero va el Objeto, luego si el objeto no esta vacio ahi lanza la excepcion.
+        if (obj != null && obj.getNombre().equals(nombre)) {
+            throw new ElementoExisteException("ERROR: Este Objeto ya existe");
+        }
+
+        if(nivel < 1)
+        {
+            throw new RangoException("ERROR: El nivel debe ser mayor o igual a 1");
+        }
+
+        if (nombre.length() < 1 || !nombre.matches("^[\\p{L}\\s]+$")) {
+            throw new NombreElementoException("ERROR: Solo se permite un nombre de 8 o mas caracteres.");
+        }
+
+        return new Objeto(id, nombre, nivel, calidad);
+    }
+
+    public String crearObjeto(Integer id, String nombre, int nivel, E_Calidad calidad)
+            throws RangoException, NombreElementoException, ElementoExisteException
+    {
+
+        objetos.agregarElemento(crearObjetoAuxiliar(id, nombre, nivel, calidad));
+
+        return "=== Se creo un Objeto ===";
+    }
+
+    public String crearPocion(Integer id, String nombre, int nivel, E_TipoPocion tipoPocion, E_Calidad calidad)
+            throws RangoException, NombreElementoException, ElementoExisteException
+    {
+        double efecto = 0;
+        Objeto obj = crearObjetoAuxiliar(id, nombre, nivel, calidad);
+
+        if(tipoPocion == E_TipoPocion.CRITICO)
+        {
+            efecto = 2;
+        }
+        else if(tipoPocion == E_TipoPocion.CURACION)
+        {
+            efecto = 15;
+        }
+        else if(tipoPocion == E_TipoPocion.DAÑO)
+        {
+            efecto = 5;
+        }
+        else if(tipoPocion == E_TipoPocion.ENERGIA)
+        {
+            efecto = 10;
+        }
+        else if(tipoPocion == E_TipoPocion.MANA)
+        {
+            efecto = 12;
+        }
+
+        objetos.agregarElemento(new Pocion(obj, efecto, tipoPocion));
+
+        return "=== Se creo una Pocion ===";
+    }
+
+    public String crearArma(Integer id, String nombre, int nivel, E_Calidad calidad , int danioBase, E_ClaseAsociada claseAsociada, int consumo)
+            throws RangoException, NombreElementoException, ElementoExisteException
+    {
+        Objeto obj = crearObjetoAuxiliar(id, nombre, nivel, calidad);
+        String mensaje = "=== Se creo un Arma ";
+
+        if(claseAsociada == E_ClaseAsociada.CUERPO_A_CUERPO)
+        {
+            mensaje += "Cuerpo a Cuerpo ===";
+            objetos.agregarElemento(new ArmaCuerpoACuerpo(obj, danioBase, consumo));
+        }
+        else if(claseAsociada == E_ClaseAsociada.DISTANCIA)
+        {
+            mensaje += "a Distancia ===";
+            objetos.agregarElemento(new ArmaDistancia(obj, danioBase, consumo));
+        }
+        else if(claseAsociada == E_ClaseAsociada.MAGO)
+        {
+            mensaje += "de Mago ===";
+            objetos.agregarElemento(new ArmaMago(obj, danioBase, consumo));
+        }
+
+        return mensaje;
+    }
+
+    public String eliminarObjeto(Integer id)
+    {
+        String mensaje = "";
+        if(objetos.obtenerElemento(id) instanceof ArmaCuerpoACuerpo)
+        {
+            objetos.eliminarElemento(id);
+            mensaje = "=== Se elimino un Arma Cuerpo a Cuerpo ===";
+        }
+        else if(objetos.obtenerElemento(id) instanceof ArmaDistancia)
+        {
+            objetos.eliminarElemento(id);
+            mensaje = "=== Se elimino un Arma a Distancia ===";
+        }
+        else if(objetos.obtenerElemento(id) instanceof ArmaMago)
+        {
+            objetos.eliminarElemento(id);
+            mensaje = "=== Se elimino un Arma un Mago ===";
+        }
+        else if(objetos.obtenerElemento(id) instanceof Pocion)
+        {
+            objetos.eliminarElemento(id);
+            mensaje = "=== Se elimino una Pocion ===";
+        }
+        else if(objetos.obtenerElemento(id) instanceof Objeto)
+        {
+            objetos.eliminarElemento(id);
+            mensaje = "=== Se elimino un Objeto ===";
+        }
+        return mensaje;
+    }
+
+    public String verObjetoID(Integer id)
+    {
+        String mensaje = "[=] ";
+        Objeto o = this.objetos.obtenerElemento(id);
+        if(o == null)
+        {
+            mensaje = "=== Este jugador no existe ===";
+        }
+        else
+        {
+            mensaje += o.toString();
+        }
+        return mensaje;
+    }
+
+    public String verTodosObjeto()
+    {
+        return this.objetos.verElementoTodos();
+    }
+
+//*=====================================================================================================================================================================*//
+    // ============= METODOS DE OBJETOS ============= //
+//*=====================================================================================================================================================================*//
 
 }
 

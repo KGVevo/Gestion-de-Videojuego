@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 
-public class Usuario implements IObtenerID<String>, IPermisos {
+public class Usuario implements IObtenerID<Integer>, IPermisos {
     private Integer id;
     private String userNombre;
     private String gmail;
@@ -21,7 +21,7 @@ public class Usuario implements IObtenerID<String>, IPermisos {
 
 
     /// Constructor para un usuario nuevo: la cuenta nace ACTIVA
-    public Usuario(Integer id,String userNombre, String gmail, E_Rol rol) {
+    public Usuario(Integer id, String userNombre, String gmail, E_Rol rol) {
         this(id, userNombre, gmail, rol, E_EstadoCuenta.ACTIVA);
     }
 
@@ -114,8 +114,9 @@ public class Usuario implements IObtenerID<String>, IPermisos {
     }
 
     @Override
-    public String getID() {
-        return this.gmail;
+    public Integer getID()
+    {
+        return this.id;
     }
 
     @Override

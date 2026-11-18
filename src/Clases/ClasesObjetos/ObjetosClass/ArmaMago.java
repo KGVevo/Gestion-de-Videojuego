@@ -14,6 +14,12 @@ public class ArmaMago extends Arma {
         this.consumoMana = consumoMana;
     }
 
+    public ArmaMago(Objeto obj, int danioBase, int consumoMana) throws RangoException
+    {
+        super(obj.getID(), obj.getNombre(), obj.getNivel(), obj.getCalidad(), danioBase, E_ClaseAsociada.MAGO);
+        this.consumoMana = consumoMana;
+    }
+
     public int getConsumoMana()
     {
         return this.consumoMana;

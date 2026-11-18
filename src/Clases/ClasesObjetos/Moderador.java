@@ -24,6 +24,10 @@ public class Moderador extends Usuario {
         }
     }
 
+    public Integer getID() {
+        return super.getID();
+    }
+
 
     public boolean getPermitido() {
         return permitido;

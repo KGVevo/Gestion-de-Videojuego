@@ -16,7 +16,18 @@ public class Reserva implements IObtenerID<Integer> {
     private E_EstadoReserva estadoReserva;
 
 
-    /// Constructor: una reserva nueva siempre nace ACTIVA. El ID lo asigna la base de datos
+    /// Constructor 1: Para cargar de la base de datos
+    public Reserva(Integer id, Jugador jugador, Mundo mundo, LocalDate desde, LocalDate hasta, E_EstadoReserva estadoReserva) {
+        this.id = id;
+        this.jugador = jugador;
+        this.mundo = mundo;
+        this.desde = desde;
+        this.hasta = hasta;
+        this.estadoReserva = estadoReserva;
+    }
+
+
+    /// Constructor 2: Para cuando se crea
     public Reserva(Integer id, Jugador jugador, Mundo mundo, LocalDate desde, LocalDate hasta) {
         this.id = id;
         this.jugador = jugador;

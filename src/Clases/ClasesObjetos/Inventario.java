@@ -14,7 +14,7 @@ public class Inventario {
 
     public Inventario() {
         this.objetos = new ArrayList<>();
-        this.capacidadMaxima = 30;  /// Valor por defecto
+        this.capacidadMaxima = 10;  /// Valor por defecto
     }
 
     public ArrayList<Objeto> getObjetos() {

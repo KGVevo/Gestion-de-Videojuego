@@ -12,20 +12,15 @@ public class Consola {
 
 
     public static String pedirString(String mensaje){
-        System.out.println(mensaje);
+        System.out.print(mensaje);
 
         return sc.nextLine();
     }
 
-    public static int pedirInt(String mensaje){
-        System.out.println(mensaje);
-
-        return sc.nextInt();
-    }
-
 
     /// Si lo que se escribio no es un numero, tira InputMismatchException.
-    public static int pedirInt(){
+    public static int pedirInt(String mensaje){
+        System.out.print(mensaje);
         String linea = sc.nextLine();
 
         try {
@@ -38,23 +33,6 @@ public class Consola {
     }
 
 
-
-
-    public static void verificarFormatoGmail(String gmailUser) throws GmailInvalidoException {
-        if(!gmailUser.endsWith("@gmail.com")){
-            throw new GmailInvalidoException("|=================================================|\n" +
-                                             "|ERROR: !! El formato del Gmail no es correcto !! |\n" +
-                                             "|=================================================|\n");
-        }
-
-        if(gmailUser.length() < 18){
-            throw new GmailInvalidoException("|======================================================|\n" +
-                                             "|ERROR: !! El Gmail contiene menos de 18 caracteres !! |\n" +
-                                             "|======================================================|\n");
-        }
-
-
-    }
 
 
 }

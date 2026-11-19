@@ -1,13 +1,9 @@
 package Clases.ClasesObjetos;
 
-import Clases.ClasesObjetos.Entidades.*;
 import Enums.E_EstadoCuenta;
 import Enums.E_Rol;
-import Enums.E_TipoDeEnemigo;
-import Exceptions.UserInvalidException;
 
 import java.sql.*;
-import java.util.HashSet;
 
 public class JDBC {
 
@@ -17,39 +13,21 @@ public class JDBC {
     ///
     private static String URL = "jdbc:sqlite:registro.db";
 
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------- QUERY USUARIO --------------------------------------------------------*/
 
-
-    ///Para agregar un Usuario a la base de datos(Debere retonar un id que es el que usaremos para guardarlo en la clase)
+    /// Para agregar un Usuario a la base de datos(Debere retonar un id que es el que usaremos para guardarlo en la clase)
     private static String INSERTAR_USUARIO = "INSERT INTO Usuario (nombre, gmail, password, rol) VALUES (?, ?, ?, ?)";
-    /*  Atributos:  String nombre, gmail, password, rol[USUARIO, MODERADOR , ADMINISTRADOR] -> Pasar a texto para la BDD
-    *   Para saber que ROL de Usuario se va a agregar se va a requerir que reciba un -> "int select" por parametros
-    *                                                                                     1 = USUARIO, 2 = MODERADOR 3 = ADMINISTRADOR
-    */
 
+    /// Obtiene todos los Usuarios
     private static String OBTENER_USUARIOS = "SELECT * FROM Usuario";
-    /*Debe retornar Usuario lo siguiente:
-     *  int id,
-     *  String nombre,
-     *  String gmail,
-     *  E_Rol rol[USUARIO, MODERADOR, ADMINISTRADOR],
-     *  boolean permitido[En la base de datos está como 0 o 1 por lo tanto para saber deberias verificar si es 1 = true o 0 = false]
-     *  E_EstadoCuenta estado[ACTIVA, BANEADA]
-     *
-     *  -> Recorda que los ENUMs en la base de datos son TEXT, los tenes que pasar de TEXT a ENUM
-     * **/
 
-    ///Para obtener la contraseña de un Usuario en base a su gmail
+    /// Para obtener la contraseña de un Usuario en base a su gmail
     private static String OBTENER_CONTRASEÑA = "SELECT * FROM Usuario WHERE gmail = ?";
 
-    ///Para cuando le damos el permitido a un Moderador
+    ///  Para cuando le damos el permitido a un Moderador
     private static String ACTUALIZAR_MODERADOR = "UPDATE Usuario SET permitido = ? WHERE idUsuario = ?";
-    /*Como debe funcionar:
-    *   Buscamos al Usuario con el idUsuario y a ese Usuario le colocamos el 1 al permitido
-    *   permitido = ? -> 1 = true
-    *
-    *       IMPORTANTE: el metodo debe permitir tanto darle el permitido = 1(true) o permitido = 0(false)
-    *                       esto se logra teniendo en cuenta que va a llegar un boolean por parametros
-    *  */
 
     /// Obtener el Usuario por Gmail, crucial para no perder la verificacion despues de iniciar sesion
     private static String OBTENER_USUARIO_POR_GMAIL = "SELECT * FROM Usuario WHERE gmail = ?";
@@ -62,47 +40,196 @@ public class JDBC {
 
     private static String OBTENER_USUARIO_POR_ID = "SELECT * FROM Usuario WHERE id = ?";
 
+    /*----------------------------------------- QUERY USUARIO --------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------- QUERY JUGADOR --------------------------------------------------------*/
 
-
-
-
-
-
-    /// ESTOS NO LOS TOQUES TODAVIA,  ANDA HACIENDO LO DE USUARIO
-    //Para agregar un Player de un Usuario
+    ///Para agregar un Player de un Usuario
     private static String INSERTAR_JUGADOR = "INSERT INTO Player (idUsuario, nombrePlayer, tipoPlayer) VALUES (?, ?, ?);";
-    //Para agregar un Inventario(se debe crear al mismo tiempo que player y conectarlo con el id que retorne Player)
-    private static String INSERTAR_INVENTARIO = "INSERT INTO Inventario (idPlayer, idObjeto, nombreObjeto) VALUES (?, ?, ?)";
-    //Para agregar Cualquier tipo de Objetos a la base de datos
-    private static String INSERTAR_OBJETOS = "INSERT INTO Objetos (tipoObjeto ,nombreObjeto, nivel, calidad, descripcion, danioBase, consumo) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    //Para agregar un Enemigo
-    private static String INSERTAR_ENEMIGO = "INSERT INTO Enemigo (nombre, vida, danio, nivel, tipoEnemigo) VALUES (?, ?, ?, ?, ?)";
-    //Parar agregar un mundo a la BDD
-    private static String INSERTAR_MUNDO = "INSERT INTO Mundo (nombre, dificultad, estado, motivo, detalle)  VALUES (?, ?, ?, ?, ?)";
-    //Para crear Reservas en la BDD
-    private static String INSERTAR_RESERVA = "INSERT INTO Reserva (idPlayer, idMundo, desde, hasta, estado) VALUES (?, ?, ?, ?, ?)";
-    //Para guardar las partidas en la BDD
-    private static String INSERTAR_PARTIDA = "INSERT INTO Partida (idPlayer, idMundo, inicio, fin, resultado, expGanada, monedasGanadas) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    //El "tipoPlayer" es un ENUM en la base de datos que contiene lo siguiente:[GUERRERO, ARQUERO, MAGO]
+
+    /// Obtenemos todos los players
+    private static String OBTENER_JUGADORES = "SELECT * FROM Player";
+    /*
+    *   Debe retornar los siguiente de la base de datos:
+    *   int id | int idUsuario | String nombrePlayer | tipoPlayer | int vida | int danioBase | nivel | expAcumulada | monedas |
+    *
+    *   el "tipoPlayer" va a definir en que clase se guarda(JugadorCuerpoACuerpo, JugadorDistancia, JugadorMago)
+    */
+
+    /// Obtenemos todos los Players de un Jugador en especifico
+    private static String OBTENER_JUGADORES_USUARIO = "SELECT * FROM Player WHERE idUsuario = ?";
 
 
-    /** Estos se mantienen igual **/
-    private static String ACTUALIZAR_LEVEL = "UPDATE Player SET nivel = ? WHERE id = ?";
+    /// Borra un Player en especifico
+    private static String ELIMINAR_JUGADOR = "DELETE FROM Player WHERE idPlayer = ?";
+
+
+    /// Actualiza estadisticas de jugador
     private static String ACTUALIZAR_VIDA = "UPDATE Player SET vida = ? WHERE id = ?";
+    private static String ACTUALIZAR_NIVEL = "UPDATE Player SET nivel = ? WHERE id = ?";
     private static String ACTUALIZAR_EXP_ACUMULADA = "UPDATE Player SET expAcumulada = ? WHERE id = ?";
+    private static String ACTUALIZAR_DANIO = "UPDATE Player SET danioBase = ? WHERE id = ?";
     private static String ACTUALIZAR_MONEDAS = "UPDATE Player SET monedas = ? WHERE id = ?";
 
+    /*----------------------------------------- QUERY JUGADOR --------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------- QUERY ENEMIGO --------------------------------------------------------*/
 
-    /// NO TOCAR
-    private static String OBTENER_JUGADORES = "SELECT * FROM Player";
-    private static String OBTENER_PLAYERS_POR_ID = "SELECT * FROM Player WHERE idUsuario = ?";
-    /// NO TOCAR
+    /// Agrega un Enemigo a la base de datos
+    private static String INSERTAR_ENEMIGO = "INSERT INTO Enemigo (nombre, vida, danio, nivel, tipoEnemigo) VALUES (?, ?, ?, ?, ?)";
+    // Contiene ENUM en la base de datos [NORMAL, ELITE, JEFE]
+
+    /// Obtiene todos los Enemigos
     private static String OBTENER_ENEMIGOS = "SELECT * FROM Enemigo";
+
+    /*
+     *   Debe retornar los siguiente de la base de datos:
+     *   int id | String nombre | int vida | int danio | nivel | tipoEnemigo |
+     *
+     *   el tipoEnemigo contiene si es [NORMAL, ELITE, JEFE]
+     */
+
+    /// Borra un Enemigo de la BDD
     private static String ELIMINAR_ENEMIGO = "DELETE FROM Enemigo WHERE id = ?";
-    /// NO TOCAR
-    private static String OBTENER_INVENTARIO_POR_ID = "SELECT * FROM Inventario WHERE idPlayer = ?";
+
+    /*----------------------------------------- QUERY ENEMIGO --------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------- QUERY MUNDOS ---------------------------------------------------------*/
+
+    /// Parar agregar un mundo a la BDD
+    private static String INSERTAR_MUNDO = "INSERT INTO Mundo (nombre, dificultad, estado, motivo, detalle)  VALUES (?, ?, ?, ?, ?)";
+    /*PARAMETROS:
+    *   String nombre
+    *   ENUM   dificultad  -> FACIL , NORMAL , DIFICIL
+    *   ENUM   estado -> DISPONIBLE, EN_PARTIDA, RESERVADO, NO_DISPONIBLE
+    *   ENUM   motivo -> MANTENIMIENTO, ERROR_TECNICO, OTRO
+    *   String detalle
+    * */
+
+    /// Obtener Mundos
+    private static String OBTENER_MUNDOS = "SELECT * FROM Mundo";
+
+    /// Borrar Mundo
+    private static String ELIMINAR_MUNDO = "DELETE FROM Mundo WHERE id = ?";
+
+    /// Actualiza el estado del mundo
+    private static String ACTUALIZAR_ESTADO_MUNDO = "UPDATE Mundo SET estado = ? WHERE id = ?";
+    // Por parametros recibira el ENUM con el estado al que cambiara
+
+    /// Modificar motivo del Mundo
+    private static String ACTUALIZAR_MOTIVO_MUNDO = "UPDATE Mundo SET motivo = ?, detalle = ? WHERE id = ?";
+    // Por parametros recibira un ENUM del motivo y un String sobre los detalles
+
+    /*----------------------------------------- QUERY MUNDOS ---------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------- QUERY RESERVAS -------------------------------------------------------*/
+    /// Ingresa una Reserva a la Base de datos
+    private static String INSERTAR_RESERVA = "INSERT INTO Reserva (idPlayer, idMundo, desde, hasta, estado) VALUES (?, ?, ?, ?, ?)";
+    /*Parametros:
+    *   int idPlayer
+    *   int idMundo
+    *   LocalDate desde -> Recibira una fecha, deberas buscar la forma de pasarla a un String para la base de datos
+    *   LocalDate hasta -> Recibira una fecha, deberas buscar la forma de pasarla a un String para la base de datos
+    *   E_EstadoReserva estado -> ACTIVA, CANCELADA, CUMPLIDA
+    * */
+
+    /// Obtiene todas las reservas
+    private static String OBTENER_RESERVAS  = "SELECT * FROM Reserva WHERE id = ?";
+
+    /// Obtiene las Reservas de un Player en especifico
+    private static String OBTENER_RESERVAS_USUARIO = "SELECT * FROM Reserva WHERE idPlayer = ?";
+
+    /// Actualiza el estado de la reserva
+    private static String ACTUALIZAR_RESERVA_ESTADO = "UPDATE Reserva SET estado = ? WHERE id = ?";
+    //estado -> ACTIVA, CANCELADA, CUMPLIDA
+
+    /// Borra una reserva en base a la id del Mundo
+    private static String ELIMINAR_RESERVAS = "DELETE FROM Reserva WHERE idMundo = ?";
+
+    /*----------------------------------------- QUERY RESERVAS -------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------- QUERY PARTIDAS -------------------------------------------------------*/
+
+    /// Inserta un partida
+    private static String INSERTAR_PARTIDA = "INSERT INTO Partida (idPlayer, idMundo, inicio, fin, resultado, expGanada, monedasGanadas) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    /*Parametros
+    *   int idPlayer
+    *   int idMundo
+    *   LocalDate inicio
+    *   LocalDate fin
+    *   E_ResultadoPartida -> VICTORIA, DERROTA, ABANDONO
+    *   int expGanada
+    *   int monedasGanadas
+    * */
+
+    /// Obtiene todas las partidas
+    private static String OBTENER_PARTIDAS = "SELECT * FROM Partida ";
+
+    /// Obtiene las partidas de un Player en especifico
+    private static String OBTENER_PARTIDAS_PLAYER = "SELECT * FROM Partida WHERE idPlayer = ?";
+
+    /// Actualiza resultado de la partida
+    private static String ACTUALIZAR_RESULTADO_PARTIDA = "UPDATE Partida SET resultado = ? WHERE idPlayer = ?";
+    // resultado -> VICTORIA, DERROTA, ABANDONO
+
+    /*----------------------------------------- QUERY PARTIDAS -------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------- QUERY INVENTARIO -----------------------------------------------------*/
+
+    /// Para agregar un Inventario a un Player
+    private static String INSERTAR_INVENTARIO = "INSERT INTO Inventario (idPlayer, slot, idObjeto, nombreObjeto) VALUES (?, ?, NULL, NULL)";
+    /*Parametro:
+    *   (int idPlayer)
+    *
+    *   OJO: Tenes que lograr que cuando se crea un Inventario se creen los 10 SLOTS de una con un FOR
+    *   ejemplo:
+    *   for(int slot = 1; slot <= 10; slot++){
+    *       ps.Int(1, idPlayer)
+    *       ps.Int(2, slot)
+    *       ps.executeUpdate()
+    *   }
+    *
+    *
+    * */
+
+
+    /// Obtener el inventario de Player
+    private static String OBTENER_INVENTARIO_PLAYER  = "SELECT * FROM Inventario WHERE id = ?";
+
+    /// Actualiza el slot de un inventario de un player en base al id
+    private static String ACTUALIZAR_INVENTARIO_PLAYER = "UPDATE Inventario SET idObjeto = ?, nombreObjeto WHERE slot = ? AND idPlayer = ?";
+
+    /// Borra un inventario de un Player
+    private static String ELIMINAR_INVENTARIO = "DELETE FROM Inventario WHERE idPlayer = ?";
+
+
+    /*----------------------------------------- QUERY INVENTARIO -----------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------- QUERY OBJETOS --------------------------------------------------------*/
+
+    /// ESTOS LOS HAGO YO PORQUE SON UN EMBOLE
+    private static String INSERTAR_OBJETOS = "INSERT INTO Objetos (tipoObjeto ,nombreObjeto, nivel, calidad, descripcion, danioBase, consumo) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static String OBTENER_OBJETO_POR_ID = "SELECT * FROM Objeto WHERE id = ?";
+    private static String ELIMINAR_OBJETO = "DELETE FROM Objeto WHERE id = ?";
 
-
+    /*----------------------------------------- QUERY OBJETOS --------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                         PROBAR CONEXION                                                     ///
@@ -120,6 +247,9 @@ public class JDBC {
 
         return conexion;
     }
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                         QUERY USUARIO                                                       ///
@@ -130,7 +260,7 @@ public class JDBC {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_USUARIO, Statement.RETURN_GENERATED_KEYS)){
 
             ps.setString(1, nombre);
             ps.setString(2, gmail);
@@ -158,6 +288,7 @@ public class JDBC {
         return idAgregado;
     }
 
+    /// Obtiene todos los Usuarios
     public static ClaseGenericaHS<Usuario> obtenerUsuarios(){
         ClaseGenericaHS<Usuario> usuarios = new ClaseGenericaHS<>();
         boolean flag;
@@ -171,6 +302,7 @@ public class JDBC {
                     String nombre = rs.getString("nombre");
                     String gmail = rs.getString("gmail");
                     E_Rol rol = E_Rol.valueOf(rs.getString("rol"));
+                    E_EstadoCuenta estadoCuenta = E_EstadoCuenta.valueOf(rs.getString("estado"));
 
                     if (rol == E_Rol.MODERADOR){
                         int permitido = rs.getInt("permitido");
@@ -180,13 +312,13 @@ public class JDBC {
                             flag = true;
                         }
 
-                        Moderador mod = new Moderador(idUsuario, nombre, gmail, flag);
+                        Moderador mod = new Moderador(idUsuario, nombre, gmail, flag, estadoCuenta);
                         usuarios.agregarElemento(mod);
                     }
                     if (rol == E_Rol.ADMINISTRADOR){
                         Administrador admin = new Administrador(idUsuario, nombre, gmail);
                     }if (rol == E_Rol.USUARIO){
-                        Usuario usuario = new Usuario(idUsuario, nombre, gmail, rol);
+                        Usuario usuario = new Usuario(idUsuario, nombre, gmail, rol, estadoCuenta);
                    }
 
                }
@@ -219,6 +351,7 @@ public class JDBC {
         return password;
     }
 
+    /// Cambio el estado del Moderador
     public static void actualizarModerador(boolean b, int idUsuario){
         int permitido;
         if (b == false){
@@ -238,6 +371,7 @@ public class JDBC {
         }
     }
 
+    /// Obtiene el Usuario en base al Gmail
     public static Usuario obtenerUsuario(String gmail){
 
         Usuario usuario = null;
@@ -254,6 +388,7 @@ public class JDBC {
                     int idUsuario = rs.getInt("id");
                     String nombre = rs.getString("nombre");
                     E_Rol rol = E_Rol.valueOf(rs.getString("rol"));
+                    E_EstadoCuenta estadoCuenta = E_EstadoCuenta.valueOf(rs.getString("estado"));
 
                     if (rol == E_Rol.MODERADOR){
                         int permitido = rs.getInt("permitido");
@@ -262,12 +397,12 @@ public class JDBC {
                         }else{
                             flag = true;
                         }
-                        usuario = new Moderador(idUsuario, nombre, gmail, flag);
+                        usuario = new Moderador(idUsuario, nombre, gmail, flag, estadoCuenta);
                     }
                     if (rol == E_Rol.ADMINISTRADOR){
                         usuario = new Administrador(idUsuario, nombre, gmail);
                     }if (rol == E_Rol.USUARIO){
-                        usuario = new Usuario(idUsuario, nombre, gmail, rol);
+                        usuario = new Usuario(idUsuario, nombre, gmail, rol, estadoCuenta);
                     }
                 }
             }
@@ -278,6 +413,7 @@ public class JDBC {
         return usuario;
     }
 
+    /// Obtiene el Usuario por ID
     public static Usuario obtenerUsuarioPorId(int idUsuario){
 
         Usuario usuario = null;
@@ -294,6 +430,7 @@ public class JDBC {
                     String gmail = rs.getString("gmail");
                     String nombre = rs.getString("nombre");
                     E_Rol rol = E_Rol.valueOf(rs.getString("rol"));
+                    E_EstadoCuenta estadoCuenta = E_EstadoCuenta.valueOf(rs.getString("estado"));
 
                     if (rol == E_Rol.MODERADOR){
                         int permitido = rs.getInt("permitido");
@@ -302,12 +439,12 @@ public class JDBC {
                         }else{
                             flag = true;
                         }
-                        usuario = new Moderador(idUsuario, nombre, gmail, flag);
+                        usuario = new Moderador(idUsuario, nombre, gmail, flag, estadoCuenta);
                     }
                     if (rol == E_Rol.ADMINISTRADOR){
                         usuario = new Administrador(idUsuario, nombre, gmail);
                     }if (rol == E_Rol.USUARIO){
-                        usuario = new Usuario(idUsuario, nombre, gmail, rol);
+                        usuario = new Usuario(idUsuario, nombre, gmail, rol, estadoCuenta);
                     }
                 }
             }
@@ -318,17 +455,19 @@ public class JDBC {
         return usuario;
     }
 
-    public static void actualizarUsuario(int idUsuario){
+    /// Cambia el estado del Usuario ACTIVA/BANEADO
+    public static void cambiarEstadoUsuario(int idUsuario){
         Usuario usuario = obtenerUsuarioPorId(idUsuario);
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(CAMBIAR_ESTADO_USUARIO)){
+            PreparedStatement ps = connection.prepareStatement(CAMBIAR_ESTADO_USUARIO)){
             
             if (usuario.getEstadoCuenta() == E_EstadoCuenta.ACTIVA){
                 ps.setString(1, String.valueOf(E_EstadoCuenta.BANEADA));
             }else if (usuario.getEstadoCuenta() == E_EstadoCuenta.BANEADA){
                 ps.setString(1, String.valueOf(E_EstadoCuenta.ACTIVA));
             }
+
             ps.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
@@ -336,7 +475,7 @@ public class JDBC {
     }
 
 
-
+    /// ELIMINA UN USUARIO
     public static int eliminarUsuario(int id){
         int afectado = -1;
 
@@ -354,281 +493,29 @@ public class JDBC {
         return  afectado;
     }
 
-
-
-//    /// Agrega un Jugador a la Base de Datos
-//    public static int agregarJugador(int id_usuario, String nombrePlayer, int opcion){
-//        int idAgregado = -1;
-//
-//
-//        try(Connection connection = DriverManager.getConnection(URL);
-//            PreparedStatement ps = connection.prepareStatement(INSERTAR_JUGADOR, PreparedStatement.RETURN_GENERATED_KEYS)){
-//
-//            ps.setInt(1, id_usuario);
-//            ps.setString(2, nombrePlayer);
-//
-//            ps.executeUpdate();
-//
-//            try(ResultSet rs = ps.getGeneratedKeys()){
-//                if (rs.next()){
-//                    idAgregado = rs.getInt(1);
-//                }
-//            }
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return idAgregado;
-//    }
-//
-//    /// Agregar Inventario
-//    public static int agregarInventario(int idPlayer, String nombrePlayer){
-//        int idAgregado = -1;
-//
-//        try(Connection connection = DriverManager.getConnection(URL);
-//            PreparedStatement ps = connection.prepareStatement(INSERTAR_INVENTARIO, PreparedStatement.RETURN_GENERATED_KEYS)){
-//
-//            ps.setInt(1, idPlayer);
-//            ps.setString(2, nombrePlayer);
-//
-//            ps.executeUpdate();
-//
-//            try(ResultSet rs = ps.getGeneratedKeys()){
-//                if (rs.next()){
-//                    idAgregado = rs.getInt(1);
-//                }
-//            }
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return idAgregado;
-//    }
-//
-//    /// Agregar Objeto
-//    public static int agregarObjeto(String nombre, int level, String descripcion){
-//        int idAgregado = -1;
-//
-//        try(Connection connection = DriverManager.getConnection(URL);
-//            PreparedStatement ps = connection.prepareStatement(INSERTAR_OBJETOS, Statement.RETURN_GENERATED_KEYS)){
-//
-//            ps.setString(1, nombre);
-//            ps.setInt(2, level);
-//
-//            ps.executeUpdate();
-//
-//            try(ResultSet rs = ps.getGeneratedKeys()){
-//                if (rs.next()){
-//                    idAgregado = rs.getInt(1);
-//                }
-//            }
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return idAgregado;
-//    }
-//
-//    /// Agrega un enemigo a la Base de Datos
-//    public static int agregarEnemigo(String nombreEnemigo, int vida, int level, int danio, E_TipoDeEnemigo tipoDeEnemigo){
-//        int idAgregado = -1;
-//
-//        try(Connection connection = DriverManager.getConnection(URL);
-//            PreparedStatement ps = connection.prepareStatement(INSERTAR_ENEMIGO)){
-//
-//            ps.setString(1, nombreEnemigo);
-//            ps.setInt(2, vida);
-//            ps.setInt(3, level);
-//            ps.setInt(4, danio);
-//            ps.setString(5, tipoDeEnemigo.getTipoDeEnemigo());
-//
-//            ps.executeUpdate();
-//
-//            try(ResultSet rs = ps.getGeneratedKeys()){
-//                if (rs.next()){
-//                    idAgregado = rs.getInt(1);
-//                }
-//            }
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return idAgregado;
-//    }
-
-
-
-//    /// Descargar Enemigos de la Base de Datos
-//    public static ClaseGenericaAL descargarEnemigos(){
-//        ClaseGenericaAL enemigos = new ClaseGenericaAL<>();
-//        Enemigo enemigo;
-//        try(Connection connection = DriverManager.getConnection(URL);
-//            PreparedStatement ps = connection.prepareStatement(MOSTRAR_ENEMIGOS)){
-//
-//            try(ResultSet rs = ps.executeQuery()){
-//                while(rs.next()){
-//                    String nombre = rs.getString("nombreEnemigo");
-//                    int vida  = rs.getInt("vida");
-//                    int danio = rs.getInt("danio");
-//                    int nivel = rs.getInt("level");
-//                    String tipo = rs.getString("tipo");
-//                    E_TipoDeEnemigo tipoE = null;
-//                    switch (tipo){
-//
-//                        case "NORMAL":{
-//                            tipoE = E_TipoDeEnemigo.NORMAL;
-//                            break;
-//                        }
-//                        case "ELITE":{
-//                            tipoE = E_TipoDeEnemigo.ELITE;
-//                            break;
-//                        }
-//                        case "JEFE":{
-//                            tipoE = E_TipoDeEnemigo.JEFE;
-//                            break;
-//                        }
-//                    }
-//
-//                    enemigo = new Enemigo(nombre, vida, danio, nivel, tipoE);
-//                    enemigos.agregarElemento(enemigo);
-//                }
-//            }
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return enemigos;
-//    }
-
-
-
-//    /// Descargar Usuarios de la Base de Datos
-//    public static ClaseGenericaHS descargarUsuarios(){
-//        ClaseGenericaHS<Usuario> usuarios = new ClaseGenericaHS<>();
-//        Usuario usuario;
-//
-//        try(Connection connection = DriverManager.getConnection(URL);
-//            PreparedStatement ps = connection.prepareStatement(OBTENER_USUARIOS)){
-//
-//            try(ResultSet rs = ps.executeQuery()){
-//                while(rs.next()){
-//                    int idUsuario = rs.getInt("id");
-//                    String nombre = rs.getString("nombre");
-//                    String gmail = rs.getString("gmail");
-//
-//                    usuario = new Usuario(idUsuario, nombre, gmail);
-//                    usuarios.agregarElemento(usuario);
-//                }
-//            }
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return usuarios;
-//    }
-
-
-
-//    /// Descargar Jugadores de la Base de Datos
-//    public static HashSet<Jugador> descargarJugadores(){
-//        HashSet<Jugador> jugadores = new HashSet<>();
-//        Jugador jugador;
-//
-//        try(Connection connection = DriverManager.getConnection(URL);
-//            PreparedStatement ps = connection.prepareStatement(MOSTRAR_JUGADORES)){
-//
-//            try(ResultSet rs = ps.executeQuery()){
-//                while (rs.next()){
-//                    int idUsuario = rs.getInt("id_Usuario");
-//                    String nombreJugador = rs.getString("nombrePlayer");
-//                    int expAcumulada = rs.getInt("expAcumulada");
-//                    int monedas = rs.getInt("monedas");
-//
-//                    String tipoJugador = rs.getString("tipoPlayer");
-//
-//
-//                    switch (tipoJugador.toUpperCase()) {
-//                        case "GUERRERO":
-//                            jugador = new JugadorCuerpoACuerpo(nombreJugador, idUsuario, monedas);
-//                            break;
-//                        case "MAGO":
-//                            jugador = new JugadorMago(nombreJugador, idUsuario, monedas);
-//                            break;
-//                        case "ARQUERO":
-//                            jugador = new JugadorDistancia(nombreJugador, idUsuario, monedas);
-//                            break;
-//                        default:
-//
-//                            continue;
-//                    }
-//
-//                    jugadores.add(jugador);
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return jugadores;
-//    }
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                              OBTENER / MOSTRAR                                              ///
+    ///                                         QUERY JUGADOR                                                       ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-//    /// Muestra los Jugadores de un Usuario
-//    public static String mostrarJugadoresPorUsuario(int id){
-//        Jugador jugador = null;
-//        StringBuilder sb = new StringBuilder();
-//
-//        try(Connection connection = DriverManager.getConnection(URL);
-//            PreparedStatement ps = connection.prepareStatement(OBTENER_PLAYERS_POR_ID)){
-//
-//            ps.setInt(1, id);
-//
-//            try(ResultSet rs = ps.executeQuery()) {
-//                while (rs.next()) {
-//                    int idUsuario = rs.getInt("id_Usuario");
-//                    String nombreJugador = rs.getString("nombrePlayer");
-//                    int vida = rs.getInt("vida");
-//                    int expAcumulada = rs.getInt("expAcumulada");
-//                    int monedas = rs.getInt("monedas");
-//                    int nivel = rs.getInt("level");
-//                    String tipoJugador = rs.getString("tipoPlayer");
-//
-//
-//                    switch (tipoJugador.toUpperCase()) {
-//                        case "GUERRERO":
-//                            jugador = new JugadorCuerpoACuerpo(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
-//                            break;
-//                        case "MAGO":
-//                            jugador = new JugadorMago(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
-//                            break;
-//                        case "ARQUERO":
-//                            jugador = new JugadorDistancia(nombreJugador, idUsuario, vida, nivel, expAcumulada, monedas);
-//                            break;
-//                        default: {
-//
-//                        }
-//
-//                    }
-//                    sb.append(jugador.toString());
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        return sb.toString();
-//    }
 
 
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                              ACTUALIZAR                                                     ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void actualizarLevelJugador(int nuevoLevelJugador, int idJugador){
+
+
+
+
+
+    /// Actualiza el nivel del Jugador
+    public static void actualizarNivelJugador(int nuevoLevelJugador, int idJugador){
 
         try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_LEVEL)){
+            PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_NIVEL)){
 
             ps.setInt(1, nuevoLevelJugador);
             ps.setInt(2, idJugador);
@@ -639,6 +526,7 @@ public class JDBC {
         }
     }
 
+    /// Actualiza el vida del Jugador
     public static void actualizarVidaJugador(int nuevaVidaJugador, int idJugador){
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -653,6 +541,22 @@ public class JDBC {
         }
     }
 
+    /// Actualiza el danio del Jugador
+    public static void actualizarDanioJugador(int nuevoDanioJugador, int idJugador){
+
+        try(Connection connection = DriverManager.getConnection(URL);
+            PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_DANIO)){
+
+            ps.setInt(1, nuevoDanioJugador);
+            ps.setInt(2, idJugador);
+
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    /// Actualiza la experiencia del Jugador
     public static void actualizarXPJugador(int expAcumulada, int idJugador){
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -667,6 +571,7 @@ public class JDBC {
         }
     }
 
+    /// Actualiza las monedas del Jugador
     public static void actualizarMonedasJugador(int nuevasMonedas, int idJugador){
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -682,90 +587,81 @@ public class JDBC {
     }
 
 
+
+
+
+
+
+
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                              ELIMINAR                                                       ///
+    ///                                              QUERY ENEMIGOS                                                 ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static int eliminarEnemigo(int id){
-        int afectado = -1;
 
-        try(Connection connection = DriverManager.getConnection(URL);
-            PreparedStatement ps = connection.prepareStatement(ELIMINAR_ENEMIGO)){
 
-            ps.setInt(1, id);
 
-            afectado = ps.executeUpdate();
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
 
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
 
-        return  afectado;
-    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              QUERY MUNDO                                                   ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
 
-    /*public static Objeto obtenerObjetoPorId(int idObjeto) throws RangoException{
-        Objeto objeto = null;
 
-        try (Connection connection = DriverManager.getConnection(URL);
-             PreparedStatement ps = connection.prepareStatement(MOSTRAR_OBJETO_POR_ID)) {
 
-            ps.setInt(1, idObjeto);
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String nombre = rs.getString("nombre");
-                    int nivel = rs.getInt("nivel");
-                    String descripcion = rs.getString("descripcion");
 
-                    String tipoObjeto = rs.getString("tipoObjeto");
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              QUERY RESERVAS                                                 ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    switch (tipoObjeto.toUpperCase()) {
-                        case "ARMA_GUERRO":
-                            objeto = new ArmaCuerpoACuerpo(nombre, nivel);
-                            break;
-                        case "ARMA_ARQUERO":
-                            objeto = new ArmaDistancia(nombre, nivel);
-                            break;
-                        case "ARMA_MAGO":
-                            objeto = new ArmaMago(nombre, nivel);
-                            break;
-                        case "ARMADURA":
-                            objeto = new Armadura(nombre, nivel);
-                            break;
-                        case "POCION":
-                            objeto = new Pocion(nombre, nivel);
-                            break;
-                        default:
-                            continue;
-                    }
-                }
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return objeto;
-    }
 
-    public static Inventario obtenerInventarioPorIdJugador(int idJugador){
-        Inventario inventario;
 
-        try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(MOSTRAR_INVENTARIO_POR_ID)){
 
-            ps.setInt(1, idJugador);
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
 
-            try(ResultSet rs = ps.executeQuery()){
-                if (rs.next()){
-                    int idObjeto = rs.getInt("id_objeta");
-                }
-            }
-        }
 
-    }
-    */
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              QUERY PARTIDAS                                                 ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              QUERY INVENTARIO                                               ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                              QUERY OBJETOS                                                  ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
+    //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
 }

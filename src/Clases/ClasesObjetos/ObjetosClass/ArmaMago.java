@@ -2,19 +2,18 @@ package Clases.ClasesObjetos.ObjetosClass;
 
 import Enums.E_Calidad;
 import Enums.E_ClaseAsociada;
-import Exceptions.RangoException;
 
 public class ArmaMago extends Arma {
 
     private int consumoMana;
 
-    public ArmaMago(Integer id, String nombre, int nivel, int danioBase, E_Calidad calidad, int consumoMana) throws RangoException
+    public ArmaMago(Integer id, String nombre, int nivel, int danioBase, E_Calidad calidad, int consumoMana)
     {
         super(id, nombre, nivel, calidad, danioBase, E_ClaseAsociada.MAGO);
         this.consumoMana = consumoMana;
     }
 
-    public ArmaMago(Objeto obj, int danioBase, int consumoMana) throws RangoException
+    public ArmaMago(Objeto obj, int danioBase, int consumoMana)
     {
         super(obj.getID(), obj.getNombre(), obj.getNivel(), obj.getCalidad(), danioBase, E_ClaseAsociada.MAGO);
         this.consumoMana = consumoMana;

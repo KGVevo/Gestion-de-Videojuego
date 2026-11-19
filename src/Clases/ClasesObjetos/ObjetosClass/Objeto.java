@@ -1,7 +1,6 @@
 package Clases.ClasesObjetos.ObjetosClass;
 
 import Enums.E_Calidad;
-import Exceptions.RangoException;
 import Interfaces.IObtenerID;
 
 import java.util.Objects;
@@ -18,16 +17,7 @@ public class Objeto implements IObtenerID<Integer> {
 
     //Constructor
     /// El ID lo asigna la base de datos (JDBC), por eso llega por parametro
-    public Objeto(Integer id, String nombre, int nivel, E_Calidad calidad) throws RangoException {
-
-        if(nivel < 1){
-            throw new RangoException("ERROR: El nivel debe ser mayor o igual a 1");
-        }
-
-        if(nivel > 20){
-            throw new RangoException("ERROR: El nivel debe ser como maximo 20");
-        }
-
+    public Objeto(Integer id, String nombre, int nivel, E_Calidad calidad){
         this.id = id;
         this.nombre = nombre;
         this.nivel = nivel;

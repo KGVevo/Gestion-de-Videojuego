@@ -4,16 +4,15 @@ import Clases.ClasesObjetos.Entidades.Jugador;
 import Enums.E_Calidad;
 import Enums.E_ClaseAsociada;
 import Exceptions.ClaseAsociadaException;
-import Exceptions.RangoException;
 import Interfaces.IComprobarClase;
 
 
-public class Arma extends Objeto implements IComprobarClase {
+public abstract class Arma extends Objeto implements IComprobarClase {
 
     private final int danioBase;
     private final E_ClaseAsociada claseAsociada;
 
-    public Arma(Integer id, String nombre, int nivel, E_Calidad calidad , int danioBase, E_ClaseAsociada claseAsociada) throws RangoException {
+    public Arma(Integer id, String nombre, int nivel, E_Calidad calidad , int danioBase, E_ClaseAsociada claseAsociada) {
         super(id, nombre, nivel, calidad);
         this.danioBase = danioBase;
         this.claseAsociada = claseAsociada;

@@ -3,6 +3,7 @@ package Clases.ClasesObjetos;
 
 import Clases.ClasesObjetos.Entidades.*;
 import Clases.ClasesObjetos.ObjetosClass.*;
+import Clases.ClasesObjetos.SistemaDeJuego.Mundo;
 import Enums.*;
 import Exceptions.*;
 
@@ -274,7 +275,7 @@ public class Servidor {
         {
             efecto = 15;
         }
-        else if(tipoPocion == E_TipoPocion.DAÑO)
+        else if(tipoPocion == E_TipoPocion.DANIO)
         {
             efecto = 5;
         }

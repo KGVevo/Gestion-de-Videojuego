@@ -46,7 +46,7 @@ public class Inventario {
         StringBuilder listado = new StringBuilder();
 
         for(Objeto o : objetos){
-            listado.append(o.toString());
+            listado.append(o.toString()).append("\n");
         }
 
         return listado.toString() + "\n|-> Espacio disponible: " + (capacidadMaxima - objetos.size()) + " <-|";
@@ -93,10 +93,9 @@ public class Inventario {
 
         if(aux == null){
             throw new ObjetoInvalidoException("|-> El item no existe <-|");
-        }{
-            return objetos.remove(aux);
         }
 
+        return objetos.remove(aux);
     }
 
     @Override

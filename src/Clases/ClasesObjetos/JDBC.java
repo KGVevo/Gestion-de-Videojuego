@@ -569,9 +569,9 @@ public class JDBC {
                     if (tipo == E_ClaseAsociada.CUERPO_A_CUERPO){
                         jugador = new JugadorCuerpoACuerpo(idPlayer, nombre, idUsuario, danioBase, (ArmaCuerpoACuerpo) obtenerObjeto(1), vida, nivel, expAcumulada, monedas);
                     }else if (tipo == E_ClaseAsociada.MAGO){
-                        jugador = new JugadorMago(idPlayer, nombre, idUsuario, danioBase, (ArmaMago) obtenerObjeto(2),vida, nivel, expAcumulada, monedas);
+                        jugador = new JugadorMago(idPlayer, nombre, idUsuario, danioBase, (ArmaMago) obtenerObjeto(3),vida, nivel, expAcumulada, monedas);
                     }else if (tipo == E_ClaseAsociada.DISTANCIA){
-                        jugador = new JugadorDistancia(idPlayer, nombre, idUsuario, danioBase, (ArmaDistancia) obtenerObjeto(3),vida, nivel, expAcumulada, monedas);
+                        jugador = new JugadorDistancia(idPlayer, nombre, idUsuario, danioBase, (ArmaDistancia) obtenerObjeto(2),vida, nivel, expAcumulada, monedas);
                     }
                 }
             }
@@ -603,9 +603,9 @@ public class JDBC {
                     if (tipo == E_ClaseAsociada.CUERPO_A_CUERPO){
                         jugador = new JugadorCuerpoACuerpo(id, nombre, idUsuario, danioBase, (ArmaCuerpoACuerpo) obtenerObjeto(1), vida, nivel, expAcumulada, monedas);
                     }else if (tipo == E_ClaseAsociada.MAGO){
-                        jugador = new JugadorMago(id, nombre, idUsuario, danioBase, (ArmaMago) obtenerObjeto(2),vida, nivel, expAcumulada, monedas);
+                        jugador = new JugadorMago(id, nombre, idUsuario, danioBase, (ArmaMago) obtenerObjeto(3),vida, nivel, expAcumulada, monedas);
                     }else if (tipo == E_ClaseAsociada.DISTANCIA){
-                        jugador = new JugadorDistancia(id, nombre, idUsuario, danioBase, (ArmaDistancia) obtenerObjeto(3),vida, nivel, expAcumulada, monedas);
+                        jugador = new JugadorDistancia(id, nombre, idUsuario, danioBase, (ArmaDistancia) obtenerObjeto(2),vida, nivel, expAcumulada, monedas);
                     }
 
                     jugadores.agregarElemento(jugador);
@@ -642,9 +642,9 @@ public class JDBC {
                     if (tipo == E_ClaseAsociada.CUERPO_A_CUERPO){
                         jugador = new JugadorCuerpoACuerpo(id, nombre, idUsuario, danioBase, (ArmaCuerpoACuerpo) obtenerObjeto(1),vida, nivel, expAcumulada, monedas);
                     }else if (tipo == E_ClaseAsociada.MAGO){
-                        jugador = new JugadorMago(id, nombre, idUsuario, danioBase, (ArmaMago) obtenerObjeto(2),vida, nivel, expAcumulada, monedas);
+                        jugador = new JugadorMago(id, nombre, idUsuario, danioBase, (ArmaMago) obtenerObjeto(3),vida, nivel, expAcumulada, monedas);
                     }else if (tipo == E_ClaseAsociada.DISTANCIA){
-                        jugador = new JugadorDistancia(id, nombre, idUsuario, danioBase, (ArmaDistancia) obtenerObjeto(3),vida, nivel, expAcumulada, monedas);
+                        jugador = new JugadorDistancia(id, nombre, idUsuario, danioBase, (ArmaDistancia) obtenerObjeto(2),vida, nivel, expAcumulada, monedas);
                     }
 
                     jugadores.agregarElemento(jugador);
@@ -658,16 +658,17 @@ public class JDBC {
     }
 
 
-    public static void eliminarJugador(int idPlayer){
-
+    public static int eliminarJugador(int idPlayer){
+        int filasAfectadas = -1;
         try(Connection connection = DriverManager.getConnection(URL);
                 PreparedStatement ps = connection.prepareStatement(ELIMINAR_JUGADOR)){
             ps.setInt(1, idPlayer);
 
-            ps.executeUpdate();
+            filasAfectadas = ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
         }
+        return filasAfectadas;
     }
 
     public static void actualizarArmaJugador(int idArma, int idJugador){
@@ -922,16 +923,17 @@ public class JDBC {
         return mundos;
     }
 
-    public static void eliminarMundo(int id){
-
+    public static int eliminarMundo(int id){
+        int filasAfectadas = -1;
         try(Connection connection = DriverManager.getConnection(URL);
                 PreparedStatement ps = connection.prepareStatement(ELIMINAR_MUNDO)){
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            filasAfectadas = ps.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
         }
+        return filasAfectadas;
     }
 
     public static void actualizarEstadoMundo(E_EstadoMundo estado, int id){
@@ -1059,16 +1061,17 @@ public class JDBC {
         }
     }
 
-    public static void eliminarReserva(int idMundo){
-
+    public static int eliminarReserva(int idMundo){
+        int filasAfectadas = -1;
         try(Connection connection = DriverManager.getConnection(URL);
                 PreparedStatement ps = connection.prepareStatement(ELIMINAR_RESERVAS)){
             ps.setInt(1, idMundo);
 
-            ps.executeUpdate();
+            filasAfectadas = ps.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
         }
+        return filasAfectadas;
     }
 
     //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
@@ -1234,16 +1237,17 @@ public class JDBC {
         }
     }
 
-    public static void eliminarInventario(int idPlayer){
-
+    public static int eliminarInventario(int idPlayer){
+        int filasAfectadas = -1;
         try(Connection connection = DriverManager.getConnection(URL);
             PreparedStatement ps = connection.prepareStatement(ELIMINAR_INVENTARIO)){
             ps.setInt(1, idPlayer);
 
-            ps.executeUpdate();
+            filasAfectadas = ps.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
         }
+        return filasAfectadas;
     }
 
     //-///////////////////////////////////////////////////////////////////////////////////////////////////////////////-//
@@ -1342,16 +1346,17 @@ public class JDBC {
         return objeto;
     }
 
-    public static void eliminarObjeto(int idObjeto){
-
+    public static int eliminarObjeto(int idObjeto){
+        int filasAfectadas = -1;
         try(Connection connection = DriverManager.getConnection(URL);
                 PreparedStatement ps = connection.prepareStatement(ELIMINAR_OBJETO)){
             ps.setInt(1, idObjeto);
 
-            ps.executeUpdate();
+            filasAfectadas = ps.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
         }
+        return filasAfectadas;
     }
 
 

@@ -4,6 +4,7 @@ import Clases.ClasesObjetos.Entidades.Jugador;
 import Enums.E_ResultadoPartida;
 import Interfaces.IObtenerID;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Partida implements IObtenerID<Integer> {
@@ -12,20 +13,34 @@ public class Partida implements IObtenerID<Integer> {
     private Jugador jugador;
     private Mundo mundo;
 
-    private LocalDateTime inicio;
-    private LocalDateTime fin;                      /// Es null mientras la partida sigue en curso
+    private LocalDate inicio;
+    private LocalDate fin;                      /// Es null mientras la partida sigue en curso
     private E_ResultadoPartida resultadoPartida;    /// Es null mientras la partida sigue en curso
 
     private int expGanada;
     private int monedasGanadas;
 
 
-    /// Constructor: El id sale de la JDBC
+    /// Constructor 1: Para la JDBC
+    public Partida(Integer id, Jugador jugador, Mundo mundo, LocalDate inicio, LocalDate fin,  E_ResultadoPartida resultadoPartida,  int expGanada, int monedasGanadas) {
+        this.id = id;
+        this.jugador = jugador;
+        this.mundo = mundo;
+        this.inicio = inicio;
+        this.fin = fin;
+        this.resultadoPartida = resultadoPartida;
+        this.expGanada = expGanada;
+        this.monedasGanadas = monedasGanadas;
+    }
+
+
+
+    /// Constructor: Para la creacion
     public Partida(Integer id, Jugador jugador, Mundo mundo) {
         this.id = id;
         this.jugador = jugador;
         this.mundo = mundo;
-        this.inicio = LocalDateTime.now();
+        this.inicio = LocalDate.now();
         this.fin = null;
         this.resultadoPartida = null;
         this.expGanada = 0;
@@ -47,11 +62,11 @@ public class Partida implements IObtenerID<Integer> {
         return mundo;
     }
 
-    public LocalDateTime getInicio() {
+    public LocalDate getInicio() {
         return inicio;
     }
 
-    public LocalDateTime getFin() {
+    public LocalDate getFin() {
         return fin;
     }
 
@@ -102,7 +117,7 @@ public class Partida implements IObtenerID<Integer> {
             return false;
         }
 
-        this.fin = LocalDateTime.now();
+        this.fin = LocalDate.now();
         this.resultadoPartida = resultado;
         this.expGanada = expGanada;
         this.monedasGanadas = monedasGanadas;

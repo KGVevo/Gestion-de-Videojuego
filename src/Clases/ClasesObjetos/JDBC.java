@@ -517,13 +517,22 @@ public class JDBC {
 
     public static int agregarJugador (int idUsuario, String nombrePlayer, E_ClaseAsociada tipo){
         int idAgregado = -1;
+        String tipoPlayer = null;
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(INSERTAR_JUGADOR)){
+            PreparedStatement ps = connection.prepareStatement(INSERTAR_JUGADOR, Statement.RETURN_GENERATED_KEYS)){
+
+            switch (tipo){
+                case CUERPO_A_CUERPO: tipoPlayer = "GUERRERO"; break;
+                case DISTANCIA: tipoPlayer = "ARQUERO"; break;
+                case MAGO: tipoPlayer = "MAGO"; break;
+            }
+
+
 
             ps.setInt(1, idUsuario);
             ps.setString(2, nombrePlayer);
-            ps.setString(3, String.valueOf(tipo));
+            ps.setString(3, tipoPlayer);
 
 
             ps.executeUpdate();
@@ -818,16 +827,20 @@ public class JDBC {
         return enemigos;
     }
 
-    public static void eliminarEnemigo(int id){
+    public static int eliminarEnemigo(int id){
+        int afectado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
                 PreparedStatement ps = connection.prepareStatement(ELIMINAR_ENEMIGO)){
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            afectado = ps.executeUpdate();
+
         }catch (SQLException e){
             e.printStackTrace();
         }
+
+        return afectado;
     }
 
 
@@ -1257,6 +1270,7 @@ public class JDBC {
                 ps.setString(1, "ARMA_MAGO");
             }else if(tipoObjeto == 5){
                 ps.setString(1, "POCION");
+
                 if(tipoPocion == 1){
                     ps.setString(8,String.valueOf(E_TipoPocion.CURACION));
                 }else if(tipoPocion == 2){

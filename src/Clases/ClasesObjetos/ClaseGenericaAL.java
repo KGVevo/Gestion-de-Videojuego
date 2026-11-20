@@ -3,7 +3,6 @@ package Clases.ClasesObjetos;
 import Interfaces.IObtenerID;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 public class ClaseGenericaAL<T extends IObtenerID> {
@@ -14,7 +13,6 @@ public class ClaseGenericaAL<T extends IObtenerID> {
     }
 
 
-
     /// Agregar elemento
     public boolean agregarElemento(T elemento) {
         if(this.lista.contains(elemento)){
@@ -22,6 +20,38 @@ public class ClaseGenericaAL<T extends IObtenerID> {
         }
         this.lista.add(elemento);
         return true;
+    }
+
+
+    /// Obtener elemento por ID
+    public T obtenerElementoPorId(Integer id){
+        if(id < 1){
+            return null;
+        }
+
+        for(T elemento : lista){
+            if (elemento.getID().equals(id)){
+                return elemento;
+            }
+        }
+
+        return null;
+    }
+
+    /// Obtener todos los Elementos
+    public ArrayList<T> obtenerTodosElementos(){
+        return new ArrayList<>(this.lista);
+    }
+
+    /// Obtener todos los elementos
+    public String mostrarTodosElementos(){
+        StringBuilder sb = new StringBuilder();
+
+        for(T elemento : this.lista){
+            sb.append(elemento.toString()).append("\n");
+        }
+
+        return sb.toString();
     }
 
     /// Eliminar por Elemento
@@ -114,5 +144,6 @@ public class ClaseGenericaAL<T extends IObtenerID> {
 
         return sb.toString();
     }
+
 
 }

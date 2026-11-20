@@ -16,6 +16,12 @@ public class ClaseGenericaHS<T extends IObtenerID> {
         return this.elementos.add(elemento);
     }
 
+
+    /// Devuelve una copia con todos los elementos
+    public HashSet<T> obtenerTodosElementos(){
+        return new HashSet<>(this.elementos);
+    }
+
     /// Eliminar por Elemento
     public boolean eliminarElemento(T elemento) {
 
@@ -54,6 +60,20 @@ public class ClaseGenericaHS<T extends IObtenerID> {
 
         return null;
     }
+
+    public T obtenerElemento(String id){
+        Iterator<T> it = elementos.iterator();
+        while (it.hasNext())
+        {
+            T devuelve = it.next();
+            if (devuelve.getID().equals(id)){
+                return devuelve;
+            }
+        }
+
+        return null;
+    }
+
 
 
     /// Mostrar todos los elementos

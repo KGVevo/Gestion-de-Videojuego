@@ -26,9 +26,6 @@ public class Moderador extends Usuario {
         }
     }
 
-    public Integer getID() {
-        return super.getID();
-    }
     public boolean getPermitido() {
         return permitido;
     }
@@ -45,4 +42,10 @@ public class Moderador extends Usuario {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return super.toString() +
+                " | Permitido: " + this.permitido +
+                " |.";
+    }
 }

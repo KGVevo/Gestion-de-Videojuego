@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 
-public class Usuario implements IObtenerID<Integer>, IPermisos {
+public class Usuario implements IObtenerID, IPermisos {
     private Integer id;
     private String userNombre;
     private String gmail;
@@ -114,9 +114,8 @@ public class Usuario implements IObtenerID<Integer>, IPermisos {
     }
 
     @Override
-    public Integer getID()
-    {
-        return this.id;
+    public String getID() {
+        return this.gmail;
     }
 
     @Override
@@ -141,8 +140,12 @@ public class Usuario implements IObtenerID<Integer>, IPermisos {
 
     @Override
     public String toString() {
-        return "Usuario [ID: "+this.id+" | Nombre Usuario: "+this.userNombre+" | Gmail: "+this.gmail
-                + "| Rol: " + this.rol.getRol() + " | Cuenta: " + this.estadoCuenta + "]";
+        return  "Usuario [ID: " + this.id +
+                " | Nombre Usuario: "+this.userNombre+
+                " | Gmail: "+this.gmail +
+                " | Rol: " + this.rol.getRol() +
+                " | Cuenta: " + this.estadoCuenta +
+                " | ";
     }
 
 }

@@ -1263,7 +1263,7 @@ public class JDBC {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
-                PreparedStatement ps = connection.prepareStatement(INSERTAR_OBJETOS)){
+                PreparedStatement ps = connection.prepareStatement(INSERTAR_OBJETOS, Statement.RETURN_GENERATED_KEYS)){
             if(tipoObjeto == 1){
                 String obj = "OBJETO";
                 ps.setString(1, obj);

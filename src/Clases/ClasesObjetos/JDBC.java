@@ -236,7 +236,7 @@ public class JDBC {
     /*----------------------------------------- QUERY OBJETOS --------------------------------------------------------*/
 
     /// ESTOS LOS HAGO YO PORQUE SON UN EMBOLE
-    private static final String INSERTAR_OBJETOS = "INSERT INTO Objetos (tipoObjeto ,nombreObjeto, nivel, calidad, descripcion, danioBase, consumo, tipoPocion) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERTAR_OBJETOS = "INSERT INTO Objeto (tipoObjeto ,nombreObjeto, nivel, calidad, descripcion, danioBase, consumo, tipoPocion) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String OBTENER_OBJETO_POR_ID = "SELECT * FROM Objeto WHERE id = ?;";
     private static final String ELIMINAR_OBJETO = "DELETE FROM Objeto WHERE id = ?;";
 

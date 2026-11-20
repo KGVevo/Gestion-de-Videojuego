@@ -1265,15 +1265,20 @@ public class JDBC {
         try(Connection connection = DriverManager.getConnection(URL);
                 PreparedStatement ps = connection.prepareStatement(INSERTAR_OBJETOS)){
             if(tipoObjeto == 1){
-                ps.setString(1, "OBJETO");
+                String obj = "OBJETO";
+                ps.setString(1, obj);
             }else if(tipoObjeto == 2){
-                ps.setString(1, "ARMA_GUERRERO");
+                String obj = "ARMA_GUERRERO";
+                ps.setString(1, obj);
             }else if(tipoObjeto == 3){
-                ps.setString(1, "ARMA_ARQUERO");
+                String obj = "ARMA_ARQUERO";
+                ps.setString(1, obj);
             }else if(tipoObjeto == 4){
-                ps.setString(1, "ARMA_MAGO");
+                String obj = "ARMA_MAGO";
+                ps.setString(1, obj);
             }else if(tipoObjeto == 5){
-                ps.setString(1, "POCION");
+                String obj = "POCION";
+                ps.setString(1, obj);
 
                 if(tipoPocion == 1){
                     ps.setString(8,String.valueOf(E_TipoPocion.CURACION));

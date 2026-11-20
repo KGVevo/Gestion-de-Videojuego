@@ -181,7 +181,7 @@ public class Servidor {
         }
 
         if (nombreEnemigo.length() < 4 || !nombreEnemigo.matches("^[\\p{L}\\s]+$")) {
-            throw new NombreElementoException("ERROR: Solo se permite un nombre de 8 o mas caracteres.");
+            throw new NombreElementoException("ERROR: Solo se permite un nombre de 4 o mas caracteres.");
         }
 
         if(nivel < 1)
@@ -245,8 +245,8 @@ public class Servidor {
             throw new RangoException("ERROR: El nivel debe ser mayor o igual a 1");
         }
 
-        if (nombre.length() < 1 || !nombre.matches("^[\\p{L}\\s]+$")) {
-            throw new NombreElementoException("ERROR: Solo se permite un nombre de 8 o mas caracteres.");
+        if (nombre.length() < 2 || !nombre.matches("^[\\p{L}\\s]+$")) {
+            throw new NombreElementoException("ERROR: Solo se permite un nombre de 2 o mas caracteres.");
         }
 
         return new Objeto(id, nombre, nivel, calidad);

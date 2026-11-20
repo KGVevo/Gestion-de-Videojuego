@@ -6,6 +6,7 @@ import Clases.ClasesObjetos.SistemaDeJuego.Mundo;
 import Clases.ClasesObjetos.SistemaDeJuego.Partida;
 import Clases.ClasesObjetos.SistemaDeJuego.Reserva;
 import Enums.*;
+import Exceptions.ElementoExisteException;
 import Exceptions.InventarioException;
 import Exceptions.ObjetoInvalidoException;
 
@@ -269,7 +270,8 @@ public class JDBC {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// Agrega un Usuario a la Base de Datos
-    public static int agregarUsuario(String nombre, String gmail, String password, int rol){
+    public static int agregarUsuario(String nombre, String gmail, String password, int rol) throws ElementoExisteException
+    {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -296,6 +298,14 @@ public class JDBC {
             }
         }
         catch (SQLException e){
+
+            String mensaje = e.getMessage().toLowerCase();
+
+            if(mensaje.contains("unique"))
+            {
+                throw new ElementoExisteException("| ERROR: Este Usuario ya existe|");
+            }
+
             e.printStackTrace();
         }
         return idAgregado;
@@ -515,7 +525,8 @@ public class JDBC {
     ///                                         QUERY JUGADOR                                                       ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static int agregarJugador (int idUsuario, String nombrePlayer, E_ClaseAsociada tipo){
+    public static int agregarJugador (int idUsuario, String nombrePlayer, E_ClaseAsociada tipo) throws ElementoExisteException
+    {
         int idAgregado = -1;
         String tipoPlayer = null;
 
@@ -543,6 +554,14 @@ public class JDBC {
                 }
             }
         }catch (SQLException e){
+
+            String mensaje = e.getMessage().toLowerCase();
+
+            if(mensaje.contains("unique"))
+            {
+                throw new ElementoExisteException("| ERROR: Este Jugador ya existe|");
+            }
+
             e.printStackTrace();
         }
         return  idAgregado;
@@ -777,7 +796,8 @@ public class JDBC {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public static int agregarEnemigos(String nombre , int vida, int danio, int nivel, E_TipoDeEnemigo tipo){
+    public static int agregarEnemigos(String nombre , int vida, int danio, int nivel, E_TipoDeEnemigo tipo) throws ElementoExisteException
+    {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -797,6 +817,14 @@ public class JDBC {
                 }
             }
         }catch (SQLException e){
+
+            String mensaje = e.getMessage().toLowerCase();
+
+            if(mensaje.contains("unique"))
+            {
+                throw new ElementoExisteException("| ERROR: Este Enemigo ya existe|");
+            }
+
             e.printStackTrace();
         }
         return idAgregado;
@@ -856,7 +884,8 @@ public class JDBC {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public static int agregarMundo(String nombre, E_Dificultad dificultad, E_EstadoMundo estado, E_MotivoMundo motivo, String detalles){
+    public static int agregarMundo(String nombre, E_Dificultad dificultad, E_EstadoMundo estado, E_MotivoMundo motivo, String detalles) throws ElementoExisteException
+    {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -875,6 +904,14 @@ public class JDBC {
                 }
             }
         }catch (SQLException e){
+
+            String mensaje = e.getMessage().toLowerCase();
+
+            if(mensaje.contains("unique"))
+            {
+                throw new ElementoExisteException("| ERROR: Este Mundo ya existe|");
+            }
+
             e.printStackTrace();
         }
         return idAgregado;
@@ -971,7 +1008,8 @@ public class JDBC {
     ///                                              QUERY RESERVAS                                                 ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static int agregarReserva(int idPlayer, int idMundo, LocalDate desde, LocalDate hasta, E_EstadoReserva estado){
+    public static int agregarReserva(int idPlayer, int idMundo, LocalDate desde, LocalDate hasta, E_EstadoReserva estado) throws ElementoExisteException
+    {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -990,6 +1028,14 @@ public class JDBC {
                 }
             }
         }catch (SQLException e){
+
+            String mensaje = e.getMessage().toLowerCase();
+
+            if(mensaje.contains("unique"))
+            {
+                throw new ElementoExisteException("| ERROR: Esta Reserva ya existe|");
+            }
+
             e.printStackTrace();
         }
         return idAgregado;
@@ -1082,7 +1128,8 @@ public class JDBC {
     ///                                              QUERY PARTIDAS                                                 ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static int agregarPartida(int idPlayer, int idMundo, LocalDate inicio, LocalDate fin, E_ResultadoPartida resultado, int expGanada, int monedasGanadas){
+    public static int agregarPartida(int idPlayer, int idMundo, LocalDate inicio, LocalDate fin, E_ResultadoPartida resultado, int expGanada, int monedasGanadas) throws ElementoExisteException
+    {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -1103,6 +1150,14 @@ public class JDBC {
                 }
             }
         }catch (SQLException e){
+
+            String mensaje = e.getMessage().toLowerCase();
+
+            if(mensaje.contains("unique"))
+            {
+                throw new ElementoExisteException("| ERROR: Esta Partida ya existe|");
+            }
+
             e.printStackTrace();
         }
         return idAgregado;
@@ -1185,7 +1240,8 @@ public class JDBC {
     ///                                              QUERY INVENTARIO                                               ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void agregarInventario(int idPlayer){
+    public static void agregarInventario(int idPlayer) throws ElementoExisteException
+    {
 
         try(Connection connection = DriverManager.getConnection(URL);
                 PreparedStatement ps = connection.prepareStatement(INSERTAR_INVENTARIO)){
@@ -1195,6 +1251,14 @@ public class JDBC {
                 ps.executeUpdate();
             }
         }catch (SQLException e){
+
+            String mensaje = e.getMessage().toLowerCase();
+
+            if(mensaje.contains("unique"))
+            {
+                throw new ElementoExisteException("| ERROR: Este Inventario ya existe|");
+            }
+
             e.printStackTrace();
         }
     }
@@ -1259,7 +1323,8 @@ public class JDBC {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public static int agregarObjeto(int tipoObjeto, String nombreObjeto, int nivel, E_Calidad calidad, String descripcion, int danioBase, int consumo, int tipoPocion){
+    public static int agregarObjeto(int tipoObjeto, String nombreObjeto, int nivel, E_Calidad calidad, String descripcion, int danioBase, int consumo, int tipoPocion) throws ElementoExisteException
+    {
         int idAgregado = -1;
 
         try(Connection connection = DriverManager.getConnection(URL);
@@ -1309,6 +1374,14 @@ public class JDBC {
                 }
             }
         }catch(SQLException e){
+
+            String mensaje = e.getMessage().toLowerCase();
+
+            if(mensaje.contains("unique"))
+            {
+                throw new ElementoExisteException("| ERROR: Este Objeto ya existe|");
+            }
+
             e.printStackTrace();
         }
         return idAgregado;

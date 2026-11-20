@@ -242,11 +242,11 @@ public abstract class Jugador extends Entidad implements IPlayerInterface {
 
     @Override
     public String toString() {
-        return "ID Usuario: " + this.idUsuario +
-                super.toString() +
-                "[| Clase: " + this.claseAsociada.getClaseAsociada() +
+        return super.toString() +
+                " | ID Usuario: [" + this.idUsuario +
+                " | Clase: " + this.claseAsociada.getClaseAsociada() +
                 " | XP Acumulada: " + this.expAcumuladaNivel +
-                " | Monedas: " + this.monedas + "|].";
+                " | Monedas: " + this.monedas + " |]";
     }
 
 }

@@ -117,8 +117,8 @@ public class JugadorMago extends Jugador {
 
     @Override
     public String toString() {
-        return "Clase Mago ["+super.toString()+" | Mana: "+this.mana+"]\n"
-                +super.getInventario().toString();
+        return "| Clase Mago ["+super.toString()+" | Mana: "+this.mana+"]\n"
+                + super.getInventario().toString();
     }
 
 }

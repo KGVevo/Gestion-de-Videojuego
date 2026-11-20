@@ -108,7 +108,7 @@ public class JugadorDistancia extends Jugador {
     @Override
     public String toString()
     {
-        return "Clase Distancia ["+super.toString()+" | Municion: "+this.municion+"]\n"
+        return "| Clase Distancia ["+super.toString()+" | Municion: "+this.municion+"]\n"
                 +super.getInventario().toString();
     }
 }

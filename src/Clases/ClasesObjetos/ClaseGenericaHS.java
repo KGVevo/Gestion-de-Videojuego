@@ -77,7 +77,7 @@ public class ClaseGenericaHS<T extends IObtenerID> {
 
 
     /// Mostrar todos los elementos
-    public String verTodosElemento(){
+    public String mostrarElementoTodos(){
         StringBuilder sb = new StringBuilder();
 
         for(T elemento : elementos){

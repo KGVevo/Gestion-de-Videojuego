@@ -93,7 +93,7 @@ public abstract class Entidad implements IInterfazDeCombate, IObtenerID<Integer>
     public String toString()
     {
         return "|ID: " + this.id + "|Nombre: "+this.nombreEntidad+"|Vida Actual: "+this.vida+"|Daño Base: "
-                + this.danioBase + "|Nivel: " +this.nivel + "|";
+                + this.danioBase + "|Nivel: " +this.nivel + " | ";
     }
 
 }

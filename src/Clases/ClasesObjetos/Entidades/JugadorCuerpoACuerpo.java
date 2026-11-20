@@ -98,7 +98,7 @@ public class JugadorCuerpoACuerpo extends Jugador {
 
     @Override
     public String toString() {
-        return "Clase Cuerpo a Cuerpo [" + super.toString() + " | Energia: " + this.energia + "]\n"
+        return "|Clase Cuerpo a Cuerpo [" + super.toString() + " | Energia: " + this.energia + "]\n"
                 + super.getInventario().toString();
     }
 }

@@ -8,6 +8,8 @@ import Enums.*;
 import Exceptions.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 
@@ -78,14 +80,14 @@ public class Servidor {
     public static void verificarFormatoGmail(String gmailUser) throws GmailInvalidoException {
         if(!gmailUser.endsWith("@gmail.com")){
             throw new GmailInvalidoException("|=================================================|\n" +
-                                             "|ERROR: !! El formato del Gmail no es correcto !! |\n" +
-                                             "|=================================================|\n");
+                    "|ERROR: !! El formato del Gmail no es correcto !! |\n" +
+                    "|=================================================|\n");
         }
 
         if(gmailUser.length() < 18){
             throw new GmailInvalidoException("|======================================================|\n" +
-                                             "|ERROR: !! El Gmail contiene menos de 18 caracteres !! |\n" +
-                                             "|======================================================|\n");
+                    "|ERROR: !! El Gmail contiene menos de 18 caracteres !! |\n" +
+                    "|======================================================|\n");
         }
 
 
@@ -97,14 +99,14 @@ public class Servidor {
 
         if(!usuarios.verificarElemento(id)){
             throw new UserInvalidException( "|============================================|\n" +
-                                            "|ERROR: !! El Gmail Ingresado no Existe !!   |\n" +
-                                            "|============================================|\n");
+                    "|ERROR: !! El Gmail Ingresado no Existe !!   |\n" +
+                    "|============================================|\n");
         }
 
         if (!password.equals(JDBC.getUsuarioPassword(id))){
             throw new UserInvalidException("|=========================================|\n" +
-                                           "|ERROR: !! La Contraseña es Incorrecta!!  |\n" +
-                                           "|=========================================|\n");
+                    "|ERROR: !! La Contraseña es Incorrecta!!  |\n" +
+                    "|=========================================|\n");
         }
 
         // Una cuenta baneada no puede iniciar sesion
@@ -112,8 +114,8 @@ public class Servidor {
 
         if (usuario != null && usuario.estaBaneada()){
             throw new UserInvalidException("|=============================================|\n" +
-                                           "|ERROR: !! Esta cuenta esta baneada !!        |\n" +
-                                           "|=============================================|\n");
+                    "|ERROR: !! Esta cuenta esta baneada !!        |\n" +
+                    "|=============================================|\n");
         }
 
         return usuario;
@@ -199,35 +201,35 @@ public class Servidor {
     /////////////////////////////// RESERVAS, ENTRADA Y SALIDA DE MUNDOS ///////////////////////////////////////////////
 
     /// Reserva el mundo para un Jugador en especifico. JUGADOR, NO USUARIO
-    public boolean reservarMundo(Jugador jugador, Mundo mundo, LocalDate desde,LocalDate hasta) throws ReservaInvalidaException {
+    public boolean reservarMundo(Jugador jugador, Mundo mundo, LocalDate desde, LocalDate hasta) throws ReservaInvalidaException {
         if (jugador == null || mundo == null || desde == null || hasta == null) {
             throw new ReservaInvalidaException("|=============================================|\n" +
-                                               "|ERROR: Faltan datos para realizar la reserva|\n" +
-                                               "|=============================================|\n");
+                                                "|ERROR: Faltan datos para realizar la reserva|\n" +
+                                                "|=============================================|\n");
         }
 
         if (cuentaBaneada(jugador)) {
             throw new ReservaInvalidaException("|=============================================|\n" +
-                                               "|ERROR: La cuenta del jugador esta baneada    |\n" +
-                                               "|=============================================|\n");
+                                                "|ERROR: La cuenta del jugador esta baneada    |\n" +
+                                                "|=============================================|\n");
         }
 
         if(mundo.getEstadoMundo() == E_EstadoMundo.NO_DISPONIBLE){
             throw new ReservaInvalidaException("|==================================|\n" +
-                                               "|ERROR: El mundo no esta disponible|\n" +
-                                               "|==================================|\n");
+                                                "|ERROR: El mundo no esta disponible|\n" +
+                                                "|==================================|\n");
         }
         // Hasta > desde,
         if (!hasta.isAfter(desde)){
             throw new ReservaInvalidaException("|=====================================================|\n" +
-                                               "|ERROR: La fecha final debe ser posterior a la inicial|\n" +
-                                               "|=====================================================|\n");
+                                                "|ERROR: La fecha final debe ser posterior a la inicial|\n" +
+                                                "|=====================================================|\n");
         }
         // Desde < Ahora,
         if (desde.isBefore(LocalDate.now())) {
             throw new ReservaInvalidaException("|========================================|\n" +
-                                               "|ERROR: No se puede reservar en el pasado|\n" +
-                                               "|========================================|\n");
+                                                "|ERROR: No se puede reservar en el pasado|\n" +
+                                                "|========================================|\n");
         }
 
         for (Reserva r : reservas.obtenerTodosElementos()) {
@@ -258,20 +260,21 @@ public class Servidor {
 
         if (reserva == null) {
             throw new ReservaInvalidaException("|==================================|\n" +
-                                               "|ERROR: La reserva no existe       |\n" +
-                                               "|==================================|\n");
+                                                "|ERROR: La reserva no existe       |\n" +
+                                                "|==================================|\n");
         }
 
         if (jugador == null || !reserva.getJugador().getID().equals(jugador.getID())) {
             throw new ReservaInvalidaException("|=====================================================|\n" +
-                                               "|ERROR: La reserva pertenece a otro Jugador           |\n" +
-                                               "|=====================================================|\n");
+                                                "|ERROR: La reserva pertenece a otro Jugador           |\n" +
+                                                "|=====================================================|\n");
         }
+
 
         if (!reserva.cancelarReserva()) {
             throw new ReservaInvalidaException("|=====================================================|\n" +
-                                               "|ERROR: Solo se puede cancelar una reserva ACTIVA     |\n" +
-                                               "|=====================================================|\n");
+                                                "|ERROR: Solo se puede cancelar una reserva ACTIVA     |\n" +
+                                                "|=====================================================|\n");
         }
 
         return true;
@@ -323,15 +326,15 @@ public class Servidor {
     public boolean entrarMundo(Jugador jugador, Mundo mundo) throws ReservaInvalidaException, PartidaInvalidaException {
         if (cuentaBaneada(jugador)) {
             throw new PartidaInvalidaException("|=============================================|\n" +
-                                               "|ERROR: La cuenta del jugador esta baneada    |\n" +
-                                               "|=============================================|\n");
+                    "|ERROR: La cuenta del jugador esta baneada    |\n" +
+                    "|=============================================|\n");
         }
 
         /// Un jugador no puede estar jugando en dos mundos a la vez
         if (buscarPartidaDeJugador(jugador) != null) {
             throw new PartidaInvalidaException("|=======================================================|\n" +
-                                               "|ERROR:   El Jugador ya esta jugando en otro Mundo      |\n" +
-                                               "|=======================================================|\n");
+                    "|ERROR:   El Jugador ya esta jugando en otro Mundo      |\n" +
+                    "|=======================================================|\n");
         }
 
         LocalDate hoy = LocalDate.now();
@@ -348,8 +351,8 @@ public class Servidor {
                     reserva = r;
                 }else{
                     throw new ReservaInvalidaException("|=======================================================|\n" +
-                                                       "|ERROR:   El Mundo ya esta reservado por otro Jugador   |\n" +
-                                                       "|=======================================================|\n");
+                            "|ERROR:   El Mundo ya esta reservado por otro Jugador   |\n" +
+                            "|=======================================================|\n");
                 }
             }
 
@@ -358,8 +361,8 @@ public class Servidor {
 
         if(!mundo.entrar(jugador)){
             throw new PartidaInvalidaException("|=====================================================|\n" +
-                                               "|ERROR:   El Mundo esta:" + mundo.getEstadoMundo() + "|\n" +
-                                               "|=====================================================|\n");
+                    "|ERROR:   El Mundo esta:" + mundo.getEstadoMundo() + "|\n" +
+                    "|=====================================================|\n");
         }
 
         if(reserva != null){
@@ -405,20 +408,21 @@ public class Servidor {
 
     /// Historial de un jugador: todas sus partidas (en curso y terminadas)
     public String listarPartidasDeJugador(Jugador jugador) {
+
         if (jugador == null) {
             return "|ERROR: Jugador invalido|\n";
         }
 
         StringBuilder sb = new StringBuilder();
 
-        /// Recorre todas las partidas y se queda solo con las de este jugador
+        // Recorre todas las partidas y se queda solo con las de este jugador
         for (Partida p : partidas.obtenerTodosElementos()) {
             if (p.getJugador().getID().equals(jugador.getID())) {
                 sb.append(p.toString());
             }
         }
 
-        /// Si no encontro ninguna, avisa en vez de devolver un texto vacio
+        // Si no encontro ninguna, avisa en vez de devolver un texto vacio
         if (sb.length() == 0) {
             return "|El jugador todavia no tiene partidas|\n";
         }
@@ -549,8 +553,8 @@ public class Servidor {
     private void verificarPermiso(Usuario solicitante, E_Permisos permiso) throws UserInvalidException {
         if (solicitante == null || !solicitante.tienePermiso(permiso)) {
             throw new UserInvalidException("|=====================================================|\n" +
-                                             "|ERROR: No tenes permisos para realizar esta accion   |\n" +
-                                            "|=====================================================|\n");
+                    "|ERROR: No tenes permisos para realizar esta accion   |\n" +
+                    "|=====================================================|\n");
         }
     }
 
@@ -593,8 +597,8 @@ public class Servidor {
 
         if (objetivo.getRol() == E_Rol.ADMINISTRADOR || objetivo.equals(solicitante)) {
             throw new UserInvalidException("|===========================================================|\n" +
-                                           "|ERROR: No se puede banear a un Administrador ni a uno mismo|\n" +
-                                           "|===========================================================|\n");
+                    "|ERROR: No se puede banear a un Administrador ni a uno mismo|\n" +
+                    "|===========================================================|\n");
         }
 
         /// Verificamos si ya esta baneado
@@ -658,10 +662,18 @@ public class Servidor {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// ADMINISTRACION DE MUNDOS ////////////////////////////////////////////////////////
 
-    public boolean agregarMundo(Usuario solicitante, String nombreMundo, E_Dificultad dificultad) throws UserInvalidException {
+    public boolean agregarMundo(Usuario solicitante, String nombreMundo, int opcion) throws UserInvalidException {
         verificarPermiso(solicitante, E_Permisos.GESTIONAR_MUNDOS);
+        
+        E_Dificultad dificultad = null; 
+        switch(opcion){
+            case 1: dificultad = E_Dificultad.FACIL; break;
+            case 2: dificultad = E_Dificultad.NORMAL; break;
+            case 3: dificultad = E_Dificultad.DIFICIL; break;
+        }
+        
 
-        if (nombreMundo == null || nombreMundo.isBlank() || dificultad == null) {
+        if (nombreMundo == null || dificultad == null) {
             return false;
         }
 
@@ -670,6 +682,7 @@ public class Servidor {
                 return false;
             }
         }
+        
         ///TODO:JDBC    -
         int id = JDBC.agregarMundo(nombreMundo, dificultad, E_EstadoMundo.DISPONIBLE, null, null);
 
@@ -1049,7 +1062,43 @@ public class Servidor {
         return null;
     }
 
+
     ///////////////////////////// ELIMINAR ELEMENTOS METODOS ///////////////////////////////////////////////////////////
+
+
+    /// AGREGA UN ENEMIGO
+    public boolean agregarEnemigo(String nombre,int vida, int danio, int nivel, int tipoEnemigo){
+        int id = -1;
+        E_TipoDeEnemigo enemigoTipo = null;
+
+        switch (tipoEnemigo) {
+            case 1: enemigoTipo = E_TipoDeEnemigo.NORMAL; break;
+            case 2: enemigoTipo = E_TipoDeEnemigo.ELITE; break;
+            case 3: enemigoTipo = E_TipoDeEnemigo.JEFE; break;
+        }
+
+        id = JDBC.agregarEnemigos(nombre, vida, danio, nivel, enemigoTipo);
+
+        if(id == -1){
+            return false;
+        }
+        return enemigos.agregarElemento(new Enemigo(id, nombre, vida, danio, nivel, enemigoTipo));
+    }
+
+
+    public String mostrarEnemigos(){
+        StringBuilder sb = new StringBuilder();
+
+        for (Enemigo e : enemigos.obtenerTodosElementos()){
+            sb.append(e.toString());
+        }
+
+        return sb.toString();
+    }
+
+
+
+
 
     public boolean eliminarUsuario(int id){
         int afectado = JDBC.eliminarUsuario(id);
@@ -1068,10 +1117,16 @@ public class Servidor {
     /// Eliminar Objeto
     public boolean eliminarObjeto(int id){
         return objetos.eliminarElemento(id);
+
     }
 
     /// Eliminar Enemigo
     public boolean eliminarEnemigo(int id){
+
+        if(!enemigos.verificarElemento(id)){
+            return false;
+        }
+
         int afectado = JDBC.eliminarEnemigo(id);
 
         if(afectado != -1){
@@ -1176,8 +1231,6 @@ public class Servidor {
 
         return auxiliar;
     }
-
-
 
 
 
